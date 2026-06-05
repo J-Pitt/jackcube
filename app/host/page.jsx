@@ -9,6 +9,10 @@ function HostForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const mode = searchParams.get('mode') === 'local' ? 'local' : 'online'
+  const gameIdParam = searchParams.get('gameId')
+  const validGameIds = ['flappy', 'truthOrCube', 'fakinIt', 'dirtyDrawful', 'letMeFinish']
+  const gameId = validGameIds.includes(gameIdParam) ? gameIdParam : 'flappy'
+  const isAdult = searchParams.get('adult') === '1' || gameId !== 'flappy'
 
   const [name, setName] = useState('')
   const [targetScore, setTargetScore] = useState(5000)
@@ -24,6 +28,7 @@ function HostForm() {
         hostName: name.trim() || 'Host',
         mode,
         targetScore,
+        gameId: isAdult ? gameId : 'flappy',
       })
       saveRejoin({
         roomId: data.roomId,

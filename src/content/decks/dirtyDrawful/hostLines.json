@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "gameId": "dirtyDrawful",
+  "category": "hostLines",
+  "intensity": "mature",
+  "locale": "en-US",
+  "items": [
+    {
+      "id": "dd-host-001",
+      "text": "The owl has seen things. Draw them anyway.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-002",
+      "text": "Art is subjective. Your prompt is not.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-003",
+      "text": "I am legally required to say: wow.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-004",
+      "text": "Stroke faster. Judgment is waiting.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-005",
+      "text": "That line had confidence. Concerning confidence.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-006",
+      "text": "Picasso could never. Thankfully.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-007",
+      "text": "Your canvas screams. I listen.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-008",
+      "text": "Undo exists. Dignity does not.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-009",
+      "text": "I brought popcorn for this reveal.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-010",
+      "text": "Draw like nobody is watching. They are.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-011",
+      "text": "Hot tip: fewer stick figures, more chaos.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-012",
+      "text": "This prompt was approved by zero owls.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-013",
+      "text": "Shaky lines tell a story. Usually regret.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-014",
+      "text": "Color outside the lines. Inside the law.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-015",
+      "text": "Guessing phase: lie with conviction.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-016",
+      "text": "The drawer sweats. The owl thrives.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-017",
+      "text": "Masterpiece loading… please hold.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-018",
+      "text": "I have feathers and no chill.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-019",
+      "text": "Art school rejected this prompt. Twice.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-020",
+      "text": "Your mom is not here. Draw freely.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-021",
+      "text": "Bold strokes for bold adults.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-022",
+      "text": "If you can read this, draw faster.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-023",
+      "text": "The eraser is your friend. Barely.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-024",
+      "text": "I hoot therefore I roast.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-025",
+      "text": "Next stop: museum of bad decisions.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-026",
+      "text": "Sketch the unsketchable. I dare you.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-027",
+      "text": "This is not Bob Ross energy.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-028",
+      "text": "Feathers ruffled. Standards lowered.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-029",
+      "text": "Drawful but make it unhinged.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-030",
+      "text": "Owl verdict pending. Panic responsibly.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-host-031",
+      "text": "Gallery opening in T-minus chaos.",
+      "tags": [
+        "host"
+      ],
+      "remotePlaySafe": true
+    }
+  ]
+}

@@ -1,0 +1,288 @@
+{
+  "version": 1,
+  "gameId": "fakinIt",
+  "category": "behavior",
+  "intensity": "mature",
+  "locale": "en-US",
+  "items": [
+    {
+      "id": "fi-behavior-001",
+      "text": "Raise your hand if you have ever skinny-dipped.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-002",
+      "text": "Stand up if you have sent a thirsty text you regret.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-003",
+      "text": "Touch your nose if you have kissed someone in this room (or on video).",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-004",
+      "text": "Cross your arms if you have used a dating app this year.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-005",
+      "text": "Point at the ceiling if you have had a one-night stand.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-006",
+      "text": "Wave if you have faked enthusiasm during intimacy.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-007",
+      "text": "Clap once if you have sexted while in a meeting.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-008",
+      "text": "Put a hand on your heart if you have had a friends-with-benefits situation.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-009",
+      "text": "Scratch your head if you have googled something embarrassing about sex.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-010",
+      "text": "Lean left if you have kissed more than one person in a single night out.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-011",
+      "text": "Lean right if you have been walked in on.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-012",
+      "text": "Cover your mouth if you have lied about your body count.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-013",
+      "text": "Tap your shoulder if you have had a vacation fling.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-014",
+      "text": "Tap your knee if you have used a safe word (or wanted to).",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-015",
+      "text": "Look at the host if you have dated a coworker.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-016",
+      "text": "Look away if you have ghosted someone after hooking up.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-017",
+      "text": "Raise both hands if you have been to a strip club.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-018",
+      "text": "Sit taller if you have bought lingerie as a gift.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-019",
+      "text": "Slouch if you have fallen asleep during a hookup.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-020",
+      "text": "Nod if you have had a crush on a friend's partner.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-021",
+      "text": "Shake your head if you have never used a blindfold.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-022",
+      "text": "Wink if you have role-played.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-023",
+      "text": "Pout if you have cried after a hookup.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-024",
+      "text": "Smile wide if you have laughed during sex.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-025",
+      "text": "Whisper \"guilty\" if you have stolen a friend's hoodie after a sleepover.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-026",
+      "text": "Stretch if you have pulled a muscle during adult activities.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-027",
+      "text": "Flex if you have flexed in a mirror before a date.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-028",
+      "text": "Pat your chest if you have had a hickey at work.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-029",
+      "text": "Pat your lap if you have lost underwear somewhere memorable.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-030",
+      "text": "Bow dramatically if you have proposed something wild on the first date.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "fi-behavior-031",
+      "text": "Salute if you have saluted a bad pickup line that worked anyway.",
+      "tags": [
+        "physical",
+        "group"
+      ],
+      "remotePlaySafe": false
+    }
+  ]
+}

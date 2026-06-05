@@ -10,20 +10,7 @@ import {
   ROOM_TTL_SEC,
   MAX_PLAYERS,
 } from '../../lib/redis'
-
-function publicRoom(room) {
-  return {
-    roomId: room.roomId,
-    gameCode: room.gameCode,
-    mode: room.mode || 'online',
-    hostId: room.hostId,
-    phase: room.phase || 'lobby',
-    players: room.players || [],
-    config: room.config || { targetScore: 5000 },
-    gameState: room.gameState || null,
-    updatedAt: room.updatedAt || null,
-  }
-}
+import { publicRoom } from '../../lib/sanitizeRoom'
 
 export async function GET(request) {
   try {
@@ -62,7 +49,12 @@ export async function POST(request) {
       if (body.players !== undefined) room.players = body.players
       room.updatedAt = new Date().toISOString()
       await setRoom(body.roomId, room)
-      return NextResponse.json({ success: true, roomId: body.roomId, phase: room.phase })
+      return NextResponse.json({
+        success: true,
+        roomId: body.roomId,
+        phase: room.phase,
+        ...publicRoom(room),
+      })
     }
 
     if (body.roomId && body.state !== undefined) {
@@ -81,6 +73,11 @@ export async function POST(request) {
     const targetScore = [3000, 5000, 10000].includes(body.targetScore)
       ? body.targetScore
       : 5000
+    const gameId = ['flappy', 'truthOrCube', 'fakinIt', 'dirtyDrawful', 'letMeFinish'].includes(
+      body.gameId
+    )
+      ? body.gameId
+      : 'flappy'
 
     const r = getRedis()
     if (!r) {
@@ -114,7 +111,7 @@ export async function POST(request) {
       hostName,
       phase: 'lobby',
       players: [hostPlayer],
-      config: { targetScore },
+      config: { targetScore, gameId, spicyRemote: false },
       gameState: null,
       updatedAt: new Date().toISOString(),
     }

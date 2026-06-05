@@ -20,9 +20,13 @@ export default function PlayerList({ players, hostId, myPlayerId }) {
             />
             <span className="flex-1 font-medium text-white">
               {player.name}
-              {isMe && <span className="ml-2 text-xs text-white/50">(you)</span>}
+              {isMe && isHost ? (
+                <span className="ml-2 text-xs text-cube-violet">(you · host)</span>
+              ) : isMe ? (
+                <span className="ml-2 text-xs text-white/50">(you)</span>
+              ) : null}
             </span>
-            {isHost && (
+            {isHost && !isMe && (
               <span className="rounded-full bg-cube-violet/30 px-2 py-0.5 text-xs font-semibold text-cube-violet">
                 Host
               </span>

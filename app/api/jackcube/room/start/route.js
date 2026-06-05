@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getRoom, setRoom } from '../../../lib/redis'
-import { createInitialFlappyState } from '../../../lib/flappyInit'
+import { validatePlayerCount } from '../../../lib/games/registry'
+import { createGameState } from '../../../lib/gameInit'
 
 export async function POST(request) {
   try {
@@ -26,22 +27,16 @@ export async function POST(request) {
     }
 
     const players = room.players || []
-    if (players.length < 2) {
-      return NextResponse.json(
-        { success: false, error: 'Need at least 2 players to start' },
-        { status: 400 }
-      )
+    const gameId = room.config?.gameId || 'flappy'
+    const validation = validatePlayerCount(gameId, players.length)
+    if (!validation.ok) {
+      return NextResponse.json({ success: false, error: validation.error }, { status: 400 })
     }
 
-    const flappy = createInitialFlappyState(players)
-
     room.phase = 'countdown'
-    room.gameState = {
-      round: 1,
-      countdownStartedAt: new Date().toISOString(),
-      flappy,
-      roundResults: null,
-      winnerId: null,
+    room.gameState = createGameState(gameId, players, room, 1)
+    if (gameId !== 'flappy') {
+      room.gameState.countdownStartedAt = new Date().toISOString()
     }
     room.updatedAt = new Date().toISOString()
     await setRoom(roomId, room)

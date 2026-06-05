@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getRoom, setRoom } from '../../../lib/redis'
-import { createInitialFlappyState } from '../../../lib/flappyInit'
+import { createGameState } from '../../../lib/gameInit'
 
 export async function POST(request) {
   try {
@@ -29,16 +29,28 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'Can only advance from leaderboard' }, { status: 400 })
     }
 
+    const gameId = room.config?.gameId || 'flappy'
     const nextRound = (room.gameState?.round || 1) + 1
-    const flappy = createInitialFlappyState(room.players || [])
+    const maxRounds = 5
+    if (gameId !== 'flappy' && nextRound > maxRounds) {
+      const sorted = [...(room.players || [])].sort(
+        (a, b) => (Number(b.score) || 0) - (Number(a.score) || 0)
+      )
+      room.phase = 'victory'
+      room.gameState = {
+        ...room.gameState,
+        winnerId: sorted[0]?.id || null,
+        roundResults: room.gameState?.roundResults,
+      }
+      room.updatedAt = new Date().toISOString()
+      await setRoom(roomId, room)
+      return NextResponse.json({ success: true, phase: room.phase, gameState: room.gameState })
+    }
 
     room.phase = 'countdown'
-    room.gameState = {
-      round: nextRound,
-      countdownStartedAt: new Date().toISOString(),
-      flappy,
-      roundResults: null,
-      winnerId: null,
+    room.gameState = createGameState(gameId, room.players || [], room, nextRound)
+    if (gameId !== 'flappy') {
+      room.gameState.countdownStartedAt = new Date().toISOString()
     }
     room.updatedAt = new Date().toISOString()
     await setRoom(roomId, room)

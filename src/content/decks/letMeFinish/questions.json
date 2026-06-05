@@ -1,0 +1,288 @@
+{
+  "version": 1,
+  "gameId": "letMeFinish",
+  "category": "questions",
+  "intensity": "mature",
+  "locale": "en-US",
+  "items": [
+    {
+      "id": "lmf-q-001",
+      "text": "Where is a mailbox's butt, and how do you compliment it politely?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-002",
+      "text": "How exactly does this avocado get aroused — walk us through the foreplay.",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-003",
+      "text": "If clouds had dating profiles, what would their red flags be?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-004",
+      "text": "Pitch a startup that delivers breakup speeches by drone.",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-005",
+      "text": "Which household appliance is the biggest flirt and why?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-006",
+      "text": "Explain how to negotiate with a horny garden gnome.",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-007",
+      "text": "What is the safe word for a group chat that got too spicy?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-008",
+      "text": "Defend the romantic appeal of wet socks.",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-009",
+      "text": "How do you break up with your own reflection?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-010",
+      "text": "Where do lost socks go on vacation?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-011",
+      "text": "Pitch a TED talk titled \"Consent for Furniture.\"",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-012",
+      "text": "If your shower could sue you, what would the charges be?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-013",
+      "text": "How does a mailbox propose to a post office?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-014",
+      "text": "What pickup line works on a sentient burrito?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-015",
+      "text": "Explain the HR policy for office plants that gossip.",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-016",
+      "text": "Where is the clitoris on a GPS and how do you ask for directions?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-017",
+      "text": "Pitch a dating app for people who love chaos.",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-018",
+      "text": "How do you apologize to a pizza you ghosted?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-019",
+      "text": "What is the kinkiest thing a calculator can do?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-020",
+      "text": "Defend pineapple on pizza using only legal jargon.",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-021",
+      "text": "How would you seduce a parking meter?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-022",
+      "text": "What is the safe word for a family reunion?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-023",
+      "text": "Explain why the moon is jealous of your situationship.",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-024",
+      "text": "Pitch a workout class called \"Thirst Trap Yoga.\"",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-025",
+      "text": "How do you dump a haunted vibrator respectfully?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-026",
+      "text": "What would a lobster put on its LinkedIn headline?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-027",
+      "text": "Where does a toaster keep its nudes?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-028",
+      "text": "How do you flirt with a traffic cone at 2 a.m.?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-029",
+      "text": "Pitch a reality show: \"Love Island but it's just Roombas.\"",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-030",
+      "text": "Explain the mating call of a divorced ceiling fan.",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-q-031",
+      "text": "How do you write a breakup letter to your Wi-Fi?",
+      "tags": [
+        "absurd",
+        "debate"
+      ],
+      "remotePlaySafe": true
+    }
+  ]
+}

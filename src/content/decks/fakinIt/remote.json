@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "gameId": "fakinIt",
+  "category": "remote",
+  "intensity": "mature",
+  "locale": "en-US",
+  "items": [
+    {
+      "id": "fi-remote-001",
+      "text": "Tap RAISE HAND if you have ever skinny-dipped.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-002",
+      "text": "Tap STAND if you have sent a thirsty text you regret.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-003",
+      "text": "Tap NOSE if you have kissed someone you met online.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-004",
+      "text": "Tap ARMS CROSSED if you have used a dating app this year.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-005",
+      "text": "Tap POINT UP if you have had a one-night stand.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-006",
+      "text": "Tap WAVE if you have faked enthusiasm during intimacy.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-007",
+      "text": "Tap CLAP if you have sexted from your phone in public.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-008",
+      "text": "Tap HEART if you have had a friends-with-benefits situation.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-009",
+      "text": "Tap HEAD if you have googled something embarrassing about sex.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-010",
+      "text": "Tap LEFT if you have kissed more than one person in one night.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-011",
+      "text": "Tap RIGHT if you have been walked in on.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-012",
+      "text": "Tap MOUTH if you have lied about your body count.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-013",
+      "text": "Tap SHOULDER if you have had a vacation fling.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-014",
+      "text": "Tap KNEE if you have used or wanted a safe word.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-015",
+      "text": "Tap HOST if you have dated a coworker.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-016",
+      "text": "Tap AWAY if you have ghosted after hooking up.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-017",
+      "text": "Tap BOTH HANDS if you have been to a strip club.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-018",
+      "text": "Tap TALL if you have bought lingerie as a gift.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-019",
+      "text": "Tap SLOUCH if you have fallen asleep during a hookup.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-020",
+      "text": "Tap NOD if you have had a crush on a friend's partner.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-021",
+      "text": "Tap SHAKE if you have never used a blindfold.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-022",
+      "text": "Tap WINK if you have role-played.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-023",
+      "text": "Tap POUT if you have cried after a hookup.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-024",
+      "text": "Tap SMILE if you have laughed during sex.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-025",
+      "text": "Tap GUILTY if you have stolen a hoodie after a sleepover.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-026",
+      "text": "Tap STRETCH if you have pulled a muscle being adventurous.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-027",
+      "text": "Tap FLEX if you have flexed before a date.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-028",
+      "text": "Tap CHEST if you have had a hickey at work.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-029",
+      "text": "Tap LAP if you have lost underwear somewhere memorable.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-030",
+      "text": "Tap BOW if you have proposed something wild on date one.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "fi-remote-031",
+      "text": "Tap SALUTE if a terrible pickup line worked on you.",
+      "tags": [
+        "tapProxy"
+      ],
+      "remotePlaySafe": true
+    }
+  ]
+}

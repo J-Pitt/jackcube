@@ -1,19 +1,36 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
+import AdultGamesPasswordModal from '@/components/AdultGamesPasswordModal'
 import { getMultiplayerStatus } from '@/lib/roomApi'
 import { loadRejoin } from '@/lib/rejoin'
+import { isAdultUnlocked } from '@/lib/adultAccess'
 
-export default function HomePage() {
+function HomeContent() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [redisOk, setRedisOk] = useState(null)
   const [saved, setSaved] = useState(null)
+  const [adultModalOpen, setAdultModalOpen] = useState(false)
 
   useEffect(() => {
     getMultiplayerStatus().then((s) => setRedisOk(s.available))
     setSaved(loadRejoin())
-  }, [])
+    if (searchParams.get('adult') === 'locked') {
+      setAdultModalOpen(true)
+    }
+  }, [searchParams])
+
+  function openAdultGames() {
+    if (isAdultUnlocked()) {
+      router.push('/adult-games')
+      return
+    }
+    setAdultModalOpen(true)
+  }
 
   return (
     <main className="mx-auto flex min-h-screen max-w-3xl flex-col items-center justify-center px-6 py-12 text-center">
@@ -74,12 +91,36 @@ export default function HomePage() {
         </Link>
       </div>
 
+      <button
+        type="button"
+        onClick={openAdultGames}
+        className="mt-8 w-full max-w-md rounded-2xl border border-cube-danger/40 bg-cube-danger/10 px-6 py-4 text-left transition hover:bg-cube-danger/15"
+      >
+        <span className="text-2xl">🔞</span>
+        <span className="mt-2 block font-display text-lg font-bold text-white">Adult games</span>
+        <span className="text-sm text-white/50">Password required · 18+ party games</span>
+      </button>
+
       <Link
         href="/join"
-        className="mt-8 text-sm text-white/50 underline-offset-4 hover:text-cube-cyan hover:underline"
+        className="mt-6 text-sm text-white/50 underline-offset-4 hover:text-cube-cyan hover:underline"
       >
         Join with a room code →
       </Link>
+
+      <AdultGamesPasswordModal
+        open={adultModalOpen}
+        onClose={() => setAdultModalOpen(false)}
+        onUnlocked={() => router.push('/adult-games')}
+      />
     </main>
+  )
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={<main className="flex min-h-screen items-center justify-center text-white/50">Loading…</main>}>
+      <HomeContent />
+    </Suspense>
   )
 }

@@ -8,6 +8,7 @@ import {
   pickColor,
   MAX_PLAYERS,
 } from '../../../lib/redis'
+import { dedupePlayers, findPlayerByName } from '../../../lib/players'
 
 export async function POST(request) {
   try {
@@ -42,11 +43,13 @@ export async function POST(request) {
       )
     }
 
-    const players = Array.isArray(room.players) ? [...room.players] : []
+    let players = dedupePlayers(Array.isArray(room.players) ? [...room.players] : [])
     const name = String(playerName).trim()
 
-    const existing = players.find((p) => p.name === name)
+    const existing = findPlayerByName(players, name)
     if (existing) {
+      room.players = players
+      await setRoom(roomId, room)
       return NextResponse.json({
         success: true,
         roomId: room.roomId,
@@ -57,6 +60,7 @@ export async function POST(request) {
         players,
         config: room.config,
         myPlayerId: existing.id,
+        isHost: existing.id === room.hostId,
       })
     }
 
@@ -71,7 +75,7 @@ export async function POST(request) {
       score: 0,
     }
     players.push(newPlayer)
-    room.players = players
+    room.players = dedupePlayers(players)
     room.updatedAt = new Date().toISOString()
     await setRoom(roomId, room)
 
@@ -82,9 +86,10 @@ export async function POST(request) {
       mode: room.mode,
       hostId: room.hostId,
       phase: room.phase,
-      players,
+      players: room.players,
       config: room.config,
       myPlayerId: newPlayer.id,
+      isHost: false,
     })
   } catch (err) {
     return NextResponse.json(

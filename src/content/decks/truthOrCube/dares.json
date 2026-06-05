@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "gameId": "truthOrCube",
+  "category": "dares",
+  "intensity": "mature",
+  "locale": "en-US",
+  "items": [
+    {
+      "id": "toc-dare-001",
+      "text": "Send a thirsty emoji to the last person you texted — show the group.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-002",
+      "text": "Let the group pick a word you must whisper seductively.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-003",
+      "text": "Do your best \"I am the drama\" walk across the room.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-004",
+      "text": "Swap phones with someone for 30 seconds — no scrolling DMs.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-005",
+      "text": "Post a vague thirsty story — delete after the round.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-006",
+      "text": "Let someone rewrite your dating bio out loud.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-007",
+      "text": "Give your most convincing fake moan for two seconds.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-008",
+      "text": "Text \"thinking about you\" to someone the group chooses (or chicken out).",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-009",
+      "text": "Do 10 squats while maintaining eye contact with the host.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-010",
+      "text": "Read your last three emojis used like they are a poem.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-011",
+      "text": "Let the group pose you for a thirst trap photo — keep it PG-13.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-012",
+      "text": "Serenade the player on your left for fifteen seconds.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-013",
+      "text": "Swap an item of clothing with someone for one round.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-014",
+      "text": "Do your best impression of someone in the room flirting.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-015",
+      "text": "Hold a plank while saying three things you find hot.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-016",
+      "text": "Let the group pick a pickup line — deliver it to the camera.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-017",
+      "text": "Show the last photo you took without explaining it.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-018",
+      "text": "Give someone a compliment that sounds like a threat.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-019",
+      "text": "Narrate your morning routine like a romance novel.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-020",
+      "text": "Do a slow-motion hair flip or hat tip.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-021",
+      "text": "Let the group rename you for the rest of the night.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-022",
+      "text": "Demonstrate your signature dance move from the club.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-023",
+      "text": "Say something nice about each player — no repeats.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-024",
+      "text": "Act out your last crush meeting you in a movie.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-025",
+      "text": "Share your most-used emoji and defend it.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-026",
+      "text": "Let someone tickle your ego — brag for twenty seconds.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-027",
+      "text": "Pretend you are on a dating show intro — sell yourself.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-028",
+      "text": "Do push-ups or wall sits until the timer ends.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-029",
+      "text": "Whisper a secret to the player across from you.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-030",
+      "text": "Let the group choose your next drink or snack.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    },
+    {
+      "id": "toc-dare-031",
+      "text": "Strike three poses the group calls out — fast.",
+      "tags": [
+        "dare"
+      ],
+      "remotePlaySafe": false
+    }
+  ]
+}

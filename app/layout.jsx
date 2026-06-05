@@ -1,4 +1,5 @@
 import { Inter, Outfit } from 'next/font/google'
+import Providers from './providers'
 import './globals.css'
 
 const inter = Inter({
@@ -25,7 +26,9 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
-      <body className="font-body antialiased">{children}</body>
+      <body className="font-body antialiased">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   )
 }

@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "gameId": "letMeFinish",
+  "category": "challengerPrompts",
+  "intensity": "mature",
+  "locale": "en-US",
+  "items": [
+    {
+      "id": "lmf-c-001",
+      "text": "Objection: that logic is drunk!",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-002",
+      "text": "Hot take: harder!",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-003",
+      "text": "Spicy follow-up: cite your sources!",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-004",
+      "text": "Objection: my brain filed a complaint.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-005",
+      "text": "Hot take: the jury is horny for chaos.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-006",
+      "text": "Spicy follow-up: explain it like I'm a golden retriever.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-007",
+      "text": "Objection: vibes are inadmissible!",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-008",
+      "text": "Hot take: double down or sit down.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-009",
+      "text": "Spicy follow-up: what would your mom say?",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-010",
+      "text": "Objection: insufficient glitter!",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-011",
+      "text": "Hot take: that's a stretch and a half.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-012",
+      "text": "Spicy follow-up: name three witnesses.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-013",
+      "text": "Objection: I need a minute to recover.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-014",
+      "text": "Hot take: sell me the director's cut.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-015",
+      "text": "Spicy follow-up: pivot to something wilder.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-016",
+      "text": "Objection: the metaphor escaped!",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-017",
+      "text": "Hot take: louder for the back row.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-018",
+      "text": "Spicy follow-up: what's the worst case scenario?",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-019",
+      "text": "Objection: I smell cap.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-020",
+      "text": "Hot take: make it make sense.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-021",
+      "text": "Spicy follow-up: add a plot twist.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-022",
+      "text": "Objection: emotional damage!",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-023",
+      "text": "Hot take: commit to the bit!",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-024",
+      "text": "Spicy follow-up: rate that pitch 1-10.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-025",
+      "text": "Objection: insufficient avocado lore.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-026",
+      "text": "Hot take: the mailbox deserves better.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-027",
+      "text": "Spicy follow-up: translate to corporate speak.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-028",
+      "text": "Objection: I'm personally attacked.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-029",
+      "text": "Hot take: more confidence, less facts.",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-030",
+      "text": "Spicy follow-up: what would the owl say?",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "lmf-c-031",
+      "text": "Objection: closing statement when?",
+      "tags": [
+        "objection"
+      ],
+      "remotePlaySafe": true
+    }
+  ]
+}

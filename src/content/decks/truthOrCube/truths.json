@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "gameId": "truthOrCube",
+  "category": "truths",
+  "intensity": "mature",
+  "locale": "en-US",
+  "items": [
+    {
+      "id": "toc-truth-001",
+      "text": "What is the wildest place you have hooked up?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-002",
+      "text": "Who in this room would you trust with a secret fantasy?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-003",
+      "text": "What is your most embarrassing turn-on?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-004",
+      "text": "Have you ever faked it — be honest.",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-005",
+      "text": "What is the thirstiest thing on your camera roll right now?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-006",
+      "text": "Describe your worst date in ten seconds.",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-007",
+      "text": "What song is on your sex playlist?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-008",
+      "text": "Have you ever caught feelings after a one-night stand?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-009",
+      "text": "What is a green flag that is secretly a red flag for you?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-010",
+      "text": "What is the pettiest reason you stopped texting someone?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-011",
+      "text": "Who was your most chaotic crush?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-012",
+      "text": "What is something you have never told a partner?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-013",
+      "text": "What is your go-to move when you are flirting?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-014",
+      "text": "Have you ever stalked an ex online this year?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-015",
+      "text": "What is the lamest pickup line that worked on you?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-016",
+      "text": "What would your ex say is your toxic trait?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-017",
+      "text": "What is the most scandalous DM you have sent?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-018",
+      "text": "Have you ever kissed two people in one weekend?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-019",
+      "text": "What is your body count range — low, mid, or chaos?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-020",
+      "text": "What is the weirdest thing you find attractive?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-021",
+      "text": "Would you date a friend's ex for the right vibe?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-022",
+      "text": "What is your drunk confession story?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-023",
+      "text": "Have you ever lied about liking something in bed?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-024",
+      "text": "What is your type and why is it a problem?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-025",
+      "text": "What is the most romantic thing you have done while tipsy?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-026",
+      "text": "Have you ever been the other person in a situationship?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-027",
+      "text": "What app has caused you the most romantic trouble?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-028",
+      "text": "What is a dealbreaker you ignore when you are lonely?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-029",
+      "text": "Who here gives off main-character energy — explain.",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-030",
+      "text": "What would you do on a dare if nobody recorded it?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "toc-truth-031",
+      "text": "What is your honest rating of your rizz out of 10?",
+      "tags": [
+        "truth"
+      ],
+      "remotePlaySafe": true
+    }
+  ]
+}

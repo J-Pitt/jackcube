@@ -33,13 +33,34 @@ export async function getMultiplayerStatus() {
   }
 }
 
-export async function createRoom({ hostName, mode = 'online', targetScore = 5000 }) {
+export async function createRoom({
+  hostName,
+  mode = 'online',
+  targetScore = 5000,
+  gameId = 'flappy',
+}) {
   const res = await fetchRoom(ROOM_PATH, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ hostName, mode, targetScore }),
+    body: JSON.stringify({ hostName, mode, targetScore, gameId }),
   })
   return parseResponse(res, 'Failed to create room')
+}
+
+export async function updateRoomConfig(roomId, hostId, config) {
+  const res = await fetchRoom(`${ROOM_PATH}/config`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ roomId, hostId, ...config }),
+  })
+  return parseResponse(res, 'Failed to update config')
+}
+
+export async function getRoomMe(roomId, playerId) {
+  const res = await fetchRoom(
+    `${ROOM_PATH}/me?roomId=${encodeURIComponent(roomId)}&playerId=${encodeURIComponent(playerId)}`
+  )
+  return parseResponse(res, 'Failed to get player view')
 }
 
 export async function joinRoom(gameCode, playerName) {
@@ -78,10 +99,14 @@ export async function leaveRoom(roomId, playerId) {
 }
 
 export async function sendFlap(roomId, playerId) {
+  return sendInput(roomId, playerId, 'flap')
+}
+
+export async function sendInput(roomId, playerId, action, payload) {
   const res = await fetchRoom(`${ROOM_PATH}/input`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ roomId, playerId, action: 'flap' }),
+    body: JSON.stringify({ roomId, playerId, action, payload }),
   })
   return parseResponse(res, 'Failed to send input')
 }
@@ -111,6 +136,15 @@ export async function nextRound(roomId, hostId) {
     body: JSON.stringify({ roomId, hostId }),
   })
   return parseResponse(res, 'Failed to start next round')
+}
+
+export async function advanceGame(roomId, hostId, forceStep) {
+  const res = await fetchRoom(`${ROOM_PATH}/advance`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ roomId, hostId, forceStep }),
+  })
+  return parseResponse(res, 'Failed to advance game')
 }
 
 export function leaveRoomBeacon(roomId, playerId) {

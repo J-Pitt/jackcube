@@ -27,7 +27,7 @@ function JoinForm() {
         gameCode: data.gameCode || code,
         playerId: data.myPlayerId,
         playerName: name.trim() || 'Player',
-        isHost: false,
+        isHost: data.isHost === true,
         mode: data.mode,
       })
       router.push(`/lobby?roomId=${encodeURIComponent(data.roomId)}`)

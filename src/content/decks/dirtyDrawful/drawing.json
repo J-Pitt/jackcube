@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "gameId": "dirtyDrawful",
+  "category": "drawing",
+  "intensity": "mature",
+  "locale": "en-US",
+  "items": [
+    {
+      "id": "dd-draw-001",
+      "text": "walk of shame",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-002",
+      "text": "thirst trap",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-003",
+      "text": "safe word",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-004",
+      "text": "one night stand",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-005",
+      "text": "dirty martini",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-006",
+      "text": "love bite",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-007",
+      "text": "blindfold",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-008",
+      "text": "handcuffs (novelty)",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-009",
+      "text": "strip poker",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-010",
+      "text": "body shot",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-011",
+      "text": "walk-in closet hookup",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-012",
+      "text": "dating app icon",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-013",
+      "text": "ghosting",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-014",
+      "text": "situationship",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-015",
+      "text": "red flag",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-016",
+      "text": "green flag",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-017",
+      "text": "morning after coffee",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-018",
+      "text": "forbidden crush",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-019",
+      "text": "secret tattoo",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-020",
+      "text": "hotel key card",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-021",
+      "text": "awkward hickey",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-022",
+      "text": "wine drunk confession",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-023",
+      "text": "shower thought (spicy)",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-024",
+      "text": "sock on doorknob",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-025",
+      "text": "candlelit bath",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-026",
+      "text": "massage oil",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-027",
+      "text": "late night text",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-028",
+      "text": "regretful selfie",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-029",
+      "text": "party foul",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-030",
+      "text": "karaoke flirt",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    },
+    {
+      "id": "dd-draw-031",
+      "text": "pizza after midnight",
+      "tags": [
+        "drawable"
+      ],
+      "remotePlaySafe": true
+    }
+  ]
+}
