@@ -12,19 +12,19 @@ import {
 import { getMediaSupportError, hasVideoTrack, requestLobbyMedia } from '@/lib/media'
 import { loadRejoin } from '@/lib/rejoin'
 import {
-  ICE_SERVERS,
   VIDEO_JOIN_KEY,
   attachAudioStream,
   displayNameFromPeerId,
   displayPeerId,
   isDisplayPeerId,
+  PEER_OPTIONS,
   safePeerId,
 } from '@/lib/partyVideo'
 import { useRoomPoll } from '@/hooks/useRoomPoll'
 
 const PartyVideoContext = createContext(null)
 
-function createEmptyStream() {
+function createRecvOnlyStream() {
   return new MediaStream()
 }
 
@@ -44,12 +44,14 @@ export function PartyVideoProvider({ children }) {
   const callsRef = useRef({})
   const remoteAudiosRef = useRef({})
   const playersRef = useRef([])
+  const remotePeersRef = useRef([])
 
   const roomId = session?.roomId
   const myPlayerId = session?.playerId
   const { room } = useRoomPoll(roomId, 1500)
   const players = room?.players || []
   playersRef.current = players
+  remotePeersRef.current = remotePeers
 
   const isDisplayMode = session?.screenRole === 'tv'
 
@@ -60,15 +62,7 @@ export function PartyVideoProvider({ children }) {
     return safePeerId(roomId, myPlayerId)
   }, [roomId, myPlayerId, isDisplayMode])
 
-  const connectedPlayers = useMemo(
-    () => players.filter((p) => !p.disconnectedAt),
-    [players]
-  )
-
-  const otherPlayers = useMemo(
-    () => connectedPlayers.filter((p) => p.id !== myPlayerId),
-    [connectedPlayers, myPlayerId]
-  )
+  const tvPeerId = roomId ? displayPeerId(roomId) : null
 
   const visibleRemotePeers = useMemo(
     () => remotePeers.filter((p) => !isDisplayPeerId(p.peerId, roomId)),
@@ -124,27 +118,55 @@ export function PartyVideoProvider({ children }) {
     persistJoined(false)
   }, [isDisplayMode, persistJoined])
 
-  const addRemotePeer = useCallback((remoteId, name, remoteStream) => {
-    if (isDisplayPeerId(remoteId, roomId)) return
-    setRemotePeers((prev) => {
-      if (prev.some((p) => p.peerId === remoteId)) return prev
-      return [...prev, { peerId: remoteId, name, stream: remoteStream }]
-    })
-    if (!hasVideoTrack(remoteStream)) {
-      let audio = remoteAudiosRef.current[remoteId]
-      if (!audio) {
-        audio = document.createElement('audio')
-        audio.autoplay = true
-        remoteAudiosRef.current[remoteId] = audio
-      }
-      attachAudioStream(audio, remoteStream)
-    }
-  }, [roomId])
-
-  const removeRemotePeer = useCallback((remoteId) => {
-    setRemotePeers((prev) => prev.filter((p) => p.peerId !== remoteId))
-    delete callsRef.current[remoteId]
+  const hasRemoteStream = useCallback((peerId) => {
+    return remotePeersRef.current.some((p) => p.peerId === peerId && p.stream)
   }, [])
+
+  const clearCall = useCallback((peerId) => {
+    const call = callsRef.current[peerId]
+    if (call) {
+      try {
+        call.close()
+      } catch {
+        /* ignore */
+      }
+    }
+    delete callsRef.current[peerId]
+  }, [])
+
+  const addRemotePeer = useCallback(
+    (remoteId, name, remoteStream) => {
+      if (isDisplayPeerId(remoteId, roomId)) return
+      if (!remoteStream) return
+      setRemotePeers((prev) => {
+        const idx = prev.findIndex((p) => p.peerId === remoteId)
+        if (idx >= 0) {
+          const next = [...prev]
+          next[idx] = { peerId: remoteId, name, stream: remoteStream }
+          return next
+        }
+        return [...prev, { peerId: remoteId, name, stream: remoteStream }]
+      })
+      if (!hasVideoTrack(remoteStream)) {
+        let audio = remoteAudiosRef.current[remoteId]
+        if (!audio) {
+          audio = document.createElement('audio')
+          audio.autoplay = true
+          remoteAudiosRef.current[remoteId] = audio
+        }
+        attachAudioStream(audio, remoteStream)
+      }
+    },
+    [roomId]
+  )
+
+  const removeRemotePeer = useCallback(
+    (remoteId) => {
+      setRemotePeers((prev) => prev.filter((p) => p.peerId !== remoteId))
+      clearCall(remoteId)
+    },
+    [clearCall]
+  )
 
   const wireIncomingCall = useCallback(
     (call, stream) => {
@@ -160,14 +182,24 @@ export function PartyVideoProvider({ children }) {
         removeRemotePeer(remoteId)
       })
 
+      call.on('error', () => {
+        clearCall(remoteId)
+      })
+
       callsRef.current[remoteId] = call
     },
-    [roomId, addRemotePeer, removeRemotePeer]
+    [roomId, addRemotePeer, removeRemotePeer, clearCall]
   )
 
   const dialPeer = useCallback(
     (theirId, name, stream) => {
-      if (!peerRef.current || !stream || callsRef.current[theirId]) return
+      if (!peerRef.current || !stream || !theirId) return
+      if (hasRemoteStream(theirId)) return
+
+      if (callsRef.current[theirId]) {
+        clearCall(theirId)
+      }
+
       try {
         const call = peerRef.current.call(theirId, stream)
         if (!call) return
@@ -180,11 +212,15 @@ export function PartyVideoProvider({ children }) {
         call.on('close', () => {
           removeRemotePeer(theirId)
         })
+
+        call.on('error', () => {
+          clearCall(theirId)
+        })
       } catch {
-        /* peer not ready */
+        clearCall(theirId)
       }
     },
-    [addRemotePeer, removeRemotePeer]
+    [addRemotePeer, removeRemotePeer, clearCall, hasRemoteStream]
   )
 
   useEffect(() => {
@@ -219,7 +255,7 @@ export function PartyVideoProvider({ children }) {
         setAudioOnly(!hasVideoTrack(stream))
         setLocalStream(stream)
 
-        peer = new Peer(myId, { debug: 0, config: { iceServers: ICE_SERVERS } })
+        peer = new Peer(myId, PEER_OPTIONS)
         peerRef.current = peer
 
         peer.on('open', () => {
@@ -250,11 +286,11 @@ export function PartyVideoProvider({ children }) {
 
       try {
         const { default: Peer } = await import('peerjs')
-        stream = createEmptyStream()
+        stream = createRecvOnlyStream()
         setAudioOnly(false)
         setLocalStream(stream)
 
-        peer = new Peer(myId, { debug: 0, config: { iceServers: ICE_SERVERS } })
+        peer = new Peer(myId, PEER_OPTIONS)
         peerRef.current = peer
 
         peer.on('open', () => {
@@ -282,8 +318,7 @@ export function PartyVideoProvider({ children }) {
 
     return () => {
       cancelled = true
-      Object.values(callsRef.current).forEach((c) => c?.close())
-      callsRef.current = {}
+      Object.keys(callsRef.current).forEach((id) => clearCall(id))
       if (peerRef.current) {
         peerRef.current.destroy()
         peerRef.current = null
@@ -305,54 +340,20 @@ export function PartyVideoProvider({ children }) {
     isDisplayMode,
     persistJoined,
     wireIncomingCall,
+    clearCall,
   ])
 
+  /** Phones publish to the TV only (hub-and-spoke). TV passively receives. */
   useEffect(() => {
-    if (!ready || !peerRef.current || !localStream || !roomId) return
+    if (!ready || !localStream || !roomId || !tvPeerId) return undefined
+    if (isDisplayMode) return undefined
 
-    if (isDisplayMode) {
-      for (const player of connectedPlayers) {
-        const theirId = safePeerId(roomId, player.id)
-        dialPeer(theirId, player.name, localStream)
-      }
-      return
-    }
+    const publishToTv = () => dialPeer(tvPeerId, 'TV', localStream)
 
-    const displayId = displayPeerId(roomId)
-    dialPeer(displayId, 'TV', localStream)
-
-    for (const player of otherPlayers) {
-      const theirId = safePeerId(roomId, player.id)
-      if (theirId === myId) continue
-      if (myId > theirId) continue
-      dialPeer(theirId, player.name, localStream)
-    }
-  }, [ready, roomId, myId, otherPlayers, connectedPlayers, localStream, isDisplayMode, dialPeer])
-
-  useEffect(() => {
-    if (!isDisplayMode || !ready || !localStream || !roomId) return undefined
-
-    const retry = () => {
-      for (const player of connectedPlayers) {
-        const theirId = safePeerId(roomId, player.id)
-        dialPeer(theirId, player.name, localStream)
-      }
-    }
-
-    const id = setInterval(retry, 4000)
+    publishToTv()
+    const id = setInterval(publishToTv, 3000)
     return () => clearInterval(id)
-  }, [isDisplayMode, ready, roomId, connectedPlayers, localStream, dialPeer])
-
-  useEffect(() => {
-    if (isDisplayMode || !ready || !localStream || !roomId) return undefined
-
-    const displayId = displayPeerId(roomId)
-    const retry = () => dialPeer(displayId, 'TV', localStream)
-
-    retry()
-    const id = setInterval(retry, 4000)
-    return () => clearInterval(id)
-  }, [isDisplayMode, ready, roomId, localStream, dialPeer])
+  }, [ready, roomId, tvPeerId, localStream, isDisplayMode, dialPeer])
 
   useEffect(() => {
     if (!localStream || isDisplayMode) return

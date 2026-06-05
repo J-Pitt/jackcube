@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getRoom, setRoom } from '../../../lib/redis'
 import { createGameState } from '../../../lib/gameInit'
+import { getMaxRounds } from '../../../lib/games/registry'
 import { activePlayers } from '../../../lib/playerPresence'
 
 export async function POST(request) {
@@ -32,7 +33,7 @@ export async function POST(request) {
 
     const gameId = room.config?.gameId || 'flappy'
     const nextRound = (room.gameState?.round || 1) + 1
-    const maxRounds = 5
+    const maxRounds = getMaxRounds(gameId)
     if (gameId !== 'flappy' && nextRound > maxRounds) {
       const sorted = [...(room.players || [])].sort(
         (a, b) => (Number(b.score) || 0) - (Number(a.score) || 0)

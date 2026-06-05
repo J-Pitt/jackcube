@@ -68,7 +68,7 @@ export default function GameHostClient({ roomId: roomIdProp }) {
   }
 
   return (
-    <div className="relative pb-[min(50vh,520px)]">
+    <div className="relative pb-[min(42vh,460px)]">
       {game}
       {isTvScreen && (
         <button
@@ -84,7 +84,7 @@ export default function GameHostClient({ roomId: roomIdProp }) {
         onClose={() => setAdultModalOpen(false)}
         onUnlocked={() => router.push('/adult-games')}
       />
-      <div className="pointer-events-none fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pt-2">
+      <div className="pointer-events-none fixed bottom-0 left-0 right-0 z-40 max-h-[55vh] overflow-y-auto px-4 pb-4 pt-2">
         <div className="pointer-events-auto mx-auto max-w-6xl">
           <PartyBottomPanel room={room} roomId={roomId} />
         </div>

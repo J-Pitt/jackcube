@@ -1,9 +1,9 @@
 const GAMES = {
-  flappy: { id: 'flappy', minPlayers: 2, maxPlayers: 8 },
-  truthOrCube: { id: 'truthOrCube', minPlayers: 2, maxPlayers: 8 },
-  fakinIt: { id: 'fakinIt', minPlayers: 3, maxPlayers: 8 },
-  dirtyDrawful: { id: 'dirtyDrawful', minPlayers: 3, maxPlayers: 8 },
-  letMeFinish: { id: 'letMeFinish', minPlayers: 3, maxPlayers: 8 },
+  flappy: { id: 'flappy', minPlayers: 2, maxPlayers: 8, maxRounds: null },
+  truthOrCube: { id: 'truthOrCube', minPlayers: 2, maxPlayers: 8, maxRounds: 10 },
+  fakinIt: { id: 'fakinIt', minPlayers: 3, maxPlayers: 8, maxRounds: 5 },
+  dirtyDrawful: { id: 'dirtyDrawful', minPlayers: 3, maxPlayers: 8, maxRounds: 5 },
+  letMeFinish: { id: 'letMeFinish', minPlayers: 3, maxPlayers: 8, maxRounds: 5 },
 }
 
 const VALID_GAMES = Object.keys(GAMES)
@@ -23,4 +23,9 @@ function validatePlayerCount(gameId, count) {
   return { ok: true }
 }
 
-module.exports = { getGameMeta, validatePlayerCount, VALID_GAMES }
+function getMaxRounds(gameId) {
+  const g = getGameMeta(gameId)
+  return g.maxRounds ?? 5
+}
+
+module.exports = { getGameMeta, validatePlayerCount, getMaxRounds, VALID_GAMES }

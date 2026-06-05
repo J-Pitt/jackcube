@@ -14,9 +14,10 @@ export const ADULT_GAMES = [
   {
     id: 'truthOrCube',
     name: 'Truth or Cube',
-    description: 'Spin the cube — spicy truths & dares on your phone',
+    description: 'Spin the cube — 10 rounds of spicy truths & dares',
     minPlayers: 2,
     maxPlayers: 8,
+    maxRounds: 10,
     mature: true,
   },
   {

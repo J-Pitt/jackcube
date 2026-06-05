@@ -307,7 +307,7 @@ export default function LobbyPage() {
               transition={{ delay: 0.05 }}
             >
               {isHost && session?.screenRole === 'tv' ? (
-                <div className="grid gap-4 lg:grid-cols-2">
+                <div className="flex flex-col gap-4">
                   <HostVideoRail />
                   <PartyChat room={room} roomId={roomId} />
                 </div>

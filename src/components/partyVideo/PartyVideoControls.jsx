@@ -95,7 +95,9 @@ export default function PartyVideoControls({ compact = false, className = '' }) 
         </span>
       )}
       {inCall && compact && (
-        <span className="text-xs text-green-400">Live on TV</span>
+        <span className="text-xs text-green-400">
+          {ready ? 'Live on TV' : 'Connecting to TV…'}
+        </span>
       )}
     </div>
   )
