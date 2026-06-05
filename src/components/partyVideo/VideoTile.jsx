@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef } from 'react'
 import { hasVideoTrack } from '@/lib/media'
 import { attachStream } from '@/lib/partyVideo'
 
-export default function VideoTile({ name, stream, color, compact = false }) {
+export default function VideoTile({ name, stream, color, size = 'default' }) {
   const videoRef = useRef(null)
 
   const setRef = useCallback(
@@ -21,11 +21,16 @@ export default function VideoTile({ name, stream, color, compact = false }) {
     }
   }, [stream])
 
-  const size = compact ? 'h-20 w-28' : 'aspect-video min-h-[100px]'
+  const sizeClass =
+    size === 'hero'
+      ? 'aspect-video min-h-[220px] sm:min-h-[280px]'
+      : size === 'large'
+        ? 'aspect-video min-h-[140px] sm:min-h-[180px]'
+        : 'aspect-video min-h-[100px]'
 
   return (
     <div
-      className={`relative overflow-hidden rounded-xl border-2 bg-cube-surface ${size}`}
+      className={`relative overflow-hidden rounded-xl border-2 bg-cube-surface ${sizeClass}`}
       style={{ borderColor: color || '#6C5CE7' }}
     >
       {hasVideoTrack(stream) ? (
@@ -33,7 +38,7 @@ export default function VideoTile({ name, stream, color, compact = false }) {
       ) : (
         <div className="flex h-full items-center justify-center bg-cube-surface text-2xl">🎤</div>
       )}
-      <span className="absolute bottom-0 left-0 right-0 truncate bg-gradient-to-t from-black/80 to-transparent px-2 py-1 text-[10px] font-medium text-white">
+      <span className="absolute bottom-0 left-0 right-0 truncate bg-gradient-to-t from-black/80 to-transparent px-2 py-1.5 text-xs font-medium text-white">
         {name}
       </span>
     </div>

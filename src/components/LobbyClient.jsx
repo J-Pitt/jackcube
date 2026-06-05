@@ -4,12 +4,13 @@ import { useCallback, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import LobbyVideo from '@/components/LobbyVideo'
+import HostVideoRail from '@/components/partyVideo/HostVideoRail'
 import PlayerList from '@/components/PlayerList'
 import RoomCodeDisplay from '@/components/RoomCodeDisplay'
 import MatureGate, { hasMatureConsent } from '@/components/MatureGate'
 import { useRoomPoll } from '@/hooks/useRoomPoll'
-import { leaveRoom, leaveRoomBeacon, startGame, updateRoomConfig } from '@/lib/roomApi'
-import { clearRejoin, loadRejoin, saveRejoin } from '@/lib/rejoin'
+import { leaveRoom, startGame, updateRoomConfig } from '@/lib/roomApi'
+import { clearRejoin, getRejoinPath, loadRejoin, saveRejoin } from '@/lib/rejoin'
 import Link from 'next/link'
 import {
   FAMILY_GAMES,
@@ -82,9 +83,7 @@ export default function LobbyPage() {
   useEffect(() => {
     if (room?.phase && room.phase !== 'lobby') {
       const saved = loadRejoin()
-      const isHost = saved?.playerId === room.hostId
-      const path = isHost ? '/game' : '/play'
-      router.push(`${path}?roomId=${encodeURIComponent(roomId)}`)
+      router.push(getRejoinPath(saved, room.phase))
     }
   }, [room?.phase, room?.hostId, roomId, router])
 
@@ -95,16 +94,6 @@ export default function LobbyPage() {
     clearRejoin()
     router.push('/')
   }, [session, router])
-
-  useEffect(() => {
-    const onUnload = () => {
-      if (session?.roomId && session?.playerId) {
-        leaveRoomBeacon(session.roomId, session.playerId)
-      }
-    }
-    window.addEventListener('pagehide', onUnload)
-    return () => window.removeEventListener('pagehide', onUnload)
-  }, [session])
 
   async function handleGameChange(gameId) {
     setSelectedGame(gameId)
@@ -169,8 +158,9 @@ export default function LobbyPage() {
     session?.isHost === true || session?.playerId === room?.hostId
   const myPlayer = room?.players?.find((p) => p.id === session?.playerId)
   const playerNames = dedupePlayersById(room?.players || [])
+  const connectedCount = playerNames.filter((p) => !p.disconnectedAt).length
   const meta = getGameMeta(selectedGame)
-  const countOk = validatePlayerCount(selectedGame, playerNames.length).ok
+  const countOk = validatePlayerCount(selectedGame, connectedCount).ok
 
   return (
     <MatureGate required={meta.mature}>
@@ -308,7 +298,7 @@ export default function LobbyPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 }}
             >
-              <LobbyVideo />
+              {isHost && session?.screenRole === 'tv' ? <HostVideoRail /> : <LobbyVideo />}
             </motion.div>
           </div>
         )}

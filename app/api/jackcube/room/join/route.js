@@ -9,6 +9,7 @@ import {
   MAX_PLAYERS,
 } from '../../../lib/redis'
 import { dedupePlayers, findPlayerByName } from '../../../lib/players'
+import { activePlayers, markConnected } from '../../../lib/playerPresence'
 
 export async function POST(request) {
   try {
@@ -36,19 +37,15 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'Room not found' }, { status: 404 })
     }
 
-    if (room.phase !== 'lobby') {
-      return NextResponse.json(
-        { success: false, error: 'Game already started — room is locked' },
-        { status: 403 }
-      )
-    }
-
     let players = dedupePlayers(Array.isArray(room.players) ? [...room.players] : [])
     const name = String(playerName).trim()
+    const inLobby = room.phase === 'lobby'
 
     const existing = findPlayerByName(players, name)
     if (existing) {
-      room.players = players
+      const wasDisconnected = !!existing.disconnectedAt
+      room.players = markConnected(players, existing.id)
+      room.updatedAt = new Date().toISOString()
       await setRoom(roomId, room)
       return NextResponse.json({
         success: true,
@@ -57,14 +54,25 @@ export async function POST(request) {
         mode: room.mode,
         hostId: room.hostId,
         phase: room.phase,
-        players,
+        players: room.players,
         config: room.config,
         myPlayerId: existing.id,
         isHost: existing.id === room.hostId,
+        reconnected: wasDisconnected,
       })
     }
 
-    if (players.length >= MAX_PLAYERS) {
+    if (!inLobby) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Game in progress — rejoin with the same name you used before',
+        },
+        { status: 403 }
+      )
+    }
+
+    if (activePlayers(players).length >= MAX_PLAYERS) {
       return NextResponse.json({ success: false, error: 'Room is full' }, { status: 403 })
     }
 

@@ -28,6 +28,12 @@ export async function POST(request) {
     if (!player) {
       return NextResponse.json({ success: false, error: 'Player not in room' }, { status: 403 })
     }
+    if (player.disconnectedAt) {
+      return NextResponse.json(
+        { success: false, error: 'Reconnect with your name to continue playing' },
+        { status: 403 }
+      )
+    }
 
     const gameId = room.config?.gameId || 'flappy'
     const gs = room.gameState || {}

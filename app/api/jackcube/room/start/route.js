@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getRoom, setRoom } from '../../../lib/redis'
 import { validatePlayerCount } from '../../../lib/games/registry'
 import { createGameState } from '../../../lib/gameInit'
+import { activePlayers } from '../../../lib/playerPresence'
 
 export async function POST(request) {
   try {
@@ -26,7 +27,7 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'Game already started' }, { status: 400 })
     }
 
-    const players = room.players || []
+    const players = activePlayers(room.players || [])
     const gameId = room.config?.gameId || 'flappy'
     const validation = validatePlayerCount(gameId, players.length)
     if (!validation.ok) {

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getRoom, setRoom } from '../../../lib/redis'
 import { createGameState } from '../../../lib/gameInit'
+import { activePlayers } from '../../../lib/playerPresence'
 
 export async function POST(request) {
   try {
@@ -48,7 +49,7 @@ export async function POST(request) {
     }
 
     room.phase = 'countdown'
-    room.gameState = createGameState(gameId, room.players || [], room, nextRound)
+    room.gameState = createGameState(gameId, activePlayers(room.players || []), room, nextRound)
     if (gameId !== 'flappy') {
       room.gameState.countdownStartedAt = new Date().toISOString()
     }

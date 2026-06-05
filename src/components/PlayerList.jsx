@@ -8,10 +8,13 @@ export default function PlayerList({ players, hostId, myPlayerId }) {
       {players.map((player) => {
         const isMe = player.id === myPlayerId
         const isHost = player.id === hostId
+        const isAway = !!player.disconnectedAt
         return (
           <li
             key={player.id}
-            className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3"
+            className={`flex items-center gap-3 rounded-xl border px-4 py-3 ${
+              isAway ? 'border-white/5 bg-white/[0.02] opacity-60' : 'border-white/10 bg-white/5'
+            }`}
           >
             <span
               className="h-3 w-3 shrink-0 rounded-full ring-2 ring-white/20"
@@ -26,7 +29,12 @@ export default function PlayerList({ players, hostId, myPlayerId }) {
                 <span className="ml-2 text-xs text-white/50">(you)</span>
               ) : null}
             </span>
-            {isHost && !isMe && (
+            {isAway && (
+              <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-white/50">
+                Away
+              </span>
+            )}
+            {isHost && !isMe && !isAway && (
               <span className="rounded-full bg-cube-violet/30 px-2 py-0.5 text-xs font-semibold text-cube-violet">
                 Host
               </span>

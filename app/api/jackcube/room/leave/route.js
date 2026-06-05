@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getRoom, setRoom } from '../../../lib/redis'
+import { markDisconnected, sanitizeGameOnDisconnect } from '../../../lib/playerPresence'
 
 export async function POST(request) {
   try {
@@ -22,12 +23,12 @@ export async function POST(request) {
       return NextResponse.json({ success: true, left: false, players })
     }
 
-    players.splice(idx, 1)
-    room.players = players
+    room.players = markDisconnected(players, playerId)
+    room.gameState = sanitizeGameOnDisconnect(room, playerId)
     room.updatedAt = new Date().toISOString()
     await setRoom(roomId, room)
 
-    return NextResponse.json({ success: true, left: true, players })
+    return NextResponse.json({ success: true, left: true, players: room.players })
   } catch (err) {
     return NextResponse.json(
       { success: false, error: 'Server error', details: err.message },

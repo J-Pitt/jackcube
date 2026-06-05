@@ -11,6 +11,16 @@ export function safePeerId(roomId, playerId) {
   return `${safeRoom}_${safePlayer}`
 }
 
+/** Receive-only peer for the TV / main screen — separate from any player id. */
+export function displayPeerId(roomId) {
+  const safeRoom = String(roomId || 'room').replace(/[^a-zA-Z0-9]/g, '')
+  return `${safeRoom}_display`
+}
+
+export function isDisplayPeerId(peerId, roomId) {
+  return peerId === displayPeerId(roomId)
+}
+
 export function displayNameFromPeerId(peerId, roomId, players) {
   const match = players.find((p) => safePeerId(roomId, p.id) === peerId)
   return match?.name || peerId.split('_').slice(-1)[0] || 'Player'

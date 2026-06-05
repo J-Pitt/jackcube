@@ -12,13 +12,36 @@ export default function PartyVideoControls({ compact = false, className = '' }) 
     error,
     mediaBlocked,
     inCall,
+    isDisplayMode,
+    remotePeers,
     toggleJoined,
     setMuted,
     setCameraOff,
     myPlayerId,
   } = usePartyVideo()
 
-  if (!myPlayerId) return null
+  if (!myPlayerId && !isDisplayMode) return null
+
+  if (isDisplayMode) {
+    return (
+      <div className={`flex flex-wrap items-center gap-2 ${className}`}>
+        {inCall ? (
+          <span className="text-xs text-green-400">
+            {remotePeers.length > 0
+              ? `${remotePeers.length} on screen`
+              : 'Listening for cameras…'}
+          </span>
+        ) : (
+          <span className="text-xs text-white/40">Connecting party cam…</span>
+        )}
+        {error && (
+          <span className="text-xs text-cube-danger" role="alert">
+            {error}
+          </span>
+        )}
+      </div>
+    )
+  }
 
   if (mediaBlocked) {
     return (

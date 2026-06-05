@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { joinRoom } from '@/lib/roomApi'
-import { saveRejoin } from '@/lib/rejoin'
+import { getRejoinPath, saveRejoin } from '@/lib/rejoin'
 
 function JoinForm() {
   const router = useRouter()
@@ -22,15 +22,16 @@ function JoinForm() {
     setLoading(true)
     try {
       const data = await joinRoom(code, name.trim() || 'Player')
-      saveRejoin({
+      const session = {
         roomId: data.roomId,
         gameCode: data.gameCode || code,
         playerId: data.myPlayerId,
         playerName: name.trim() || 'Player',
         isHost: data.isHost === true,
         mode: data.mode,
-      })
-      router.push(`/lobby?roomId=${encodeURIComponent(data.roomId)}`)
+      }
+      saveRejoin(session)
+      router.push(getRejoinPath(session, data.phase || 'lobby'))
     } catch (err) {
       setError(err.message || 'Could not join room')
     } finally {
@@ -43,7 +44,8 @@ function JoinForm() {
       <p className="text-sm uppercase tracking-widest text-cube-cyan">Join a party</p>
       <h1 className="font-display text-3xl font-bold text-white">Enter room code</h1>
       <p className="mt-2 text-sm text-white/50">
-        Get the 4-letter code from the host screen or invite link.
+        Get the 4-letter code from the host screen or invite link. Use the same name to rejoin a
+        game in progress.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-5">

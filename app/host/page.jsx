@@ -37,6 +37,7 @@ function HostForm() {
         playerName: name.trim() || 'Host',
         isHost: true,
         mode: data.mode,
+        screenRole: 'tv',
       })
       router.push(`/lobby?roomId=${encodeURIComponent(data.roomId)}`)
     } catch (err) {

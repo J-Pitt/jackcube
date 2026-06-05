@@ -82,8 +82,8 @@ export default function GameHostClient({ roomId: roomIdProp }) {
         onClose={() => setAdultModalOpen(false)}
         onUnlocked={() => router.push('/adult-games')}
       />
-      <div className="pointer-events-none fixed bottom-4 left-4 right-4 z-50 mx-auto max-w-5xl">
-        <div className="pointer-events-auto">
+      <div className="pointer-events-none fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pt-2">
+        <div className="pointer-events-auto mx-auto max-w-6xl">
           <HostVideoRail />
         </div>
       </div>

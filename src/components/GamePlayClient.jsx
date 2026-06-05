@@ -49,6 +49,7 @@ export default function GamePlayClient({ roomId: roomIdProp }) {
   const phase = room?.phase
   const players = room?.players || []
   const player = players.find((p) => p.id === playerId)
+  const isHost = playerId === room?.hostId
   const bird = room?.gameState?.flappy?.birds?.[playerId]
 
   useEffect(() => {
@@ -117,6 +118,11 @@ export default function GamePlayClient({ roomId: roomIdProp }) {
       <div className="relative min-h-screen">
         {phase !== 'lobby' && (
           <div className="sticky top-0 z-40 border-b border-white/10 bg-cube-bg/95 px-4 py-2 backdrop-blur">
+            {isHost && (
+              <p className="mb-2 text-center text-xs text-white/50">
+                Host: join video here — your camera shows on the main screen.
+              </p>
+            )}
             <PartyVideoControls compact />
           </div>
         )}

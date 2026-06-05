@@ -5,8 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Suspense, useEffect, useState } from 'react'
 import AdultGamesPasswordModal from '@/components/AdultGamesPasswordModal'
-import { getMultiplayerStatus } from '@/lib/roomApi'
-import { loadRejoin } from '@/lib/rejoin'
+import { getMultiplayerStatus, getRoom } from '@/lib/roomApi'
+import { getRejoinPath, loadRejoin } from '@/lib/rejoin'
 import { isAdultUnlocked } from '@/lib/adultAccess'
 
 function HomeContent() {
@@ -14,11 +14,18 @@ function HomeContent() {
   const searchParams = useSearchParams()
   const [redisOk, setRedisOk] = useState(null)
   const [saved, setSaved] = useState(null)
+  const [rejoinHref, setRejoinHref] = useState(null)
   const [adultModalOpen, setAdultModalOpen] = useState(false)
 
   useEffect(() => {
     getMultiplayerStatus().then((s) => setRedisOk(s.available))
-    setSaved(loadRejoin())
+    const rejoin = loadRejoin()
+    setSaved(rejoin)
+    if (rejoin?.roomId) {
+      getRoom(rejoin.roomId)
+        .then((room) => setRejoinHref(getRejoinPath(rejoin, room.phase)))
+        .catch(() => setRejoinHref(getRejoinPath(rejoin, 'lobby')))
+    }
     if (searchParams.get('adult') === 'locked') {
       setAdultModalOpen(true)
     }
@@ -56,9 +63,9 @@ function HomeContent() {
         </div>
       )}
 
-      {saved?.roomId && (
+      {saved?.roomId && rejoinHref && (
         <Link
-          href={`/lobby?roomId=${encodeURIComponent(saved.roomId)}`}
+          href={rejoinHref}
           className="mb-8 w-full max-w-md rounded-2xl border border-cube-cyan/40 bg-cube-cyan/10 px-6 py-4 text-cube-cyan transition hover:bg-cube-cyan/15"
         >
           Rejoin room <strong>{saved.gameCode}</strong> as {saved.playerName}
