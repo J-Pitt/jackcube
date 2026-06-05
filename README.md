@@ -7,7 +7,7 @@ Built for **AWS Amplify** (Next.js API routes + Upstash Redis).
 ## Quick start
 
 ```bash
-cd src/components/jackCube
+cd ~/jackcube
 cp env.example .env.local
 # Add UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN
 npm install
