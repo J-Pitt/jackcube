@@ -6,6 +6,9 @@ const questionsDeck = require('../../../src/content/decks/letMeFinish/questions.
 const challengerDeck = require('../../../src/content/decks/letMeFinish/challengerPrompts.json')
 const tocTruthsDeck = require('../../../src/content/decks/truthOrCube/truths.json')
 const tocDaresDeck = require('../../../src/content/decks/truthOrCube/dares.json')
+const captionClashDeck = require('../../../src/content/decks/captionClash/prompts.json')
+const bluffBoxDeck = require('../../../src/content/decks/bluffBox/prompts.json')
+const triviaTossDeck = require('../../../src/content/decks/triviaToss/questions.json')
 
 const DECKS = {
   'fakinIt/behavior': behaviorDeck,
@@ -16,6 +19,9 @@ const DECKS = {
   'letMeFinish/challengerPrompts': challengerDeck,
   'truthOrCube/truths': tocTruthsDeck,
   'truthOrCube/dares': tocDaresDeck,
+  'captionClash/prompts': captionClashDeck,
+  'bluffBox/prompts': bluffBoxDeck,
+  'triviaToss/questions': triviaTossDeck,
 }
 
 function pickRandomItem(deckKey, { excludeIds = [], remoteOnly = false } = {}) {

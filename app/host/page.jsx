@@ -4,16 +4,15 @@ import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createRoom } from '@/lib/roomApi'
 import { saveRejoin } from '@/lib/rejoin'
+import { getGameMeta } from '@/lib/games/registry'
 
 function HostForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const mode = searchParams.get('mode') === 'local' ? 'local' : 'online'
   const gameIdParam = searchParams.get('gameId')
-  const validGameIds = ['flappy', 'truthOrCube', 'fakinIt', 'dirtyDrawful', 'letMeFinish']
-  const gameId = validGameIds.includes(gameIdParam) ? gameIdParam : 'flappy'
-  const isAdult = searchParams.get('adult') === '1' || gameId !== 'flappy'
-
+  const meta = getGameMeta(gameIdParam || 'captionClash')
+  const gameId = meta.id
   const [name, setName] = useState('')
   const [targetScore, setTargetScore] = useState(5000)
   const [loading, setLoading] = useState(false)
@@ -28,7 +27,7 @@ function HostForm() {
         hostName: name.trim() || 'Host',
         mode,
         targetScore,
-        gameId: isAdult ? gameId : 'flappy',
+        gameId,
       })
       saveRejoin({
         roomId: data.roomId,
@@ -50,7 +49,7 @@ function HostForm() {
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6 py-12">
       <p className="text-sm uppercase tracking-widest text-cube-violet">Host a party</p>
       <h1 className="font-display text-3xl font-bold text-white">
-        {mode === 'local' ? 'Local party' : 'Online party'}
+        {meta.name}
       </h1>
       <p className="mt-2 text-sm text-white/50">
         {mode === 'local'

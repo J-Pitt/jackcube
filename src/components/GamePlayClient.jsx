@@ -2,16 +2,18 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import FlappyController from '@/components/flappy/FlappyController'
 import TruthPlay from '@/components/truthOrCube/TruthPlay'
 import FakinPlay from '@/components/fakinIt/FakinPlay'
 import DrawfulPlay from '@/components/dirtyDrawful/DrawfulPlay'
 import FinishPlay from '@/components/letMeFinish/FinishPlay'
+import CaptionPlay from '@/components/captionClash/CaptionPlay'
+import BluffPlay from '@/components/bluffBox/BluffPlay'
+import TriviaPlay from '@/components/triviaToss/TriviaPlay'
+import ReactionPlay from '@/components/reactionRush/ReactionPlay'
 import MatureGate from '@/components/MatureGate'
 import PartyVideoControls from '@/components/partyVideo/PartyVideoControls'
 import PartyChat from '@/components/partyVideo/PartyChat'
 import { useRoomPoll } from '@/hooks/useRoomPoll'
-import { sendFlap } from '@/lib/roomApi'
 import { loadRejoin } from '@/lib/rejoin'
 import { GoHomeButton } from '@/components/PartyGameLayout'
 import { getGameMeta } from '@/lib/games/registry'
@@ -60,13 +62,11 @@ export default function GamePlayClient({ roomId: roomIdProp }) {
   const playerId = session?.playerId
 
   const { room } = useRoomPoll(roomId, 800)
-  const gameId = room?.config?.gameId || 'flappy'
+  const gameId = room?.config?.gameId || 'captionClash'
   const meta = getGameMeta(gameId)
   const phase = room?.phase
   const players = room?.players || []
-  const player = players.find((p) => p.id === playerId)
   const isHost = playerId === room?.hostId
-  const bird = room?.gameState?.flappy?.birds?.[playerId]
 
   useEffect(() => {
     if (phase === 'lobby') {
@@ -82,51 +82,25 @@ export default function GamePlayClient({ roomId: roomIdProp }) {
     )
   }
 
+  const playProps = { room, roomId, playerId }
+
   const content = (() => {
     if (phase === 'leaderboard' || phase === 'victory') {
       return <RoundResultsScreen room={room} playerId={playerId} phase={phase} />
     }
 
-    if (gameId === 'truthOrCube') {
-      return <TruthPlay room={room} roomId={roomId} playerId={playerId} />
-    }
-    if (gameId === 'fakinIt') {
-      return <FakinPlay room={room} roomId={roomId} playerId={playerId} players={players} />
-    }
-    if (gameId === 'dirtyDrawful') {
-      return <DrawfulPlay room={room} roomId={roomId} playerId={playerId} />
-    }
-    if (gameId === 'letMeFinish') {
-      return <FinishPlay room={room} roomId={roomId} playerId={playerId} players={players} />
+    const playMap = {
+      truthOrCube: <TruthPlay {...playProps} />,
+      fakinIt: <FakinPlay {...playProps} players={players} />,
+      dirtyDrawful: <DrawfulPlay {...playProps} />,
+      letMeFinish: <FinishPlay {...playProps} players={players} />,
+      captionClash: <CaptionPlay {...playProps} />,
+      bluffBox: <BluffPlay {...playProps} />,
+      triviaToss: <TriviaPlay {...playProps} />,
+      reactionRush: <ReactionPlay {...playProps} />,
     }
 
-    if (phase === 'countdown') {
-      return (
-        <main className="flex min-h-screen flex-col items-center justify-center bg-cube-bg p-6 text-center">
-          <p className="text-sm uppercase tracking-widest text-cube-violet">Cube Flap</p>
-          <p className="mt-4 font-display text-5xl font-bold text-cube-cyan">Get ready!</p>
-          <p className="mt-2 text-white/50">Round {room?.gameState?.round ?? 1} starting…</p>
-        </main>
-      )
-    }
-
-    if (phase === 'playing') {
-      return (
-        <FlappyController
-          player={player}
-          bird={bird}
-          onFlap={async () => {
-            await sendFlap(roomId, playerId)
-          }}
-        />
-      )
-    }
-
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-cube-bg p-6 text-white/50">
-        Waiting for host…
-      </main>
-    )
+    return playMap[gameId] || playMap.captionClash
   })()
 
   return (

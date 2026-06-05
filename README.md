@@ -16,38 +16,44 @@ npm run dev
 
 Open [http://localhost:5180](http://localhost:5180)
 
-## 18+ mature games
+## Party games (2–5 players)
 
-Three adult party games ship with curated JSON prompt decks under `src/content/decks/`:
-
-Adult games are **password-locked** on the home screen and TV host view. Set `ADULT_GAMES_PASSWORD` on the server (default dev password: `cube18`).
+Jackbox & Mario Party-inspired games — pick from [/games](http://localhost:5180/games) or the lobby:
 
 | Game | ID | Players | TV | Phone |
 |------|-----|---------|-----|-------|
-| Cube Flap | `flappy` | 2–8 | Host sim | Tap to flap |
-| Truth or Cube | `truthOrCube` | 2–8 | Cube spin, truth/dare | Target: prompt + done/chicken |
-| Fakin' It All Night Long | `fakinIt` | 3–8 | Timer, votes, reveal | Secret prompt / faker bluff |
-| Dirty Drawful | `dirtyDrawful` | 3–8 | Live drawing, guesses | Draw + guess |
-| Let Me Finish | `letMeFinish` | 3–8 | Question, ticker, votes | Pitch / objections / vote |
+| Caption Clash | `captionClash` | 2–5 | Prompt, answers, votes | Write + vote (Quiplash-style) |
+| Bluff Box | `bluffBox` | 2–5 | Fill-in-blank, reveal | Submit bluffs + guess truth (Fibbage-style) |
+| Trivia Toss | `triviaToss` | 2–5 | Question + reveal | Multiple-choice trivia |
+| Reaction Rush | `reactionRush` | 2–5 | WAIT… GO! | Reflex tap mini-game |
 
-**Consent:** Mature games show an 18+ gate before lobby/play. Content is for consenting adults only.
+## 18+ mature games
 
-**Privacy:** Secret prompts (faker instructions, draw prompts) are stored server-side in `gameState.secrets` and exposed only via `GET /api/jackcube/room/me?roomId=&playerId=`. Public room polls never include secrets until the reveal phase.
+Adult party games ship with curated JSON prompt decks under `src/content/decks/`. Password-locked on the home screen. Set `ADULT_GAMES_PASSWORD` on the server (default dev password: `cube18`).
 
-**Remote play:** Online Fakin' It defaults to `remotePlaySafe` deck items and on-phone gesture buttons. Host can enable "spicy remote" in lobby to allow physical prompts.
+| Game | ID | Players |
+|------|-----|---------|
+| Truth or Cube | `truthOrCube` | 2–8 |
+| Fakin' It All Night Long | `fakinIt` | 3–8 |
+| Dirty Drawful | `dirtyDrawful` | 3–8 |
+| Let Me Finish | `letMeFinish` | 3–8 |
+
+**Consent:** Mature games show an 18+ gate before lobby/play.
+
+**Privacy:** Secret prompts are stored in `gameState.secrets` and exposed via `GET /api/jackcube/room/me`.
 
 ## Flow
 
-1. **Home** — pick Local or Online party, or unlock **Adult games** (password) → `/adult-games`
+1. **Home** — pick Local/Online party, browse **Party games**, or unlock **Adult games**
 2. **Host** — create room, get QR + 4-letter code
 3. **Join** — `/join?code=ABCD` on phones
 4. **Lobby** — pick game, player list, optional WebRTC video, host starts
 5. **Game** — `/game` on TV, `/play` on phones (3-2-1 countdown, rounds, scoring)
-6. **Leaderboard** — 3D podium after each round; first to target score wins (or 5 rounds for party games)
+6. **Leaderboard** — after each round; first to target score wins (5 rounds for party games)
 
 ## Lobby video call
 
-WebRTC via PeerJS (browser mesh, Google STUN). Optional — separate from game sync.
+WebRTC via PeerJS (hub-and-spoke: phones publish to TV). Optional — separate from game sync.
 
 ## API routes
 
@@ -55,25 +61,15 @@ WebRTC via PeerJS (browser mesh, Google STUN). Optional — separate from game s
 |-------|--------|---------|
 | `/api/jackcube/room` | GET | Poll room state (sanitized) |
 | `/api/jackcube/room` | POST | Create room / host sync state |
-| `/api/jackcube/adult/verify` | POST | Unlock adult games catalog (password) |
 | `/api/jackcube/room/me` | GET | Private per-player view |
 | `/api/jackcube/room/config` | POST | Host: gameId, spicyRemote, targetScore |
 | `/api/jackcube/room/join` | POST | Join by code |
-| `/api/jackcube/room/leave` | POST | Leave room |
 | `/api/jackcube/room/start` | POST | Host starts game |
-| `/api/jackcube/room/input` | POST | Phone actions (flap, vote, draw, etc.) |
+| `/api/jackcube/room/input` | POST | Phone actions (vote, draw, tap, etc.) |
 | `/api/jackcube/room/advance` | POST | Host advances party-game steps |
-| `/api/jackcube/room/end-round` | POST | Host ends round (Flappy) |
 | `/api/jackcube/room/next-round` | POST | Host starts next round |
 
 Redis key prefix: `jackcube:`
-
-## Testing locally
-
-1. `npm run dev`
-2. Open host at `/host` → lobby → choose a game → start with 3+ browser tabs on `/join` + `/play`
-3. Confirm secrets only on `/play` for assigned roles; TV shows public phases only
-4. Regression: select **Cube Flap** in lobby and play a full round
 
 ## Amplify deploy
 

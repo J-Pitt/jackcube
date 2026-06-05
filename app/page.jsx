@@ -98,6 +98,17 @@ function HomeContent() {
         </Link>
       </div>
 
+      <Link
+        href="/games"
+        className="mt-10 w-full max-w-md rounded-2xl border border-cube-cyan/30 bg-cube-cyan/5 px-6 py-5 text-left transition hover:border-cube-cyan/50 hover:bg-cube-cyan/10"
+      >
+        <span className="text-2xl">🎮</span>
+        <span className="mt-2 block font-display text-lg font-bold text-white">Party games</span>
+        <span className="text-sm text-white/50">
+          Caption Clash, Bluff Box, Trivia Toss &amp; Reaction Rush · 2–5 players
+        </span>
+      </Link>
+
       <button
         type="button"
         onClick={openAdultGames}

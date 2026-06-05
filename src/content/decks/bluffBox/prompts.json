@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "gameId": "bluffBox",
+  "category": "prompts",
+  "locale": "en-US",
+  "items": [
+    { "id": "bb-001", "text": "The average person spends ___ hours per year looking for the TV remote.", "answer": "4.5" },
+    { "id": "bb-002", "text": "Honey never spoils. Archaeologists found edible honey in Egyptian tombs over ___ years old.", "answer": "3,000" },
+    { "id": "bb-003", "text": "Octopuses have ___ hearts.", "answer": "3" },
+    { "id": "bb-004", "text": "A group of flamingos is called a ___.", "answer": "flamboyance" },
+    { "id": "bb-005", "text": "Bananas are berries, but strawberries are ___.", "answer": "not berries" },
+    { "id": "bb-006", "text": "The shortest war in history lasted ___ minutes.", "answer": "38" },
+    { "id": "bb-007", "text": "Wombat poop is shaped like ___.", "answer": "cubes" },
+    { "id": "bb-008", "text": "Scotland's national animal is the ___.", "answer": "unicorn" },
+    { "id": "bb-009", "text": "A snail can sleep for up to ___ years.", "answer": "3" },
+    { "id": "bb-010", "text": "The inventor of the Pringles can is buried in one.", "answer": "true", "altAnswers": ["yes", "correct"] },
+    { "id": "bb-011", "text": "Cleopatra lived closer in time to the Moon landing than to the building of the Great Pyramid.", "answer": "true", "altAnswers": ["yes", "correct"] },
+    { "id": "bb-012", "text": "Hot water freezes faster than cold water. Scientists call this the ___ effect.", "answer": "Mpemba" }
+  ]
+}

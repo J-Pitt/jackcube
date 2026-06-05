@@ -28,7 +28,7 @@ export async function POST(request) {
     }
 
     const players = activePlayers(room.players || [])
-    const gameId = room.config?.gameId || 'flappy'
+    const gameId = room.config?.gameId || 'captionClash'
     const validation = validatePlayerCount(gameId, players.length)
     if (!validation.ok) {
       return NextResponse.json({ success: false, error: validation.error }, { status: 400 })
@@ -36,9 +36,7 @@ export async function POST(request) {
 
     room.phase = 'countdown'
     room.gameState = createGameState(gameId, players, room, 1)
-    if (gameId !== 'flappy') {
-      room.gameState.countdownStartedAt = new Date().toISOString()
-    }
+    room.gameState.countdownStartedAt = new Date().toISOString()
     room.updatedAt = new Date().toISOString()
     await setRoom(roomId, room)
 

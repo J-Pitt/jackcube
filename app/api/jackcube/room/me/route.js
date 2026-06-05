@@ -25,7 +25,7 @@ export async function GET(request) {
       return NextResponse.json({ success: false, error: 'Player not in room' }, { status: 403 })
     }
 
-    const gameId = room.config?.gameId || 'flappy'
+    const gameId = room.config?.gameId || 'captionClash'
     const secrets = room.gameState?.secrets || {}
     const payload = { success: true, gameId, phase: room.phase, playerId }
 
@@ -91,8 +91,44 @@ export async function GET(request) {
       }
     }
 
-    if (gameId === 'flappy' && room.gameState?.flappy?.birds?.[playerId]) {
-      payload.bird = room.gameState.flappy.birds[playerId]
+    if (gameId === 'captionClash' && room.gameState?.captionClash) {
+      const cc = room.gameState.captionClash
+      payload.step = cc.step
+      payload.promptText = cc.promptText
+      payload.submitted = !!cc.submissions?.[playerId]
+      payload.voted = !!cc.votes?.[playerId]
+      if (cc.step === 'vote') {
+        payload.voteOptions = Object.entries(cc.submissions || {})
+          .filter(([pid]) => pid !== playerId)
+          .map(([pid, text]) => ({ playerId: pid, text }))
+      }
+    }
+
+    if (gameId === 'bluffBox' && room.gameState?.bluffBox) {
+      const bb = room.gameState.bluffBox
+      payload.step = bb.step
+      payload.promptText = bb.promptText
+      payload.submitted = !!bb.bluffs?.[playerId]
+      payload.guessed = !!bb.guesses?.[playerId]
+      if (bb.step === 'guess') {
+        payload.choices = bb.choices || []
+      }
+    }
+
+    if (gameId === 'triviaToss' && room.gameState?.triviaToss) {
+      const tt = room.gameState.triviaToss
+      payload.step = tt.step
+      payload.questionText = tt.questionText
+      payload.options = tt.options
+      payload.answered = tt.answers?.[playerId] !== undefined
+      if (tt.step === 'reveal') payload.correctIndex = tt.correctIndex
+    }
+
+    if (gameId === 'reactionRush' && room.gameState?.reactionRush) {
+      const rr = room.gameState.reactionRush
+      payload.step = rr.step
+      payload.tapped = !!rr.taps?.[playerId]
+      payload.early = !!rr.earlyTappers?.[playerId]
     }
 
     return NextResponse.json(payload)

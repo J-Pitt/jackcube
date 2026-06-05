@@ -37,7 +37,7 @@ function sanitizeGameOnDisconnect(room, playerId) {
   if (!room?.gameState || room.phase !== 'playing') return room.gameState
 
   const gs = { ...room.gameState }
-  const gameId = room.config?.gameId || 'flappy'
+  const gameId = room.config?.gameId || 'captionClash'
   const players = room.players || []
 
   if (gameId === 'truthOrCube' && gs.truthOrCube) {
@@ -78,14 +78,6 @@ function sanitizeGameOnDisconnect(room, playerId) {
       lmf.endsAt = endsIn(ROUND_MS.letMeFinish.vote)
     }
     gs.letMeFinish = lmf
-  }
-
-  if (gameId === 'flappy' && gs.flappy?.birds) {
-    const birds = { ...gs.flappy.birds }
-    if (birds[playerId]) {
-      birds[playerId] = { ...birds[playerId], alive: false }
-    }
-    gs.flappy = { ...gs.flappy, birds }
   }
 
   return gs

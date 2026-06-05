@@ -1,11 +1,15 @@
 import { NextResponse } from 'next/server'
 import { getRoom, setRoom } from '../../../lib/redis'
-import { endsIn, ROUND_MS } from '../../../lib/gameInit'
+import { endsIn, ROUND_MS, buildBluffChoices } from '../../../lib/gameInit'
 import { pickHostLine } from '../../../lib/content'
 import { scoreFakinItRound } from '../../../lib/games/fakinItScoring'
 import { scoreDirtyDrawfulRound } from '../../../lib/games/dirtyDrawfulScoring'
 import { scoreLetMeFinishRound } from '../../../lib/games/letMeFinishScoring'
 import { scoreTruthOrCubeRound } from '../../../lib/games/truthOrCubeScoring'
+import { scoreCaptionClashRound } from '../../../lib/games/captionClashScoring'
+import { scoreBluffBoxRound } from '../../../lib/games/bluffBoxScoring'
+import { scoreTriviaTossRound } from '../../../lib/games/triviaTossScoring'
+import { scoreReactionRushRound } from '../../../lib/games/reactionRushScoring'
 import { scoreRound, checkVictory } from '../../../lib/scoring'
 
 export async function POST(request) {
@@ -27,10 +31,7 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'Only host can advance' }, { status: 403 })
     }
 
-    const gameId = room.config?.gameId || 'flappy'
-    if (gameId === 'flappy') {
-      return NextResponse.json({ success: false, error: 'Use flappy host loop' }, { status: 400 })
-    }
+    const gameId = room.config?.gameId || 'captionClash'
 
     if (room.phase !== 'playing' && room.phase !== 'countdown') {
       return NextResponse.json({ success: false, error: 'Invalid phase' }, { status: 400 })
@@ -179,6 +180,101 @@ export async function POST(request) {
         return NextResponse.json({ success: true, phase: room.phase, roundResults: results })
       }
       gs.letMeFinish = lmf
+    }
+
+    if (gameId === 'captionClash' && gs.captionClash) {
+      const cc = { ...gs.captionClash }
+
+      if (cc.step === 'write') {
+        cc.step = 'vote'
+        cc.endsAt = endsIn(ROUND_MS.captionClash.vote)
+      } else if (cc.step === 'vote') {
+        cc.step = 'reveal'
+        cc.endsAt = endsIn(ROUND_MS.captionClash.reveal)
+      } else if (cc.step === 'reveal') {
+        const roundScores = scoreCaptionClashRound(cc, room.players || [])
+        const { results, updatedPlayers } = scoreRound(room.players || [], roundScores)
+        room.players = updatedPlayers
+        const winner = checkVictory(updatedPlayers, room.config?.targetScore ?? 5000)
+        room.phase = winner ? 'victory' : 'leaderboard'
+        room.gameState = { ...gs, captionClash: cc, roundResults: results, winnerId: winner?.id || null }
+        room.updatedAt = new Date().toISOString()
+        await setRoom(roomId, room)
+        return NextResponse.json({ success: true, phase: room.phase, roundResults: results })
+      }
+      gs.captionClash = cc
+    }
+
+    if (gameId === 'bluffBox' && gs.bluffBox) {
+      const bb = { ...gs.bluffBox }
+      const sec = secrets.bluffBox || {}
+
+      if (bb.step === 'write') {
+        bb.choices = buildBluffChoices(bb.bluffs || {}, sec.realAnswer, room.players || [])
+        bb.step = 'guess'
+        bb.endsAt = endsIn(ROUND_MS.bluffBox.guess)
+      } else if (bb.step === 'guess') {
+        bb.step = 'reveal'
+        bb.realAnswer = sec.realAnswer
+        bb.endsAt = endsIn(ROUND_MS.bluffBox.reveal)
+      } else if (bb.step === 'reveal') {
+        const roundScores = scoreBluffBoxRound(bb, room.players || [])
+        const { results, updatedPlayers } = scoreRound(room.players || [], roundScores)
+        room.players = updatedPlayers
+        const winner = checkVictory(updatedPlayers, room.config?.targetScore ?? 5000)
+        room.phase = winner ? 'victory' : 'leaderboard'
+        room.gameState = { ...gs, bluffBox: bb, roundResults: results, winnerId: winner?.id || null }
+        room.updatedAt = new Date().toISOString()
+        await setRoom(roomId, room)
+        return NextResponse.json({ success: true, phase: room.phase, roundResults: results })
+      }
+      gs.bluffBox = bb
+    }
+
+    if (gameId === 'triviaToss' && gs.triviaToss) {
+      const tt = { ...gs.triviaToss }
+      const sec = secrets.triviaToss || {}
+
+      if (tt.step === 'question') {
+        tt.step = 'reveal'
+        tt.correctIndex = sec.correctIndex
+        tt.endsAt = endsIn(ROUND_MS.triviaToss.reveal)
+      } else if (tt.step === 'reveal') {
+        const roundScores = scoreTriviaTossRound(tt, room.players || [], sec.correctIndex ?? 0)
+        const { results, updatedPlayers } = scoreRound(room.players || [], roundScores)
+        room.players = updatedPlayers
+        const winner = checkVictory(updatedPlayers, room.config?.targetScore ?? 5000)
+        room.phase = winner ? 'victory' : 'leaderboard'
+        room.gameState = { ...gs, triviaToss: tt, roundResults: results, winnerId: winner?.id || null }
+        room.updatedAt = new Date().toISOString()
+        await setRoom(roomId, room)
+        return NextResponse.json({ success: true, phase: room.phase, roundResults: results })
+      }
+      gs.triviaToss = tt
+    }
+
+    if (gameId === 'reactionRush' && gs.reactionRush) {
+      const rr = { ...gs.reactionRush }
+
+      if (rr.step === 'ready') {
+        rr.step = 'go'
+        rr.goAt = new Date().toISOString()
+        rr.endsAt = endsIn(ROUND_MS.reactionRush.go)
+      } else if (rr.step === 'go') {
+        rr.step = 'reveal'
+        rr.endsAt = endsIn(ROUND_MS.reactionRush.reveal)
+      } else if (rr.step === 'reveal') {
+        const roundScores = scoreReactionRushRound(rr, room.players || [])
+        const { results, updatedPlayers } = scoreRound(room.players || [], roundScores)
+        room.players = updatedPlayers
+        const winner = checkVictory(updatedPlayers, room.config?.targetScore ?? 5000)
+        room.phase = winner ? 'victory' : 'leaderboard'
+        room.gameState = { ...gs, reactionRush: rr, roundResults: results, winnerId: winner?.id || null }
+        room.updatedAt = new Date().toISOString()
+        await setRoom(roomId, room)
+        return NextResponse.json({ success: true, phase: room.phase, roundResults: results })
+      }
+      gs.reactionRush = rr
     }
 
     room.gameState = gs

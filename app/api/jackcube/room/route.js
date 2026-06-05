@@ -11,6 +11,7 @@ import {
   MAX_PLAYERS,
 } from '../../lib/redis'
 import { publicRoom } from '../../lib/sanitizeRoom'
+import { VALID_GAMES } from '../../lib/games/registry'
 
 export async function GET(request) {
   try {
@@ -73,11 +74,7 @@ export async function POST(request) {
     const targetScore = [3000, 5000, 10000].includes(body.targetScore)
       ? body.targetScore
       : 5000
-    const gameId = ['flappy', 'truthOrCube', 'fakinIt', 'dirtyDrawful', 'letMeFinish'].includes(
-      body.gameId
-    )
-      ? body.gameId
-      : 'flappy'
+    const gameId = VALID_GAMES.includes(body.gameId) ? body.gameId : 'captionClash'
 
     const r = getRedis()
     if (!r) {

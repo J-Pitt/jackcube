@@ -1,5 +1,8 @@
 const GAMES = {
-  flappy: { id: 'flappy', minPlayers: 2, maxPlayers: 8, maxRounds: null },
+  captionClash: { id: 'captionClash', minPlayers: 2, maxPlayers: 5, maxRounds: 5 },
+  bluffBox: { id: 'bluffBox', minPlayers: 2, maxPlayers: 5, maxRounds: 5 },
+  triviaToss: { id: 'triviaToss', minPlayers: 2, maxPlayers: 5, maxRounds: 5 },
+  reactionRush: { id: 'reactionRush', minPlayers: 2, maxPlayers: 5, maxRounds: 5 },
   truthOrCube: { id: 'truthOrCube', minPlayers: 2, maxPlayers: 8, maxRounds: 10 },
   fakinIt: { id: 'fakinIt', minPlayers: 3, maxPlayers: 8, maxRounds: 5 },
   dirtyDrawful: { id: 'dirtyDrawful', minPlayers: 3, maxPlayers: 8, maxRounds: 5 },
@@ -9,7 +12,7 @@ const GAMES = {
 const VALID_GAMES = Object.keys(GAMES)
 
 function getGameMeta(gameId) {
-  return GAMES[gameId] || GAMES.flappy
+  return GAMES[gameId] || GAMES.captionClash
 }
 
 function validatePlayerCount(gameId, count) {

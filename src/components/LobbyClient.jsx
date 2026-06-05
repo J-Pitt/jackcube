@@ -14,7 +14,7 @@ import { leaveRoom, startGame, updateRoomConfig } from '@/lib/roomApi'
 import { clearRejoin, getRejoinPath, loadRejoin, saveRejoin } from '@/lib/rejoin'
 import Link from 'next/link'
 import {
-  FAMILY_GAMES,
+  PARTY_GAMES,
   getGameMeta,
   isAdultGame,
   validatePlayerCount,
@@ -38,7 +38,7 @@ export default function LobbyPage() {
   const [session, setSession] = useState(null)
   const [startLoading, setStartLoading] = useState(false)
   const [actionError, setActionError] = useState(null)
-  const [selectedGame, setSelectedGame] = useState('flappy')
+  const [selectedGame, setSelectedGame] = useState('captionClash')
   const [spicyRemote, setSpicyRemote] = useState(false)
 
   useEffect(() => {
@@ -235,7 +235,7 @@ export default function LobbyPage() {
                     </div>
                   ) : (
                     <div className="space-y-2">
-                      {FAMILY_GAMES.map((g) => (
+                      {PARTY_GAMES.map((g) => (
                         <button
                           key={g.id}
                           type="button"
@@ -249,7 +249,9 @@ export default function LobbyPage() {
                           <span className="font-semibold text-white">{g.name}</span>
                           <p className="mt-1 text-xs text-white/50">{g.description}</p>
                           <p className="mt-1 text-xs text-white/30">
-                            {g.minPlayers}–{g.maxPlayers} players
+                            {g.minPlayers === g.maxPlayers
+                              ? `${g.minPlayers} players only`
+                              : `${g.minPlayers}–${g.maxPlayers} players`}
                           </p>
                         </button>
                       ))}
@@ -270,7 +272,7 @@ export default function LobbyPage() {
 
               <div className="mt-6">
                 <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-white/50">
-                  Players ({playerNames.length}/8)
+                  Players ({connectedCount}/{meta.maxPlayers})
                 </h3>
                 <PlayerList
                   players={playerNames}
@@ -289,14 +291,16 @@ export default function LobbyPage() {
                   {startLoading
                     ? 'Starting…'
                     : !countOk
-                      ? `Need ${meta.minPlayers}+ players for ${meta.name}`
+                      ? meta.minPlayers === meta.maxPlayers
+                        ? `Need exactly ${meta.minPlayers} players for ${meta.name}`
+                        : `Need ${meta.minPlayers}+ players for ${meta.name}`
                       : `Start ${meta.name}`}
                 </button>
               )}
 
               {!isHost && (
                 <p className="mt-6 text-center text-sm text-white/50">
-                  Waiting for host to start {getGameMeta(room?.config?.gameId || 'flappy').name}…
+                  Waiting for host to start {getGameMeta(room?.config?.gameId || 'captionClash').name}…
                 </p>
               )}
             </motion.section>

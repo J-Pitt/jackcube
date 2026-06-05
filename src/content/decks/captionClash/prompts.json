@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "gameId": "captionClash",
+  "category": "prompts",
+  "locale": "en-US",
+  "items": [
+    { "id": "cc-001", "text": "The worst superhero power would be…" },
+    { "id": "cc-002", "text": "A rejected Mario Party mini-game:…" },
+    { "id": "cc-003", "text": "The title of your autobiography:…" },
+    { "id": "cc-004", "text": "If aliens visited Earth, they'd be most confused by…" },
+    { "id": "cc-005", "text": "The next Jackbox game should be called…" },
+    { "id": "cc-006", "text": "A terrible name for a restaurant:…" },
+    { "id": "cc-007", "text": "The real reason the dinosaurs went extinct:…" },
+    { "id": "cc-008", "text": "A slogan that would NOT sell cereal:…" },
+    { "id": "cc-009", "text": "The most useless app on your phone:…" },
+    { "id": "cc-010", "text": "If your pet could talk, their first words would be…" },
+    { "id": "cc-011", "text": "A weird thing to yell during a job interview:…" },
+    { "id": "cc-012", "text": "The secret ingredient in grandma's cookies:…" }
+  ]
+}

@@ -2,21 +2,19 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import dynamic from 'next/dynamic'
 import AdultGamesPasswordModal from '@/components/AdultGamesPasswordModal'
 import { isAdultUnlocked } from '@/lib/adultAccess'
 import TruthHost from '@/components/truthOrCube/TruthHost'
 import FakinHost from '@/components/fakinIt/FakinHost'
 import DrawfulHost from '@/components/dirtyDrawful/DrawfulHost'
 import FinishHost from '@/components/letMeFinish/FinishHost'
+import CaptionHost from '@/components/captionClash/CaptionHost'
+import BluffHost from '@/components/bluffBox/BluffHost'
+import TriviaHost from '@/components/triviaToss/TriviaHost'
+import ReactionHost from '@/components/reactionRush/ReactionHost'
 import PartyBottomPanel from '@/components/partyVideo/PartyBottomPanel'
 import { useRoomPoll } from '@/hooks/useRoomPoll'
 import { loadRejoin } from '@/lib/rejoin'
-
-const FlappyHostInner = dynamic(() => import('@/components/flappy/FlappyHostInner'), {
-  ssr: false,
-  loading: () => <p className="p-8 text-white/50">Loading game…</p>,
-})
 
 export default function GameHostClient({ roomId: roomIdProp }) {
   const router = useRouter()
@@ -30,7 +28,7 @@ export default function GameHostClient({ roomId: roomIdProp }) {
   const isHostPlayer =
     session?.isHost === true || session?.playerId === room?.hostId
   const canViewHostScreen = isTvScreen || isHostPlayer
-  const gameId = room?.config?.gameId || 'flappy'
+  const gameId = room?.config?.gameId || 'captionClash'
 
   if (!roomId) {
     return <p className="p-8 text-white/60">No room session.</p>
@@ -46,18 +44,20 @@ export default function GameHostClient({ roomId: roomIdProp }) {
     )
   }
 
-  let game = null
-  if (gameId === 'truthOrCube') {
-    game = <TruthHost room={room} roomId={roomId} hostId={hostId} refresh={refresh} />
-  } else if (gameId === 'fakinIt') {
-    game = <FakinHost room={room} roomId={roomId} hostId={hostId} refresh={refresh} />
-  } else if (gameId === 'dirtyDrawful') {
-    game = <DrawfulHost room={room} roomId={roomId} hostId={hostId} refresh={refresh} />
-  } else if (gameId === 'letMeFinish') {
-    game = <FinishHost room={room} roomId={roomId} hostId={hostId} refresh={refresh} />
-  } else {
-    game = <FlappyHostInner room={room} roomId={roomId} hostId={hostId} refresh={refresh} />
+  const hostProps = { room, roomId, hostId, refresh }
+
+  const gameMap = {
+    truthOrCube: <TruthHost {...hostProps} />,
+    fakinIt: <FakinHost {...hostProps} />,
+    dirtyDrawful: <DrawfulHost {...hostProps} />,
+    letMeFinish: <FinishHost {...hostProps} />,
+    captionClash: <CaptionHost {...hostProps} />,
+    bluffBox: <BluffHost {...hostProps} />,
+    triviaToss: <TriviaHost {...hostProps} />,
+    reactionRush: <ReactionHost {...hostProps} />,
   }
+
+  const game = gameMap[gameId] || gameMap.captionClash
 
   function openAdultCatalog() {
     if (isAdultUnlocked()) {

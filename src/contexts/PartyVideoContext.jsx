@@ -179,6 +179,7 @@ export function PartyVideoProvider({ children }) {
       })
 
       call.on('close', () => {
+        delete callsRef.current[remoteId]
         removeRemotePeer(remoteId)
       })
 
@@ -195,10 +196,8 @@ export function PartyVideoProvider({ children }) {
     (theirId, name, stream) => {
       if (!peerRef.current || !stream || !theirId) return
       if (hasRemoteStream(theirId)) return
-
-      if (callsRef.current[theirId]) {
-        clearCall(theirId)
-      }
+      // Keep an active outbound call — redialing was tearing down the TV feed every 3s.
+      if (callsRef.current[theirId]) return
 
       try {
         const call = peerRef.current.call(theirId, stream)
@@ -210,7 +209,10 @@ export function PartyVideoProvider({ children }) {
         })
 
         call.on('close', () => {
-          removeRemotePeer(theirId)
+          delete callsRef.current[theirId]
+          if (!isDisplayPeerId(theirId, roomId)) {
+            removeRemotePeer(theirId)
+          }
         })
 
         call.on('error', () => {
@@ -220,7 +222,7 @@ export function PartyVideoProvider({ children }) {
         clearCall(theirId)
       }
     },
-    [addRemotePeer, removeRemotePeer, clearCall, hasRemoteStream]
+    [roomId, addRemotePeer, removeRemotePeer, clearCall, hasRemoteStream]
   )
 
   useEffect(() => {
@@ -348,11 +350,23 @@ export function PartyVideoProvider({ children }) {
     if (!ready || !localStream || !roomId || !tvPeerId) return undefined
     if (isDisplayMode) return undefined
 
-    const publishToTv = () => dialPeer(tvPeerId, 'TV', localStream)
+    let attempts = 0
+    const maxAttempts = 30
+    let intervalId = null
 
-    publishToTv()
-    const id = setInterval(publishToTv, 3000)
-    return () => clearInterval(id)
+    const ensurePublished = () => {
+      if (callsRef.current[tvPeerId]) {
+        clearInterval(intervalId)
+        return
+      }
+      dialPeer(tvPeerId, 'TV', localStream)
+      attempts += 1
+      if (attempts >= maxAttempts) clearInterval(intervalId)
+    }
+
+    ensurePublished()
+    intervalId = setInterval(ensurePublished, 3000)
+    return () => clearInterval(intervalId)
   }, [ready, roomId, tvPeerId, localStream, isDisplayMode, dialPeer])
 
   useEffect(() => {

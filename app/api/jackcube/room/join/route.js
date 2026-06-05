@@ -10,6 +10,7 @@ import {
 } from '../../../lib/redis'
 import { dedupePlayers, findPlayerByName } from '../../../lib/players'
 import { activePlayers, markConnected } from '../../../lib/playerPresence'
+import { getGameMeta } from '../../../lib/games/registry'
 
 export async function POST(request) {
   try {
@@ -72,7 +73,9 @@ export async function POST(request) {
       )
     }
 
-    if (activePlayers(players).length >= MAX_PLAYERS) {
+    const gameId = room.config?.gameId || 'captionClash'
+    const maxPlayers = Math.min(getGameMeta(gameId).maxPlayers, MAX_PLAYERS)
+    if (activePlayers(players).length >= maxPlayers) {
       return NextResponse.json({ success: false, error: 'Room is full' }, { status: 403 })
     }
 

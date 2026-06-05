@@ -35,18 +35,83 @@ export async function POST(request) {
       )
     }
 
-    const gameId = room.config?.gameId || 'flappy'
+    const gameId = room.config?.gameId || 'captionClash'
     const gs = room.gameState || {}
 
-    if (action === 'flap') {
-      if (gameId !== 'flappy') {
-        return NextResponse.json({ success: false, error: 'Invalid action for game' }, { status: 400 })
+    if (gameId === 'captionClash' && gs.captionClash) {
+      const cc = { ...gs.captionClash }
+      if (action === 'captionSubmit' && cc.step === 'write') {
+        const text = String(payload?.text || '').trim().slice(0, 120)
+        if (text) cc.submissions = { ...cc.submissions, [playerId]: text }
+      } else if (action === 'captionVote' && cc.step === 'vote') {
+        const votedForId = payload?.votedForId
+        if (
+          votedForId &&
+          votedForId !== playerId &&
+          (room.players || []).some((p) => p.id === votedForId) &&
+          cc.submissions?.[votedForId]
+        ) {
+          cc.votes = { ...cc.votes, [playerId]: votedForId }
+        }
+      } else {
+        return NextResponse.json({ success: false, error: 'Invalid captionClash action' }, { status: 400 })
       }
-      const flappy = gs.flappy || { flapQueue: [] }
-      const queue = Array.isArray(flappy.flapQueue) ? [...flappy.flapQueue] : []
-      queue.push({ playerId, ts: Date.now() })
-      flappy.flapQueue = queue.slice(-50)
-      gs.flappy = flappy
+      gs.captionClash = cc
+      room.gameState = gs
+      room.updatedAt = new Date().toISOString()
+      await setRoom(roomId, room)
+      return NextResponse.json({ success: true })
+    }
+
+    if (gameId === 'bluffBox' && gs.bluffBox) {
+      const bb = { ...gs.bluffBox }
+      if (action === 'bluffSubmit' && bb.step === 'write') {
+        const text = String(payload?.text || '').trim().slice(0, 80)
+        if (text) bb.bluffs = { ...bb.bluffs, [playerId]: text }
+      } else if (action === 'bluffGuess' && bb.step === 'guess') {
+        const choiceId = payload?.choiceId
+        if (choiceId && (bb.choices || []).some((c) => c.id === choiceId)) {
+          bb.guesses = { ...bb.guesses, [playerId]: choiceId }
+        }
+      } else {
+        return NextResponse.json({ success: false, error: 'Invalid bluffBox action' }, { status: 400 })
+      }
+      gs.bluffBox = bb
+      room.gameState = gs
+      room.updatedAt = new Date().toISOString()
+      await setRoom(roomId, room)
+      return NextResponse.json({ success: true })
+    }
+
+    if (gameId === 'triviaToss' && gs.triviaToss) {
+      const tt = { ...gs.triviaToss }
+      if (action === 'triviaAnswer' && tt.step === 'question') {
+        const index = payload?.index
+        if (Number.isInteger(index) && index >= 0 && index < (tt.options || []).length) {
+          tt.answers = { ...tt.answers, [playerId]: index }
+        }
+      } else {
+        return NextResponse.json({ success: false, error: 'Invalid triviaToss action' }, { status: 400 })
+      }
+      gs.triviaToss = tt
+      room.gameState = gs
+      room.updatedAt = new Date().toISOString()
+      await setRoom(roomId, room)
+      return NextResponse.json({ success: true })
+    }
+
+    if (gameId === 'reactionRush' && gs.reactionRush) {
+      const rr = { ...gs.reactionRush }
+      if (action === 'reactionTap') {
+        if (rr.step === 'ready') {
+          rr.earlyTappers = { ...rr.earlyTappers, [playerId]: true }
+        } else if (rr.step === 'go' && !rr.earlyTappers?.[playerId] && !rr.taps?.[playerId]) {
+          rr.taps = { ...rr.taps, [playerId]: Date.now() }
+        }
+      } else {
+        return NextResponse.json({ success: false, error: 'Invalid reactionRush action' }, { status: 400 })
+      }
+      gs.reactionRush = rr
       room.gameState = gs
       room.updatedAt = new Date().toISOString()
       await setRoom(roomId, room)

@@ -37,7 +37,7 @@ export async function createRoom({
   hostName,
   mode = 'online',
   targetScore = 5000,
-  gameId = 'flappy',
+  gameId = 'captionClash',
 }) {
   const res = await fetchRoom(ROOM_PATH, {
     method: 'POST',
@@ -96,10 +96,6 @@ export async function leaveRoom(roomId, playerId) {
     body: JSON.stringify({ roomId, playerId }),
   })
   return parseResponse(res, 'Failed to leave room')
-}
-
-export async function sendFlap(roomId, playerId) {
-  return sendInput(roomId, playerId, 'flap')
 }
 
 export async function sendChat(roomId, playerId, text, { asGuess = false } = {}) {

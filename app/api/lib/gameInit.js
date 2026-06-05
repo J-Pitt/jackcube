@@ -1,11 +1,15 @@
-const { createInitialFlappyState } = require('./flappyInit')
 const { pickRandomItem, pickHostLine } = require('./content')
+const { buildBluffChoices } = require('./games/partyGameUtils')
 
 const ROUND_MS = {
   fakinIt: { prompt: 8000, action: 25000, vote: 30000, reveal: 8000 },
   dirtyDrawful: { assign: 5000, draw: 90000, guess: 30000, reveal: 10000 },
   letMeFinish: { question: 6000, pitch: 55000, rebuttal: 20000, vote: 25000, reveal: 8000 },
   truthOrCube: { cube: 4500, active: 50000, reveal: 7000 },
+  captionClash: { write: 45000, vote: 30000, reveal: 8000 },
+  bluffBox: { write: 40000, guess: 35000, reveal: 10000 },
+  triviaToss: { question: 20000, reveal: 8000 },
+  reactionRush: { ready: 0, go: 5000, reveal: 7000 },
 }
 
 function endsIn(ms) {
@@ -23,6 +27,11 @@ function pickDrawer(players, round) {
 }
 
 function pickPresenter(players, round) {
+  const idx = (round - 1) % players.length
+  return players[idx].id
+}
+
+function pickTarget(players, round) {
   const idx = (round - 1) % players.length
   return players[idx].id
 }
@@ -87,11 +96,6 @@ function createDirtyDrawfulState(players, room, round = 1) {
     roundResults: null,
     winnerId: null,
   }
-}
-
-function pickTarget(players, round) {
-  const idx = (round - 1) % players.length
-  return players[idx].id
 }
 
 function createTruthOrCubeState(players, room, round = 1) {
@@ -163,6 +167,99 @@ function createLetMeFinishState(players, room, round = 1) {
   }
 }
 
+function createCaptionClashState(players, room, round = 1) {
+  const used = room.gameState?.captionClash?.usedPromptIds || []
+  const item = pickRandomItem('captionClash/prompts', { excludeIds: used })
+
+  return {
+    round,
+    captionClash: {
+      step: 'write',
+      promptId: item?.id || null,
+      promptText: item?.text || 'Write something funny…',
+      submissions: {},
+      votes: {},
+      endsAt: endsIn(ROUND_MS.captionClash.write),
+      usedPromptIds: item ? [...used, item.id] : used,
+    },
+    secrets: {},
+    roundResults: null,
+    winnerId: null,
+  }
+}
+
+function createBluffBoxState(players, room, round = 1) {
+  const used = room.gameState?.bluffBox?.usedPromptIds || []
+  const item = pickRandomItem('bluffBox/prompts', { excludeIds: used })
+
+  return {
+    round,
+    bluffBox: {
+      step: 'write',
+      promptId: item?.id || null,
+      promptText: item?.text || 'Fill in the blank with a convincing lie.',
+      bluffs: {},
+      guesses: {},
+      choices: [],
+      endsAt: endsIn(ROUND_MS.bluffBox.write),
+      usedPromptIds: item ? [...used, item.id] : used,
+    },
+    secrets: {
+      bluffBox: {
+        realAnswer: item?.answer || 'unknown',
+        promptId: item?.id,
+      },
+    },
+    roundResults: null,
+    winnerId: null,
+  }
+}
+
+function createTriviaTossState(players, room, round = 1) {
+  const used = room.gameState?.triviaToss?.usedPromptIds || []
+  const item = pickRandomItem('triviaToss/questions', { excludeIds: used })
+
+  return {
+    round,
+    triviaToss: {
+      step: 'question',
+      questionId: item?.id || null,
+      questionText: item?.text || 'Quick trivia!',
+      options: item?.options || ['A', 'B', 'C', 'D'],
+      answers: {},
+      endsAt: endsIn(ROUND_MS.triviaToss.question),
+      usedPromptIds: item ? [...used, item.id] : used,
+    },
+    secrets: {
+      triviaToss: {
+        correctIndex: item?.correctIndex ?? 0,
+        questionId: item?.id,
+      },
+    },
+    roundResults: null,
+    winnerId: null,
+  }
+}
+
+function createReactionRushState(players, room, round = 1) {
+  const delay = 2000 + Math.floor(Math.random() * 3000)
+  const signalAt = endsIn(delay)
+
+  return {
+    round,
+    reactionRush: {
+      step: 'ready',
+      endsAt: signalAt,
+      signalAt,
+      taps: {},
+      earlyTappers: {},
+    },
+    secrets: { reactionRush: { signalAt } },
+    roundResults: null,
+    winnerId: null,
+  }
+}
+
 function createGameState(gameId, players, room, round = 1) {
   switch (gameId) {
     case 'fakinIt':
@@ -173,16 +270,16 @@ function createGameState(gameId, players, room, round = 1) {
       return createLetMeFinishState(players, room, round)
     case 'truthOrCube':
       return createTruthOrCubeState(players, room, round)
-    case 'flappy':
+    case 'bluffBox':
+      return createBluffBoxState(players, room, round)
+    case 'triviaToss':
+      return createTriviaTossState(players, room, round)
+    case 'reactionRush':
+      return createReactionRushState(players, room, round)
+    case 'captionClash':
     default:
-      return {
-        round,
-        countdownStartedAt: new Date().toISOString(),
-        flappy: createInitialFlappyState(players),
-        roundResults: null,
-        winnerId: null,
-      }
+      return createCaptionClashState(players, room, round)
   }
 }
 
-module.exports = { createGameState, ROUND_MS, endsIn }
+module.exports = { createGameState, ROUND_MS, endsIn, buildBluffChoices }

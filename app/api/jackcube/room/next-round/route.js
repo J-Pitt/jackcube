@@ -31,10 +31,10 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'Can only advance from leaderboard' }, { status: 400 })
     }
 
-    const gameId = room.config?.gameId || 'flappy'
+    const gameId = room.config?.gameId || 'captionClash'
     const nextRound = (room.gameState?.round || 1) + 1
     const maxRounds = getMaxRounds(gameId)
-    if (gameId !== 'flappy' && nextRound > maxRounds) {
+    if (nextRound > maxRounds) {
       const sorted = [...(room.players || [])].sort(
         (a, b) => (Number(b.score) || 0) - (Number(a.score) || 0)
       )
@@ -51,9 +51,7 @@ export async function POST(request) {
 
     room.phase = 'countdown'
     room.gameState = createGameState(gameId, activePlayers(room.players || []), room, nextRound)
-    if (gameId !== 'flappy') {
-      room.gameState.countdownStartedAt = new Date().toISOString()
-    }
+    room.gameState.countdownStartedAt = new Date().toISOString()
     room.updatedAt = new Date().toISOString()
     await setRoom(roomId, room)
 

@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "gameId": "triviaToss",
+  "category": "questions",
+  "locale": "en-US",
+  "items": [
+    { "id": "tt-001", "text": "Which planet is known as the Red Planet?", "options": ["Venus", "Mars", "Jupiter", "Saturn"], "correctIndex": 1 },
+    { "id": "tt-002", "text": "What year did the first iPhone launch?", "options": ["2005", "2007", "2009", "2010"], "correctIndex": 1 },
+    { "id": "tt-003", "text": "Which company makes Mario?", "options": ["Sega", "Sony", "Nintendo", "Microsoft"], "correctIndex": 2 },
+    { "id": "tt-004", "text": "What is the capital of Australia?", "options": ["Sydney", "Melbourne", "Canberra", "Perth"], "correctIndex": 2 },
+    { "id": "tt-005", "text": "How many sides does a hexagon have?", "options": ["5", "6", "7", "8"], "correctIndex": 1 },
+    { "id": "tt-006", "text": "Which element has the chemical symbol 'O'?", "options": ["Gold", "Oxygen", "Osmium", "Oganesson"], "correctIndex": 1 },
+    { "id": "tt-007", "text": "In chess, which piece can only move diagonally?", "options": ["Rook", "Knight", "Bishop", "Queen"], "correctIndex": 2 },
+    { "id": "tt-008", "text": "What is the largest ocean on Earth?", "options": ["Atlantic", "Indian", "Arctic", "Pacific"], "correctIndex": 3 },
+    { "id": "tt-009", "text": "Which band sang 'Bohemian Rhapsody'?", "options": ["The Beatles", "Queen", "Led Zeppelin", "ABBA"], "correctIndex": 1 },
+    { "id": "tt-010", "text": "What color do you get mixing blue and yellow?", "options": ["Orange", "Green", "Purple", "Brown"], "correctIndex": 1 },
+    { "id": "tt-011", "text": "How many players are on a basketball team on court?", "options": ["4", "5", "6", "7"], "correctIndex": 1 },
+    { "id": "tt-012", "text": "Which country invented pizza as we know it?", "options": ["USA", "France", "Italy", "Greece"], "correctIndex": 2 }
+  ]
+}
