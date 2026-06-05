@@ -1,0 +1,85 @@
+'use client'
+
+import Link from 'next/link'
+import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { getMultiplayerStatus } from '@/lib/roomApi'
+import { loadRejoin } from '@/lib/rejoin'
+
+export default function HomePage() {
+  const [redisOk, setRedisOk] = useState(null)
+  const [saved, setSaved] = useState(null)
+
+  useEffect(() => {
+    getMultiplayerStatus().then((s) => setRedisOk(s.available))
+    setSaved(loadRejoin())
+  }, [])
+
+  return (
+    <main className="mx-auto flex min-h-screen max-w-3xl flex-col items-center justify-center px-6 py-12 text-center">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="mb-10"
+      >
+        <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-2xl bg-gradient-to-br from-cube-violet to-cube-cyan shadow-lg shadow-cube-violet/30">
+          <span className="text-4xl">🎲</span>
+        </div>
+        <h1 className="font-display text-5xl font-extrabold tracking-tight text-white">
+          JackCube
+        </h1>
+        <p className="mt-3 text-lg text-white/60">
+          Party games on the big screen. Phones as controllers.
+        </p>
+      </motion.div>
+
+      {redisOk === false && (
+        <div className="mb-6 w-full max-w-md rounded-xl border border-cube-danger/40 bg-cube-danger/10 px-4 py-3 text-sm text-cube-danger">
+          Multiplayer unavailable — set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN.
+        </div>
+      )}
+
+      {saved?.roomId && (
+        <Link
+          href={`/lobby?roomId=${encodeURIComponent(saved.roomId)}`}
+          className="mb-8 w-full max-w-md rounded-2xl border border-cube-cyan/40 bg-cube-cyan/10 px-6 py-4 text-cube-cyan transition hover:bg-cube-cyan/15"
+        >
+          Rejoin room <strong>{saved.gameCode}</strong> as {saved.playerName}
+        </Link>
+      )}
+
+      <p className="mb-4 text-sm uppercase tracking-widest text-white/40">How are you playing?</p>
+
+      <div className="grid w-full max-w-md gap-4 sm:grid-cols-2">
+        <Link
+          href="/host?mode=local"
+          className="group rounded-2xl border border-white/10 bg-cube-surface/80 p-6 text-left transition hover:border-cube-cyan/50 hover:bg-cube-surface"
+        >
+          <span className="text-3xl">🏠</span>
+          <h2 className="mt-3 font-display text-xl font-bold text-white group-hover:text-cube-cyan">
+            Local party
+          </h2>
+          <p className="mt-2 text-sm text-white/50">Same room — TV + phones on WiFi</p>
+        </Link>
+
+        <Link
+          href="/host?mode=online"
+          className="group rounded-2xl border border-white/10 bg-cube-surface/80 p-6 text-left transition hover:border-cube-violet/50 hover:bg-cube-surface"
+        >
+          <span className="text-3xl">🌐</span>
+          <h2 className="mt-3 font-display text-xl font-bold text-white group-hover:text-cube-violet">
+            Online party
+          </h2>
+          <p className="mt-2 text-sm text-white/50">Friends anywhere — share a link</p>
+        </Link>
+      </div>
+
+      <Link
+        href="/join"
+        className="mt-8 text-sm text-white/50 underline-offset-4 hover:text-cube-cyan hover:underline"
+      >
+        Join with a room code →
+      </Link>
+    </main>
+  )
+}
