@@ -1,5 +1,9 @@
 const { dedupePlayers } = require('./players')
 
+function keysOf(map) {
+  return map && typeof map === 'object' ? Object.keys(map) : []
+}
+
 /** Strip secret fields before sending room to clients */
 function sanitizeGameState(gameState, gameId) {
   if (!gameState) return null
@@ -11,6 +15,8 @@ function sanitizeGameState(gameState, gameId) {
     if (fi.step !== 'reveal') {
       delete fi.promptText
     }
+    if (fi.step === 'action') fi.answeredIds = keysOf(fi.actionAcks)
+    else if (fi.step === 'vote') fi.answeredIds = keysOf(fi.votes)
     gs.fakinIt = fi
   }
 
@@ -19,6 +25,7 @@ function sanitizeGameState(gameState, gameId) {
     if (dd.step !== 'reveal') {
       delete dd.promptText
     }
+    if (dd.step === 'guess') dd.answeredIds = keysOf(dd.guesses)
     gs.dirtyDrawful = dd
   }
 
@@ -33,9 +40,11 @@ function sanitizeGameState(gameState, gameId) {
   if (gameId === 'captionClash' && gs.captionClash) {
     const cc = { ...gs.captionClash }
     if (cc.step === 'write') {
+      cc.answeredIds = keysOf(cc.submissions)
       delete cc.submissions
       delete cc.votes
     } else if (cc.step === 'vote') {
+      cc.answeredIds = keysOf(cc.votes)
       delete cc.votes
     }
     gs.captionClash = cc
@@ -44,13 +53,17 @@ function sanitizeGameState(gameState, gameId) {
   if (gameId === 'bluffBox' && gs.bluffBox) {
     const bb = { ...gs.bluffBox }
     if (bb.step === 'write') {
+      bb.answeredIds = keysOf(bb.bluffs)
       delete bb.bluffs
       delete bb.guesses
       delete bb.choices
       delete bb.realAnswer
     } else if (bb.step === 'guess') {
+      bb.answeredIds = keysOf(bb.guesses)
       delete bb.guesses
       delete bb.realAnswer
+      // Never leak which choice is real or who authored each bluff before reveal.
+      bb.choices = (bb.choices || []).map((c) => ({ id: c.id, text: c.text }))
     }
     gs.bluffBox = bb
   }
@@ -58,6 +71,7 @@ function sanitizeGameState(gameState, gameId) {
   if (gameId === 'triviaToss' && gs.triviaToss) {
     const tt = { ...gs.triviaToss }
     if (tt.step !== 'reveal') {
+      tt.answeredIds = keysOf(tt.answers)
       delete tt.correctIndex
       delete tt.answers
     }
@@ -69,6 +83,8 @@ function sanitizeGameState(gameState, gameId) {
     if (rr.step === 'ready') {
       delete rr.taps
       delete rr.earlyTappers
+    } else if (rr.step === 'go') {
+      rr.answeredIds = [...keysOf(rr.taps), ...keysOf(rr.earlyTappers)]
     }
     gs.reactionRush = rr
   }

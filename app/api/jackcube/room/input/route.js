@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
-import { getRoom, setRoom } from '../../../lib/redis'
+import { getRoom } from '../../../lib/redis'
 import { pickChallengerLine } from '../../../lib/content'
 import { endsIn, ROUND_MS } from '../../../lib/gameInit'
+import { persistInputAndMaybeAdvance } from '../../../lib/persistInput'
 
 const MAX_STROKES = 120
 
@@ -58,8 +59,7 @@ export async function POST(request) {
       }
       gs.captionClash = cc
       room.gameState = gs
-      room.updatedAt = new Date().toISOString()
-      await setRoom(roomId, room)
+      await persistInputAndMaybeAdvance(roomId, room)
       return NextResponse.json({ success: true })
     }
 
@@ -70,7 +70,8 @@ export async function POST(request) {
         if (text) bb.bluffs = { ...bb.bluffs, [playerId]: text }
       } else if (action === 'bluffGuess' && bb.step === 'guess') {
         const choiceId = payload?.choiceId
-        if (choiceId && (bb.choices || []).some((c) => c.id === choiceId)) {
+        const choice = (bb.choices || []).find((c) => c.id === choiceId)
+        if (choice && choice.authorId !== playerId) {
           bb.guesses = { ...bb.guesses, [playerId]: choiceId }
         }
       } else {
@@ -78,8 +79,7 @@ export async function POST(request) {
       }
       gs.bluffBox = bb
       room.gameState = gs
-      room.updatedAt = new Date().toISOString()
-      await setRoom(roomId, room)
+      await persistInputAndMaybeAdvance(roomId, room)
       return NextResponse.json({ success: true })
     }
 
@@ -95,8 +95,7 @@ export async function POST(request) {
       }
       gs.triviaToss = tt
       room.gameState = gs
-      room.updatedAt = new Date().toISOString()
-      await setRoom(roomId, room)
+      await persistInputAndMaybeAdvance(roomId, room)
       return NextResponse.json({ success: true })
     }
 
@@ -113,8 +112,7 @@ export async function POST(request) {
       }
       gs.reactionRush = rr
       room.gameState = gs
-      room.updatedAt = new Date().toISOString()
-      await setRoom(roomId, room)
+      await persistInputAndMaybeAdvance(roomId, room)
       return NextResponse.json({ success: true })
     }
 
@@ -135,8 +133,7 @@ export async function POST(request) {
       }
       gs.fakinIt = fi
       room.gameState = gs
-      room.updatedAt = new Date().toISOString()
-      await setRoom(roomId, room)
+      await persistInputAndMaybeAdvance(roomId, room)
       return NextResponse.json({ success: true })
     }
 
@@ -161,8 +158,7 @@ export async function POST(request) {
       }
       gs.dirtyDrawful = dd
       room.gameState = gs
-      room.updatedAt = new Date().toISOString()
-      await setRoom(roomId, room)
+      await persistInputAndMaybeAdvance(roomId, room)
       return NextResponse.json({ success: true })
     }
 
@@ -179,8 +175,7 @@ export async function POST(request) {
       }
       gs.truthOrCube = toc
       room.gameState = gs
-      room.updatedAt = new Date().toISOString()
-      await setRoom(roomId, room)
+      await persistInputAndMaybeAdvance(roomId, room)
       return NextResponse.json({ success: true })
     }
 
@@ -220,8 +215,7 @@ export async function POST(request) {
       }
       gs.letMeFinish = lmf
       room.gameState = gs
-      room.updatedAt = new Date().toISOString()
-      await setRoom(roomId, room)
+      await persistInputAndMaybeAdvance(roomId, room)
       return NextResponse.json({ success: true })
     }
 

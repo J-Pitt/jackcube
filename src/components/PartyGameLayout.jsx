@@ -13,16 +13,32 @@ const Leaderboard3D = dynamic(() => import('@/components/leaderboard/Leaderboard
 
 export function CountdownOverlay({ countdown }) {
   if (countdown == null) return null
+  const isGo = countdown <= 0
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="flex h-48 items-center justify-center"
-    >
-      <span className="font-display text-8xl font-black text-cube-cyan">
-        {countdown > 0 ? countdown : 'GO!'}
-      </span>
-    </motion.div>
+    <div className="flex h-64 items-center justify-center">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={countdown}
+          initial={{ scale: 0.4, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 1.6, opacity: 0 }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+          className="relative"
+        >
+          <span
+            className="font-display text-[9rem] font-black leading-none"
+            style={{
+              color: isGo ? '#00F5D4' : '#fff',
+              textShadow: isGo
+                ? '0 0 40px rgba(0,245,212,0.6)'
+                : '0 0 30px rgba(108,92,231,0.5)',
+            }}
+          >
+            {isGo ? 'GO!' : countdown}
+          </span>
+        </motion.div>
+      </AnimatePresence>
+    </div>
   )
 }
 
@@ -39,10 +55,17 @@ export function PhaseTimer({ endsAt, label }) {
     return () => clearInterval(id)
   }, [endsAt])
   if (!endsAt) return null
+  const low = left <= 5
   return (
-    <p className="text-lg text-cube-cyan">
-      {label} <span className="font-mono font-bold">{left}s</span>
-    </p>
+    <div className="mt-6 flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-widest">
+      <span className="text-white/40">{label}</span>
+      <span
+        className="font-display text-lg font-black tabular-nums"
+        style={{ color: low ? '#FF6B6B' : '#00F5D4' }}
+      >
+        {left}s
+      </span>
+    </div>
   )
 }
 

@@ -111,7 +111,12 @@ export async function GET(request) {
       payload.submitted = !!bb.bluffs?.[playerId]
       payload.guessed = !!bb.guesses?.[playerId]
       if (bb.step === 'guess') {
-        payload.choices = bb.choices || []
+        // Strip isReal/authorId; flag the player's own bluff so the UI can disable it.
+        payload.choices = (bb.choices || []).map((c) => ({
+          id: c.id,
+          text: c.text,
+          mine: c.authorId === playerId,
+        }))
       }
     }
 

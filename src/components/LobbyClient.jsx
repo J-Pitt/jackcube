@@ -240,19 +240,23 @@ export default function LobbyPage() {
                           key={g.id}
                           type="button"
                           onClick={() => handleGameChange(g.id)}
-                          className={`w-full rounded-xl border px-4 py-3 text-left transition ${
+                          className={`flex w-full items-start gap-3 rounded-xl border px-4 py-3 text-left transition ${
                             selectedGame === g.id
                               ? 'border-cube-cyan bg-cube-cyan/10'
                               : 'border-white/10 hover:border-white/25'
                           }`}
                         >
-                          <span className="font-semibold text-white">{g.name}</span>
-                          <p className="mt-1 text-xs text-white/50">{g.description}</p>
-                          <p className="mt-1 text-xs text-white/30">
-                            {g.minPlayers === g.maxPlayers
-                              ? `${g.minPlayers} players only`
-                              : `${g.minPlayers}–${g.maxPlayers} players`}
-                          </p>
+                          <span className="text-2xl">{g.emoji}</span>
+                          <span className="flex-1">
+                            <span className="font-semibold text-white">{g.name}</span>
+                            <p className="mt-0.5 text-xs text-white/50">{g.description}</p>
+                            <p className="mt-1 text-xs text-white/30">
+                              {g.minPlayers === g.maxPlayers
+                                ? `${g.minPlayers} players only`
+                                : `${g.minPlayers}–${g.maxPlayers} players`}
+                            </p>
+                          </span>
+                          {selectedGame === g.id && <span className="text-cube-cyan">✓</span>}
                         </button>
                       ))}
                     </div>
