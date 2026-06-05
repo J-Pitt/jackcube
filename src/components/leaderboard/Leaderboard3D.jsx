@@ -4,6 +4,7 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { Float, Text, OrbitControls, Stars } from '@react-three/drei'
 import { useRef, useMemo } from 'react'
 import * as THREE from 'three'
+import { Scoreboard } from '@/components/game/GameUI'
 
 function PodiumBlock({ position, color, height, name, score, place }) {
   const meshRef = useRef()
@@ -99,11 +100,7 @@ function Scene({ results, players, targetScore }) {
   )
 }
 
-export default function Leaderboard3D({ results, players, targetScore, className = '' }) {
-  const sorted = [...(players || [])].sort(
-    (a, b) => (Number(b.score) || 0) - (Number(a.score) || 0)
-  )
-
+export default function Leaderboard3D({ results, players, targetScore, accentKey, className = '' }) {
   return (
     <div className={`relative ${className}`}>
       <div className="h-[420px] w-full overflow-hidden rounded-2xl ring-1 ring-white/10">
@@ -112,25 +109,9 @@ export default function Leaderboard3D({ results, players, targetScore, className
         </Canvas>
       </div>
 
-      <ol className="mt-4 space-y-2">
-        {sorted.map((p, i) => {
-          const result = (results || []).find((r) => r.playerId === p.id)
-          return (
-            <li
-              key={p.id}
-              className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-2"
-            >
-              <span className="w-6 text-sm font-bold text-white/40">#{i + 1}</span>
-              <span className="h-3 w-3 rounded-full" style={{ backgroundColor: p.color }} />
-              <span className="flex-1 font-medium text-white">{p.name}</span>
-              <span className="text-sm text-cube-cyan">
-                {result ? `+${result.pointsEarned}` : ''}
-              </span>
-              <span className="font-bold text-white">{Number(p.score).toLocaleString()}</span>
-            </li>
-          )
-        })}
-      </ol>
+      <div className="mt-4">
+        <Scoreboard players={players} results={results} targetScore={targetScore} accentKey={accentKey} />
+      </div>
     </div>
   )
 }

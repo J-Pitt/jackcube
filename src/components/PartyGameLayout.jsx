@@ -96,6 +96,7 @@ export function LeaderboardPhase({ room, onNextRound, showNext = true, nextLoadi
         results={room?.gameState?.roundResults}
         players={room?.players}
         targetScore={room?.config?.targetScore}
+        accentKey={room?.config?.gameId}
       />
       {isVictory && winner && (
         <p className="mt-6 text-center font-display text-3xl font-bold text-cube-cyan">

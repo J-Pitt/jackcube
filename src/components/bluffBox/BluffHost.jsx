@@ -24,6 +24,7 @@ export default function BluffHost({ room, roomId, hostId, refresh }) {
   const bb = room?.gameState?.bluffBox
   const players = room?.players || []
   const accent = getAccent(ACCENT_KEY)
+  const standings = players.some((p) => Number(p.score) > 0) ? players : undefined
 
   const countdown = useGameCountdown({ phase, round, roomId, hostId, onDone: refresh })
 
@@ -65,7 +66,7 @@ export default function BluffHost({ room, roomId, hostId, refresh }) {
   }
 
   return (
-    <GameStage title="Bluff Box" emoji="🎭" accentKey={ACCENT_KEY} room={room} round={round} maxRounds={5}>
+    <GameStage title="Bluff Box" emoji="🎭" accentKey={ACCENT_KEY} room={room} round={round} maxRounds={5} standings={standings}>
       {phase === 'countdown' && <CountdownOverlay countdown={countdown} />}
 
       {phase === 'playing' && bb && (

@@ -17,41 +17,57 @@ import { useRoomPoll } from '@/hooks/useRoomPoll'
 import { loadRejoin } from '@/lib/rejoin'
 import { GoHomeButton } from '@/components/PartyGameLayout'
 import { getGameMeta } from '@/lib/games/registry'
+import { PhoneStage, PromptCard, Scoreboard, PhaseReveal, getAccent } from '@/components/game/GameUI'
 
-function RoundResultsScreen({ room, playerId, phase }) {
+function RoundResultsScreen({ room, playerId, phase, accentKey }) {
   const results = room?.gameState?.roundResults || []
-  const player = room?.players?.find((p) => p.id === playerId)
+  const players = room?.players || []
+  const player = players.find((p) => p.id === playerId)
   const myResult = results.find((r) => r.playerId === playerId)
-  const winner = room?.players?.find((p) => p.id === room?.gameState?.winnerId)
+  const winner = players.find((p) => p.id === room?.gameState?.winnerId)
+  const isVictory = phase === 'victory'
+  const sorted = [...players].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0))
+  const myRank = sorted.findIndex((p) => p.id === playerId) + 1
+  const iWon = isVictory && winner?.id === playerId
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-cube-bg p-6 text-center">
-      <p className="text-sm uppercase tracking-widest text-cube-violet">
-        {phase === 'victory' ? 'Game over' : 'Round over'}
-      </p>
-      <p className="mt-4 font-display text-4xl font-bold text-white">
-        {myResult ? `#${myResult.placement}` : '—'}
-      </p>
-      {myResult && (
-        <p className="mt-2 text-2xl text-cube-cyan">+{myResult.pointsEarned} pts</p>
-      )}
-      <p className="mt-4 text-white/50">
-        Total: <strong className="text-white">{player?.score?.toLocaleString() ?? 0}</strong>
-      </p>
-      {phase === 'victory' ? (
-        <>
-          {winner && (
-            <p className="mt-6 font-display text-2xl font-bold text-cube-cyan">
-              {winner.name} wins!
+    <PhoneStage title={isVictory ? 'Game over' : 'Round over'} emoji={isVictory ? '🏁' : '📊'} accentKey={accentKey}>
+      <PromptCard accentKey={accentKey} className="text-center">
+        <p className="text-xs font-bold uppercase tracking-widest text-white/40">
+          {isVictory ? (iWon ? 'You win!' : 'Final standing') : 'Your placement'}
+        </p>
+        <p className="mt-2 font-display text-6xl font-black text-white">
+          {myRank ? `#${myRank}` : '—'}
+        </p>
+        {myResult?.pointsEarned ? (
+          <PhaseReveal>
+            <p className="mt-1 font-display text-xl font-bold" style={{ color: getAccent(accentKey).hex }}>
+              +{myResult.pointsEarned} pts this round
             </p>
-          )}
-          <div className="mt-8 w-full max-w-xs">
-            <GoHomeButton />
-          </div>
-        </>
+          </PhaseReveal>
+        ) : null}
+        <p className="mt-3 text-sm text-white/50">
+          Total <strong className="text-white">{(Number(player?.score) || 0).toLocaleString()}</strong>
+        </p>
+      </PromptCard>
+
+      <div className="mt-5 flex-1">
+        <Scoreboard
+          players={players}
+          results={results}
+          targetScore={room?.config?.targetScore}
+          accentKey={accentKey}
+        />
+      </div>
+
+      {isVictory ? (
+        <div className="mt-6">
+          <GoHomeButton />
+        </div>
       ) : (
-        <p className="mt-8 text-sm text-white/40">Watch the main screen for the leaderboard</p>
+        <p className="mt-6 text-center text-sm text-white/40">Next round starting on the main screen…</p>
       )}
-    </main>
+    </PhoneStage>
   )
 }
 
@@ -86,7 +102,7 @@ export default function GamePlayClient({ roomId: roomIdProp }) {
 
   const content = (() => {
     if (phase === 'leaderboard' || phase === 'victory') {
-      return <RoundResultsScreen room={room} playerId={playerId} phase={phase} />
+      return <RoundResultsScreen room={room} playerId={playerId} phase={phase} accentKey={gameId} />
     }
 
     const playMap = {

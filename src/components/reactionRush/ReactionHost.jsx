@@ -21,6 +21,7 @@ export default function ReactionHost({ room, roomId, hostId, refresh }) {
   const rr = room?.gameState?.reactionRush
   const players = room?.players || []
   const accent = getAccent(ACCENT_KEY)
+  const standings = players.some((p) => Number(p.score) > 0) ? players : undefined
 
   const countdown = useGameCountdown({ phase, round, roomId, hostId, onDone: refresh })
 
@@ -70,7 +71,7 @@ export default function ReactionHost({ room, roomId, hostId, refresh }) {
   const noTap = players.filter((p) => !rr?.taps?.[p.id] && !rr?.earlyTappers?.[p.id])
 
   return (
-    <GameStage title="Reaction Rush" emoji="⚡" accentKey={ACCENT_KEY} room={room} round={round} maxRounds={5}>
+    <GameStage title="Reaction Rush" emoji="⚡" accentKey={ACCENT_KEY} room={room} round={round} maxRounds={5} standings={standings}>
       {phase === 'countdown' && <CountdownOverlay countdown={countdown} />}
 
       {phase === 'playing' && rr && (

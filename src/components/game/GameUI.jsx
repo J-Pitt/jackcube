@@ -187,12 +187,12 @@ function StageBackdrop({ accent }) {
 }
 
 /** TV / main-screen wrapper with branded header. */
-export function GameStage({ title, emoji, accentKey, room, round, maxRounds, children, headerRight }) {
+export function GameStage({ title, emoji, accentKey, room, round, maxRounds, children, headerRight, standings }) {
   const accent = getAccent(accentKey)
   return (
     <main className="relative min-h-screen px-4 py-5 sm:px-6">
       <StageBackdrop accent={accent} />
-      <header className="mx-auto mb-6 flex max-w-5xl items-center justify-between gap-4">
+      <header className="mx-auto mb-4 flex max-w-5xl items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <span
             className="flex h-12 w-12 items-center justify-center rounded-2xl text-2xl shadow-lg"
@@ -219,6 +219,11 @@ export function GameStage({ title, emoji, accentKey, room, round, maxRounds, chi
           {headerRight}
         </div>
       </header>
+      {standings?.length > 0 && (
+        <div className="mx-auto mb-6 max-w-5xl">
+          <ScoreStrip players={standings} accentKey={accentKey} />
+        </div>
+      )}
       <div className="mx-auto max-w-5xl">{children}</div>
     </main>
   )
@@ -350,6 +355,119 @@ export function LockedBadge({ children = 'Locked in', accentKey }) {
     >
       <span>✓</span> {children}
     </motion.div>
+  )
+}
+
+const MEDALS = ['🥇', '🥈', '🥉']
+
+/** Full animated standings — avatars, round delta, progress to target. */
+export function Scoreboard({ players = [], results = [], targetScore, accentKey, compact = false }) {
+  const accent = getAccent(accentKey)
+  const resultMap = Object.fromEntries((results || []).map((r) => [r.playerId, r]))
+  const sorted = [...players].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0))
+  const top = Number(sorted[0]?.score) || 0
+  const max = Math.max(targetScore || 0, top, 1)
+
+  return (
+    <div className="space-y-2">
+      {sorted.map((p, i) => {
+        const r = resultMap[p.id]
+        const score = Number(p.score) || 0
+        const pct = Math.min(100, (score / max) * 100)
+        const leader = i === 0 && score > 0
+        return (
+          <motion.div
+            key={p.id}
+            layout
+            transition={{ type: 'spring', stiffness: 500, damping: 40 }}
+            className="relative flex items-center gap-3 overflow-hidden rounded-2xl border px-3 py-2.5"
+            style={{
+              borderColor: leader ? `${accent.hex}66` : 'rgba(255,255,255,0.1)',
+              background: leader ? `${accent.hex}10` : 'rgba(255,255,255,0.04)',
+            }}
+          >
+            <div
+              aria-hidden
+              className="absolute inset-y-0 left-0 -z-0"
+              style={{
+                width: `${pct}%`,
+                background: `linear-gradient(90deg, ${p.color || accent.hex}22, transparent)`,
+                transition: 'width 0.6s ease',
+              }}
+            />
+            <span className="z-0 w-7 text-center font-display text-base font-black text-white/50">
+              {MEDALS[i] || `${i + 1}`}
+            </span>
+            <span
+              className="z-0 flex shrink-0 items-center justify-center rounded-full font-display font-bold text-cube-bg"
+              style={{ width: 36, height: 36, fontSize: 14, background: p.color || accent.hex }}
+            >
+              {initials(p.name)}
+            </span>
+            <span className="z-0 flex-1 truncate font-semibold text-white">
+              {p.name}
+              {leader && <span className="ml-1.5 text-xs">👑</span>}
+            </span>
+            {r?.pointsEarned ? (
+              <motion.span
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="z-0 rounded-full px-2 py-0.5 text-xs font-bold"
+                style={{ background: `${accent.hex}1f`, color: accent.hex }}
+              >
+                +{r.pointsEarned}
+              </motion.span>
+            ) : null}
+            <span className="z-0 w-16 text-right font-display text-lg font-black tabular-nums text-white">
+              {score.toLocaleString()}
+            </span>
+          </motion.div>
+        )
+      })}
+      {targetScore ? (
+        <p className="pt-1 text-center text-xs uppercase tracking-widest text-white/30">
+          First to {Number(targetScore).toLocaleString()} wins
+        </p>
+      ) : null}
+    </div>
+  )
+}
+
+/** Compact live standings strip for the TV during play. */
+export function ScoreStrip({ players = [], accentKey }) {
+  const accent = getAccent(accentKey)
+  const sorted = [...players].sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0))
+  if (sorted.length === 0) return null
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-2">
+      {sorted.map((p, i) => {
+        const leader = i === 0 && (Number(p.score) || 0) > 0
+        return (
+          <motion.div
+            key={p.id}
+            layout
+            transition={{ type: 'spring', stiffness: 500, damping: 40 }}
+            className="flex items-center gap-2 rounded-full border py-1 pl-1 pr-3"
+            style={{
+              borderColor: leader ? `${accent.hex}66` : 'rgba(255,255,255,0.1)',
+              background: leader ? `${accent.hex}14` : 'rgba(255,255,255,0.04)',
+            }}
+          >
+            <span
+              className="flex items-center justify-center rounded-full font-display text-xs font-bold text-cube-bg"
+              style={{ width: 26, height: 26, background: p.color || accent.hex }}
+            >
+              {initials(p.name)}
+            </span>
+            <span className="text-sm font-medium text-white/80">{p.name.split(' ')[0]}</span>
+            <span className="font-display text-sm font-black tabular-nums" style={{ color: leader ? accent.hex : '#fff' }}>
+              {(Number(p.score) || 0).toLocaleString()}
+            </span>
+            {leader && <span className="text-xs">👑</span>}
+          </motion.div>
+        )
+      })}
+    </div>
   )
 }
 
