@@ -44,6 +44,7 @@ function publicRoom(room) {
     players: dedupePlayers(room.players || []),
     config: room.config || { targetScore: 5000, gameId: 'flappy' },
     gameState: sanitizeGameState(room.gameState, gameId),
+    chat: Array.isArray(room.chat) ? room.chat.slice(-100) : [],
     updatedAt: room.updatedAt || null,
   }
 }

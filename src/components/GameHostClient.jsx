@@ -9,7 +9,7 @@ import TruthHost from '@/components/truthOrCube/TruthHost'
 import FakinHost from '@/components/fakinIt/FakinHost'
 import DrawfulHost from '@/components/dirtyDrawful/DrawfulHost'
 import FinishHost from '@/components/letMeFinish/FinishHost'
-import HostVideoRail from '@/components/partyVideo/HostVideoRail'
+import PartyBottomPanel from '@/components/partyVideo/PartyBottomPanel'
 import { useRoomPoll } from '@/hooks/useRoomPoll'
 import { loadRejoin } from '@/lib/rejoin'
 
@@ -25,20 +25,22 @@ export default function GameHostClient({ roomId: roomIdProp }) {
   const roomId = roomIdProp || session?.roomId
   const { room, refresh } = useRoomPoll(roomId, 400)
 
-  const hostId = room?.hostId || session?.playerId
-  const isHost =
+  const isTvScreen = session?.screenRole === 'tv'
+  const hostId = room?.hostId
+  const isHostPlayer =
     session?.isHost === true || session?.playerId === room?.hostId
+  const canViewHostScreen = isTvScreen || isHostPlayer
   const gameId = room?.config?.gameId || 'flappy'
 
   if (!roomId) {
     return <p className="p-8 text-white/60">No room session.</p>
   }
 
-  if (!isHost) {
+  if (!canViewHostScreen) {
     return (
       <main className="flex min-h-screen items-center justify-center p-8 text-center">
         <p className="text-white/60">
-          This is the host screen. Open <strong>/play</strong> on your phone.
+          This is the main game screen. Open <strong>/play</strong> on your phone.
         </p>
       </main>
     )
@@ -66,9 +68,9 @@ export default function GameHostClient({ roomId: roomIdProp }) {
   }
 
   return (
-    <div className="relative">
+    <div className="relative pb-[min(50vh,520px)]">
       {game}
-      {isHost && (
+      {isTvScreen && (
         <button
           type="button"
           onClick={openAdultCatalog}
@@ -84,7 +86,7 @@ export default function GameHostClient({ roomId: roomIdProp }) {
       />
       <div className="pointer-events-none fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pt-2">
         <div className="pointer-events-auto mx-auto max-w-6xl">
-          <HostVideoRail />
+          <PartyBottomPanel room={room} roomId={roomId} />
         </div>
       </div>
     </div>

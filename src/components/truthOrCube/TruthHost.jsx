@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { advanceGame, nextRound } from '@/lib/roomApi'
 import { useStepTimer } from '@/hooks/useStepTimer'
+import { useGameCountdown } from '@/hooks/useGameCountdown'
 import {
   AnimatePhase,
   CountdownOverlay,
@@ -15,27 +16,21 @@ import {
 const CUBE_FACES = ['🎲', '🔥', '💋', '🍑', '🫦', '🌶️']
 
 export default function TruthHost({ room, roomId, hostId, refresh }) {
-  const [countdown, setCountdown] = useState(null)
+  const [nextLoading, setNextLoading] = useState(false)
   const [spinFace, setSpinFace] = useState(0)
   const phase = room?.phase
+  const round = room?.gameState?.round ?? 1
   const toc = room?.gameState?.truthOrCube
   const players = room?.players || []
   const target = players.find((p) => p.id === toc?.targetPlayerId)
 
-  useEffect(() => {
-    if (phase !== 'countdown' || !hostId) return undefined
-    setCountdown(3)
-    const interval = setInterval(() => {
-      setCountdown((c) => (c <= 1 ? null : c - 1))
-    }, 1000)
-    const timeout = setTimeout(() => {
-      advanceGame(roomId, hostId).then(() => refresh()).catch(() => {})
-    }, 3200)
-    return () => {
-      clearInterval(interval)
-      clearTimeout(timeout)
-    }
-  }, [phase, roomId, hostId, refresh, room?.gameState?.round])
+  const countdown = useGameCountdown({
+    phase,
+    round,
+    roomId,
+    hostId,
+    onDone: refresh,
+  })
 
   useEffect(() => {
     if (toc?.step !== 'cube') return undefined
@@ -54,9 +49,15 @@ export default function TruthHost({ room, roomId, hostId, refresh }) {
   })
 
   const handleNextRound = useCallback(async () => {
-    await nextRound(roomId, hostId)
-    refresh()
-  }, [roomId, hostId, refresh])
+    if (nextLoading) return
+    setNextLoading(true)
+    try {
+      await nextRound(roomId, hostId)
+      refresh()
+    } finally {
+      setNextLoading(false)
+    }
+  }, [roomId, hostId, refresh, nextLoading])
 
   const handleForceAdvance = useCallback(async () => {
     await advanceGame(roomId, hostId)
@@ -68,7 +69,12 @@ export default function TruthHost({ room, roomId, hostId, refresh }) {
       <main className="min-h-screen bg-cube-bg px-4 py-6">
         <GameHeader title={phase === 'victory' ? '🎉 Winner!' : '🏆 Round results'} room={room} />
         <div className="mx-auto max-w-5xl">
-          <LeaderboardPhase room={room} onNextRound={handleNextRound} showNext={phase === 'leaderboard'} />
+          <LeaderboardPhase
+            room={room}
+            onNextRound={handleNextRound}
+            showNext={phase === 'leaderboard'}
+            nextLoading={nextLoading}
+          />
         </div>
       </main>
     )
@@ -87,7 +93,7 @@ export default function TruthHost({ room, roomId, hostId, refresh }) {
         {phase === 'countdown' && <CountdownOverlay countdown={countdown} />}
 
         {phase === 'playing' && toc && (
-          <AnimatePhase phaseKey={toc.step}>
+          <AnimatePhase phaseKey={`${round}-${toc.step}`}>
             <div className="rounded-2xl border border-cube-danger/30 bg-cube-surface/80 p-8">
               {toc.step === 'cube' && (
                 <>

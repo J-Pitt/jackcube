@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import LobbyVideo from '@/components/LobbyVideo'
 import HostVideoRail from '@/components/partyVideo/HostVideoRail'
+import PartyChat from '@/components/partyVideo/PartyChat'
 import PlayerList from '@/components/PlayerList'
 import RoomCodeDisplay from '@/components/RoomCodeDisplay'
 import MatureGate, { hasMatureConsent } from '@/components/MatureGate'
@@ -63,6 +64,7 @@ export default function LobbyPage() {
 
   useEffect(() => {
     if (!room || !session || session.playerId) return
+    if (session.screenRole === 'tv') return
     if (session.isHost && room.hostId) {
       setSession((s) => ({ ...s, playerId: room.hostId }))
       return
@@ -95,9 +97,12 @@ export default function LobbyPage() {
     router.push('/')
   }, [session, router])
 
+  const isTvScreen = session?.screenRole === 'tv'
+  const canControlLobby = isTvScreen || session?.playerId === room?.hostId
+
   async function handleGameChange(gameId) {
     setSelectedGame(gameId)
-    if (!room || session?.playerId !== room.hostId) return
+    if (!room || !canControlLobby) return
     try {
       await updateRoomConfig(room.roomId, room.hostId, { gameId })
       refresh()
@@ -108,7 +113,7 @@ export default function LobbyPage() {
 
   async function handleSpicyRemote(checked) {
     setSpicyRemote(checked)
-    if (!room || session?.playerId !== room.hostId) return
+    if (!room || !canControlLobby) return
     try {
       await updateRoomConfig(room.roomId, room.hostId, { spicyRemote: checked })
       refresh()
@@ -118,12 +123,15 @@ export default function LobbyPage() {
   }
 
   async function handleStart() {
-    if (!room || !session?.playerId) return
+    if (!room || (!isTvScreen && !session?.playerId)) return
     const meta = getGameMeta(selectedGame)
     if (meta.mature && !hasMatureConsent()) {
       setActionError('Confirm 18+ on the play screen after starting, or open /play once to accept.')
     }
-    const validation = validatePlayerCount(selectedGame, (room.players || []).length)
+    const validation = validatePlayerCount(
+      selectedGame,
+      (room.players || []).filter((p) => !p.disconnectedAt).length
+    )
     if (!validation.ok) {
       setActionError(validation.error)
       return
@@ -155,7 +163,7 @@ export default function LobbyPage() {
   }
 
   const isHost =
-    session?.isHost === true || session?.playerId === room?.hostId
+    isTvScreen || session?.isHost === true || session?.playerId === room?.hostId
   const myPlayer = room?.players?.find((p) => p.id === session?.playerId)
   const playerNames = dedupePlayersById(room?.players || [])
   const connectedCount = playerNames.filter((p) => !p.disconnectedAt).length
@@ -298,7 +306,17 @@ export default function LobbyPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 }}
             >
-              {isHost && session?.screenRole === 'tv' ? <HostVideoRail /> : <LobbyVideo />}
+              {isHost && session?.screenRole === 'tv' ? (
+                <div className="grid gap-4 lg:grid-cols-2">
+                  <HostVideoRail />
+                  <PartyChat room={room} roomId={roomId} />
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <LobbyVideo />
+                  <PartyChat room={room} roomId={roomId} playerId={session?.playerId} compact />
+                </div>
+              )}
             </motion.div>
           </div>
         )}

@@ -1,8 +1,9 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { advanceGame, nextRound } from '@/lib/roomApi'
+import { useCallback, useState } from 'react'
+import { nextRound } from '@/lib/roomApi'
 import { useStepTimer } from '@/hooks/useStepTimer'
+import { useGameCountdown } from '@/hooks/useGameCountdown'
 import {
   AnimatePhase,
   CountdownOverlay,
@@ -12,26 +13,20 @@ import {
 } from '@/components/PartyGameLayout'
 
 export default function FinishHost({ room, roomId, hostId, refresh }) {
-  const [countdown, setCountdown] = useState(null)
+  const [nextLoading, setNextLoading] = useState(false)
   const phase = room?.phase
+  const round = room?.gameState?.round ?? 1
   const lmf = room?.gameState?.letMeFinish
   const players = room?.players || []
   const presenter = players.find((p) => p.id === lmf?.presenterId)
 
-  useEffect(() => {
-    if (phase !== 'countdown' || !hostId) return undefined
-    setCountdown(3)
-    const interval = setInterval(() => {
-      setCountdown((c) => (c <= 1 ? null : c - 1))
-    }, 1000)
-    const timeout = setTimeout(() => {
-      advanceGame(roomId, hostId).then(() => refresh()).catch(() => {})
-    }, 3200)
-    return () => {
-      clearInterval(interval)
-      clearTimeout(timeout)
-    }
-  }, [phase, roomId, hostId, refresh, room?.gameState?.round])
+  const countdown = useGameCountdown({
+    phase,
+    round,
+    roomId,
+    hostId,
+    onDone: refresh,
+  })
 
   useStepTimer({
     enabled: phase === 'playing' && !!lmf?.endsAt,
@@ -42,9 +37,15 @@ export default function FinishHost({ room, roomId, hostId, refresh }) {
   })
 
   const handleNextRound = useCallback(async () => {
-    await nextRound(roomId, hostId)
-    refresh()
-  }, [roomId, hostId, refresh])
+    if (nextLoading) return
+    setNextLoading(true)
+    try {
+      await nextRound(roomId, hostId)
+      refresh()
+    } finally {
+      setNextLoading(false)
+    }
+  }, [roomId, hostId, refresh, nextLoading])
 
   const voteTally = {}
   Object.values(lmf?.votes || {}).forEach((id) => {
@@ -56,7 +57,12 @@ export default function FinishHost({ room, roomId, hostId, refresh }) {
       <main className="min-h-screen bg-cube-bg px-4 py-6">
         <GameHeader title={phase === 'victory' ? '🎉 Winner!' : '🏆 Round results'} room={room} />
         <div className="mx-auto max-w-5xl">
-          <LeaderboardPhase room={room} onNextRound={handleNextRound} showNext={phase === 'leaderboard'} />
+          <LeaderboardPhase
+            room={room}
+            onNextRound={handleNextRound}
+            showNext={phase === 'leaderboard'}
+            nextLoading={nextLoading}
+          />
         </div>
       </main>
     )
@@ -67,16 +73,21 @@ export default function FinishHost({ room, roomId, hostId, refresh }) {
       <GameHeader
         title="🎤 Let Me Finish"
         room={room}
-        subtitle={`Round ${room?.gameState?.round ?? 1} · Presenter: ${presenter?.name || '…'}`}
+        subtitle={`Round ${round} · Presenter: ${presenter?.name || '…'}`}
       />
       <div className="mx-auto max-w-3xl">
         {phase === 'countdown' && <CountdownOverlay countdown={countdown} />}
         {phase === 'playing' && lmf && (
-          <AnimatePhase phaseKey={lmf.step}>
+          <AnimatePhase phaseKey={`${round}-${lmf.step}`}>
             <div className="rounded-2xl border border-white/10 bg-cube-surface/80 p-8">
-              <p className="font-display text-2xl font-bold leading-snug text-white">
-                {lmf.questionText}
-              </p>
+              {lmf.step === 'question' && (
+                <p className="font-display text-2xl font-bold leading-snug text-white">
+                  {lmf.questionText}
+                </p>
+              )}
+              {lmf.step !== 'question' && (
+                <p className="text-lg text-white/70">{lmf.questionText}</p>
+              )}
               {lmf.step === 'question' && (
                 <p className="mt-4 text-white/50">Presenter: start pitch on your phone.</p>
               )}

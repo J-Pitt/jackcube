@@ -16,6 +16,7 @@ import {
   roundScoresFromBirds,
   stepFlappy,
 } from '@/lib/flappyEngine'
+import { GoHomeButton } from '@/components/PartyGameLayout'
 
 const Leaderboard3D = dynamic(() => import('@/components/leaderboard/Leaderboard3D'), {
   ssr: false,
@@ -257,6 +258,7 @@ export default function FlappyHostInner({ room, roomId, hostId, refresh }) {
               <p className="mt-6 font-display text-4xl font-bold text-cube-cyan">
                 {winner?.name} wins!
               </p>
+              <GoHomeButton className="mt-6" />
             </motion.div>
           )}
         </AnimatePresence>

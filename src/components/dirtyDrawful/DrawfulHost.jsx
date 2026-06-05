@@ -1,8 +1,9 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { advanceGame, nextRound } from '@/lib/roomApi'
+import { useCallback, useState } from 'react'
+import { nextRound } from '@/lib/roomApi'
 import { useStepTimer } from '@/hooks/useStepTimer'
+import { useGameCountdown } from '@/hooks/useGameCountdown'
 import {
   AnimatePhase,
   CountdownOverlay,
@@ -37,26 +38,20 @@ function DrawingPreview({ strokes }) {
 }
 
 export default function DrawfulHost({ room, roomId, hostId, refresh }) {
-  const [countdown, setCountdown] = useState(null)
+  const [nextLoading, setNextLoading] = useState(false)
   const phase = room?.phase
+  const round = room?.gameState?.round ?? 1
   const dd = room?.gameState?.dirtyDrawful
   const players = room?.players || []
   const drawer = players.find((p) => p.id === dd?.drawerId)
 
-  useEffect(() => {
-    if (phase !== 'countdown' || !hostId) return undefined
-    setCountdown(3)
-    const interval = setInterval(() => {
-      setCountdown((c) => (c <= 1 ? null : c - 1))
-    }, 1000)
-    const timeout = setTimeout(() => {
-      advanceGame(roomId, hostId).then(() => refresh()).catch(() => {})
-    }, 3200)
-    return () => {
-      clearInterval(interval)
-      clearTimeout(timeout)
-    }
-  }, [phase, roomId, hostId, refresh, room?.gameState?.round])
+  const countdown = useGameCountdown({
+    phase,
+    round,
+    roomId,
+    hostId,
+    onDone: refresh,
+  })
 
   useStepTimer({
     enabled: phase === 'playing' && !!dd?.endsAt,
@@ -67,16 +62,27 @@ export default function DrawfulHost({ room, roomId, hostId, refresh }) {
   })
 
   const handleNextRound = useCallback(async () => {
-    await nextRound(roomId, hostId)
-    refresh()
-  }, [roomId, hostId, refresh])
+    if (nextLoading) return
+    setNextLoading(true)
+    try {
+      await nextRound(roomId, hostId)
+      refresh()
+    } finally {
+      setNextLoading(false)
+    }
+  }, [roomId, hostId, refresh, nextLoading])
 
   if (phase === 'leaderboard' || phase === 'victory') {
     return (
       <main className="min-h-screen bg-cube-bg px-4 py-6">
         <GameHeader title={phase === 'victory' ? '🎉 Winner!' : '🏆 Round results'} room={room} />
         <div className="mx-auto max-w-5xl">
-          <LeaderboardPhase room={room} onNextRound={handleNextRound} showNext={phase === 'leaderboard'} />
+          <LeaderboardPhase
+            room={room}
+            onNextRound={handleNextRound}
+            showNext={phase === 'leaderboard'}
+            nextLoading={nextLoading}
+          />
         </div>
       </main>
     )
@@ -93,7 +99,7 @@ export default function DrawfulHost({ room, roomId, hostId, refresh }) {
         <div>
           {phase === 'countdown' && <CountdownOverlay countdown={countdown} />}
           {phase === 'playing' && dd && (
-            <AnimatePhase phaseKey={dd.step}>
+            <AnimatePhase phaseKey={`${round}-${dd.step}`}>
               {dd.step === 'assign' && (
                 <p className="text-center text-2xl text-white">
                   <span style={{ color: drawer?.color }}>{drawer?.name}</span> is drawing…

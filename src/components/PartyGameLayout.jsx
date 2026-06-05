@@ -1,8 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import dynamic from 'next/dynamic'
+import { clearRejoin } from '@/lib/rejoin'
 
 const Leaderboard3D = dynamic(() => import('@/components/leaderboard/Leaderboard3D'), {
   ssr: false,
@@ -44,7 +46,27 @@ export function PhaseTimer({ endsAt, label }) {
   )
 }
 
-export function LeaderboardPhase({ room, onNextRound, showNext = true }) {
+export function GoHomeButton({ className = '' }) {
+  const router = useRouter()
+
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        clearRejoin()
+        router.push('/')
+      }}
+      className={`w-full rounded-xl border border-white/20 py-3 font-bold text-white transition hover:bg-white/10 ${className}`}
+    >
+      Back to home
+    </button>
+  )
+}
+
+export function LeaderboardPhase({ room, onNextRound, showNext = true, nextLoading = false }) {
+  const isVictory = !showNext
+  const winner = room?.players?.find((p) => p.id === room?.gameState?.winnerId)
+
   return (
     <motion.div key="lb" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
       <Leaderboard3D
@@ -52,14 +74,22 @@ export function LeaderboardPhase({ room, onNextRound, showNext = true }) {
         players={room?.players}
         targetScore={room?.config?.targetScore}
       />
-      {showNext && (
+      {isVictory && winner && (
+        <p className="mt-6 text-center font-display text-3xl font-bold text-cube-cyan">
+          {winner.name} wins!
+        </p>
+      )}
+      {showNext ? (
         <button
           type="button"
           onClick={onNextRound}
-          className="mt-6 w-full rounded-xl bg-cube-violet py-3 font-bold text-white hover:bg-cube-violet/90"
+          disabled={nextLoading}
+          className="mt-6 w-full rounded-xl bg-cube-violet py-3 font-bold text-white hover:bg-cube-violet/90 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Next round →
+          {nextLoading ? 'Starting…' : 'Next round →'}
         </button>
+      ) : (
+        <GoHomeButton className="mt-6" />
       )}
     </motion.div>
   )

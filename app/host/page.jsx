@@ -33,7 +33,6 @@ function HostForm() {
       saveRejoin({
         roomId: data.roomId,
         gameCode: data.gameCode,
-        playerId: data.myPlayerId,
         playerName: name.trim() || 'Host',
         isHost: true,
         mode: data.mode,

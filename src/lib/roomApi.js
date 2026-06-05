@@ -102,6 +102,15 @@ export async function sendFlap(roomId, playerId) {
   return sendInput(roomId, playerId, 'flap')
 }
 
+export async function sendChat(roomId, playerId, text, { asGuess = false } = {}) {
+  const res = await fetchRoom(`${ROOM_PATH}/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ roomId, playerId, text, asGuess }),
+  })
+  return parseResponse(res, 'Failed to send message')
+}
+
 export async function sendInput(roomId, playerId, action, payload) {
   const res = await fetchRoom(`${ROOM_PATH}/input`, {
     method: 'POST',

@@ -60,9 +60,14 @@ export function PartyVideoProvider({ children }) {
     return safePeerId(roomId, myPlayerId)
   }, [roomId, myPlayerId, isDisplayMode])
 
+  const connectedPlayers = useMemo(
+    () => players.filter((p) => !p.disconnectedAt),
+    [players]
+  )
+
   const otherPlayers = useMemo(
-    () => players.filter((p) => p.id !== myPlayerId),
-    [players, myPlayerId]
+    () => connectedPlayers.filter((p) => p.id !== myPlayerId),
+    [connectedPlayers, myPlayerId]
   )
 
   const visibleRemotePeers = useMemo(
@@ -306,12 +311,15 @@ export function PartyVideoProvider({ children }) {
     if (!ready || !peerRef.current || !localStream || !roomId) return
 
     if (isDisplayMode) {
-      for (const player of players) {
+      for (const player of connectedPlayers) {
         const theirId = safePeerId(roomId, player.id)
         dialPeer(theirId, player.name, localStream)
       }
       return
     }
+
+    const displayId = displayPeerId(roomId)
+    dialPeer(displayId, 'TV', localStream)
 
     for (const player of otherPlayers) {
       const theirId = safePeerId(roomId, player.id)
@@ -319,13 +327,13 @@ export function PartyVideoProvider({ children }) {
       if (myId > theirId) continue
       dialPeer(theirId, player.name, localStream)
     }
-  }, [ready, roomId, myId, otherPlayers, players, localStream, isDisplayMode, dialPeer])
+  }, [ready, roomId, myId, otherPlayers, connectedPlayers, localStream, isDisplayMode, dialPeer])
 
   useEffect(() => {
     if (!isDisplayMode || !ready || !localStream || !roomId) return undefined
 
     const retry = () => {
-      for (const player of players) {
+      for (const player of connectedPlayers) {
         const theirId = safePeerId(roomId, player.id)
         dialPeer(theirId, player.name, localStream)
       }
@@ -333,7 +341,18 @@ export function PartyVideoProvider({ children }) {
 
     const id = setInterval(retry, 4000)
     return () => clearInterval(id)
-  }, [isDisplayMode, ready, roomId, players, localStream, dialPeer])
+  }, [isDisplayMode, ready, roomId, connectedPlayers, localStream, dialPeer])
+
+  useEffect(() => {
+    if (isDisplayMode || !ready || !localStream || !roomId) return undefined
+
+    const displayId = displayPeerId(roomId)
+    const retry = () => dialPeer(displayId, 'TV', localStream)
+
+    retry()
+    const id = setInterval(retry, 4000)
+    return () => clearInterval(id)
+  }, [isDisplayMode, ready, roomId, localStream, dialPeer])
 
   useEffect(() => {
     if (!localStream || isDisplayMode) return

@@ -67,9 +67,15 @@ export default function FinishPlay({ room, roomId, playerId, players }) {
       <p className="text-center text-xs uppercase text-cube-violet">
         {isPresenter ? 'You are presenting' : 'You are a challenger'}
       </p>
-      <p className="mt-4 text-center text-lg text-white/80">{lmf.questionText}</p>
+      {lmf.step === 'question' && !isPresenter && (
+        <p className="mt-8 text-center text-white/50">Watch the TV for the question…</p>
+      )}
 
       {lmf.step === 'question' && isPresenter && (
+        <>
+          <p className="mt-4 text-center text-lg font-semibold leading-relaxed text-white">
+            {lmf.questionText}
+          </p>
         <button
           type="button"
           onClick={startPitch}
@@ -77,6 +83,7 @@ export default function FinishPlay({ room, roomId, playerId, players }) {
         >
           Start pitch
         </button>
+        </>
       )}
 
       {lmf.step === 'pitch' && isPresenter && (

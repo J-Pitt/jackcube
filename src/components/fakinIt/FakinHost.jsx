@@ -1,8 +1,9 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { advanceGame, nextRound } from '@/lib/roomApi'
 import { useStepTimer } from '@/hooks/useStepTimer'
+import { useGameCountdown } from '@/hooks/useGameCountdown'
 import {
   AnimatePhase,
   CountdownOverlay,
@@ -12,25 +13,19 @@ import {
 } from '@/components/PartyGameLayout'
 
 export default function FakinHost({ room, roomId, hostId, refresh }) {
-  const [countdown, setCountdown] = useState(null)
+  const [nextLoading, setNextLoading] = useState(false)
   const phase = room?.phase
+  const round = room?.gameState?.round ?? 1
   const fi = room?.gameState?.fakinIt
   const players = room?.players || []
 
-  useEffect(() => {
-    if (phase !== 'countdown' || !hostId) return undefined
-    setCountdown(3)
-    const interval = setInterval(() => {
-      setCountdown((c) => (c <= 1 ? null : c - 1))
-    }, 1000)
-    const timeout = setTimeout(() => {
-      advanceGame(roomId, hostId).then(() => refresh()).catch(() => {})
-    }, 3200)
-    return () => {
-      clearInterval(interval)
-      clearTimeout(timeout)
-    }
-  }, [phase, roomId, hostId, refresh, room?.gameState?.round])
+  const countdown = useGameCountdown({
+    phase,
+    round,
+    roomId,
+    hostId,
+    onDone: refresh,
+  })
 
   useStepTimer({
     enabled: phase === 'playing' && !!fi?.endsAt,
@@ -41,9 +36,15 @@ export default function FakinHost({ room, roomId, hostId, refresh }) {
   })
 
   const handleNextRound = useCallback(async () => {
-    await nextRound(roomId, hostId)
-    refresh()
-  }, [roomId, hostId, refresh])
+    if (nextLoading) return
+    setNextLoading(true)
+    try {
+      await nextRound(roomId, hostId)
+      refresh()
+    } finally {
+      setNextLoading(false)
+    }
+  }, [roomId, hostId, refresh, nextLoading])
 
   const handleForceAdvance = useCallback(async () => {
     await advanceGame(roomId, hostId)
@@ -66,12 +67,12 @@ export default function FakinHost({ room, roomId, hostId, refresh }) {
           subtitle={`Round ${room?.gameState?.round ?? ''}`}
         />
         <div className="mx-auto max-w-5xl">
-          <LeaderboardPhase room={room} onNextRound={handleNextRound} showNext={phase === 'leaderboard'} />
-          {phase === 'victory' && (
-            <p className="mt-6 text-center font-display text-3xl text-cube-cyan">
-              {players.find((p) => p.id === room?.gameState?.winnerId)?.name} wins!
-            </p>
-          )}
+          <LeaderboardPhase
+            room={room}
+            onNextRound={handleNextRound}
+            showNext={phase === 'leaderboard'}
+            nextLoading={nextLoading}
+          />
         </div>
       </main>
     )
@@ -88,7 +89,7 @@ export default function FakinHost({ room, roomId, hostId, refresh }) {
         {phase === 'countdown' && <CountdownOverlay countdown={countdown} />}
 
         {phase === 'playing' && fi && (
-          <AnimatePhase phaseKey={fi.step}>
+          <AnimatePhase phaseKey={`${round}-${fi.step}`}>
             <div className="rounded-2xl border border-white/10 bg-cube-surface/80 p-8">
               {fi.step === 'prompt' && (
                 <>
