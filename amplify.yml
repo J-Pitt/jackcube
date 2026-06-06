@@ -8,6 +8,7 @@ frontend:
       commands:
         - env | grep -E '^UPSTASH_REDIS_REST_URL=' >> .env.production || true
         - env | grep -E '^UPSTASH_REDIS_REST_TOKEN=' >> .env.production || true
+        - env | grep -E '^ADULT_GAMES_PASSWORD=' >> .env.production || true
         - env | grep -E '^NEXT_PUBLIC_' >> .env.production || true
         - npm run build
   artifacts:
