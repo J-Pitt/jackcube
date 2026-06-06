@@ -13,7 +13,7 @@ const outfit = Outfit({
 })
 
 export const metadata = {
-  title: 'JackCube — Party Game',
+  title: 'Party Cube — Party Game',
   description: 'Multiplayer party game — phones as controllers, TV as the show',
 }
 

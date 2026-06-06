@@ -50,7 +50,7 @@ function HomeContent() {
           <span className="text-4xl">🎲</span>
         </div>
         <h1 className="font-display text-5xl font-extrabold tracking-tight text-white">
-          JackCube
+          Party Cube
         </h1>
         <p className="mt-3 text-lg text-white/60">
           Party games on the big screen. Phones as controllers.

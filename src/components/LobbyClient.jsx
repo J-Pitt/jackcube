@@ -175,7 +175,7 @@ export default function LobbyPage() {
       <main className="mx-auto min-h-screen max-w-5xl px-4 py-8">
         <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="text-sm uppercase tracking-widest text-cube-violet">JackCube</p>
+            <p className="text-sm uppercase tracking-widest text-cube-violet">Party Cube</p>
             <h1 className="font-display text-3xl font-bold text-white">Party lobby</h1>
             <p className="mt-1 text-sm text-white/50">
               {room?.mode === 'local' ? '🏠 Local party' : '🌐 Online party'}

@@ -201,7 +201,7 @@ export function GameStage({ title, emoji, accentKey, room, round, maxRounds, chi
             {emoji}
           </span>
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/40">JackCube</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/40">Party Cube</p>
             <h1 className="font-display text-2xl font-extrabold leading-tight text-white">{title}</h1>
           </div>
         </div>

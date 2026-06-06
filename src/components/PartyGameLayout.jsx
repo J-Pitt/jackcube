@@ -123,7 +123,7 @@ export function GameHeader({ title, room, subtitle }) {
   return (
     <header className="mx-auto mb-4 flex max-w-5xl items-center justify-between">
       <div>
-        <p className="text-xs uppercase tracking-widest text-cube-violet">JackCube</p>
+        <p className="text-xs uppercase tracking-widest text-cube-violet">Party Cube</p>
         <h1 className="font-display text-2xl font-bold text-white">{title}</h1>
         {subtitle && <p className="text-sm text-white/40">{subtitle}</p>}
       </div>
