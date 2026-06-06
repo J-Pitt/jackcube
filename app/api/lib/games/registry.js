@@ -3,10 +3,16 @@ const GAMES = {
   bluffBox: { id: 'bluffBox', minPlayers: 2, maxPlayers: 5, maxRounds: 5 },
   triviaToss: { id: 'triviaToss', minPlayers: 2, maxPlayers: 5, maxRounds: 5 },
   reactionRush: { id: 'reactionRush', minPlayers: 2, maxPlayers: 5, maxRounds: 5 },
+  categories: { id: 'categories', minPlayers: 2, maxPlayers: 5, maxRounds: 5 },
+  doodle: { id: 'doodle', minPlayers: 3, maxPlayers: 5, maxRounds: 5 },
+  wordBluff: { id: 'wordBluff', minPlayers: 2, maxPlayers: 5, maxRounds: 5 },
   truthOrCube: { id: 'truthOrCube', minPlayers: 2, maxPlayers: 8, maxRounds: 10 },
   fakinIt: { id: 'fakinIt', minPlayers: 3, maxPlayers: 8, maxRounds: 5 },
   dirtyDrawful: { id: 'dirtyDrawful', minPlayers: 3, maxPlayers: 8, maxRounds: 5 },
   letMeFinish: { id: 'letMeFinish', minPlayers: 3, maxPlayers: 8, maxRounds: 5 },
+  wouldYouRather: { id: 'wouldYouRather', minPlayers: 2, maxPlayers: 8, maxRounds: 5 },
+  neverHaveIEver: { id: 'neverHaveIEver', minPlayers: 2, maxPlayers: 8, maxRounds: 5 },
+  cardCrimes: { id: 'cardCrimes', minPlayers: 3, maxPlayers: 5, maxRounds: 5 },
 }
 
 const VALID_GAMES = Object.keys(GAMES)

@@ -15,13 +15,22 @@ import {
   getAccent,
 } from '@/components/game/GameUI'
 
-const ACCENT_KEY = 'bluffBox'
-
-export default function BluffHost({ room, roomId, hostId, refresh }) {
+export default function BluffHost({
+  room,
+  roomId,
+  hostId,
+  refresh,
+  slotKey = 'bluffBox',
+  accentKey = 'bluffBox',
+  title = 'Bluff Box',
+  emoji = '🎭',
+  writeLabel = 'Invent a convincing fake answer on your phone',
+}) {
+  const ACCENT_KEY = accentKey
   const [nextLoading, setNextLoading] = useState(false)
   const phase = room?.phase
   const round = room?.gameState?.round ?? 1
-  const bb = room?.gameState?.bluffBox
+  const bb = room?.gameState?.[slotKey]
   const players = room?.players || []
   const accent = getAccent(ACCENT_KEY)
   const standings = players.some((p) => Number(p.score) > 0) ? players : undefined
@@ -54,7 +63,7 @@ export default function BluffHost({ room, roomId, hostId, refresh }) {
 
   if (phase === 'leaderboard' || phase === 'victory') {
     return (
-      <GameStage title="Bluff Box" emoji="🎭" accentKey={ACCENT_KEY} room={room} round={round} maxRounds={5}>
+      <GameStage title={title} emoji={emoji} accentKey={ACCENT_KEY} room={room} round={round} maxRounds={5}>
         <LeaderboardPhase
           room={room}
           onNextRound={handleNextRound}
@@ -66,14 +75,14 @@ export default function BluffHost({ room, roomId, hostId, refresh }) {
   }
 
   return (
-    <GameStage title="Bluff Box" emoji="🎭" accentKey={ACCENT_KEY} room={room} round={round} maxRounds={5} standings={standings}>
+    <GameStage title={title} emoji={emoji} accentKey={ACCENT_KEY} room={room} round={round} maxRounds={5} standings={standings}>
       {phase === 'countdown' && <CountdownOverlay countdown={countdown} />}
 
       {phase === 'playing' && bb && (
         <PhaseReveal key={`${round}-${bb.step}`}>
           {bb.step === 'write' && (
             <div className="space-y-8">
-              <PromptCard label="Invent a convincing fake answer on your phone" accentKey={ACCENT_KEY}>
+              <PromptCard label={writeLabel} accentKey={ACCENT_KEY}>
                 <p className="font-display text-3xl font-extrabold leading-snug text-white sm:text-4xl">
                   {bb.promptText}
                 </p>

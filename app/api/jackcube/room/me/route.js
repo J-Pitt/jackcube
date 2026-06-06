@@ -136,6 +136,70 @@ export async function GET(request) {
       payload.early = !!rr.earlyTappers?.[playerId]
     }
 
+    if (gameId === 'categories' && room.gameState?.categories) {
+      const cat = room.gameState.categories
+      payload.step = cat.step
+      payload.letter = cat.letter
+      payload.categories = cat.categories
+      payload.submitted = Array.isArray(cat.answers?.[playerId])
+      payload.myAnswers = cat.answers?.[playerId] || null
+    }
+
+    if (gameId === 'doodle' && room.gameState?.doodle) {
+      const dl = room.gameState.doodle
+      const sec = secrets.doodle || {}
+      const isDrawer = dl.drawerId === playerId
+      payload.role = isDrawer ? 'drawer' : 'guesser'
+      payload.step = dl.step
+      if (isDrawer && dl.step !== 'reveal') {
+        payload.privatePrompt = sec.promptText || null
+      } else if (dl.step === 'reveal') {
+        payload.privatePrompt = dl.promptText || sec.promptText
+      }
+    }
+
+    if ((gameId === 'wouldYouRather' && room.gameState?.wouldYouRather) || (gameId === 'neverHaveIEver' && room.gameState?.neverHaveIEver)) {
+      const v = room.gameState[gameId]
+      payload.step = v.step
+      payload.voted = v.votes?.[playerId] !== undefined
+      payload.myChoice = v.votes?.[playerId] ?? null
+      if (gameId === 'wouldYouRather') {
+        payload.optionA = v.optionA
+        payload.optionB = v.optionB
+      } else {
+        payload.statement = v.statement
+      }
+    }
+
+    if (gameId === 'cardCrimes' && room.gameState?.cardCrimes) {
+      const cc = room.gameState.cardCrimes
+      const sec = secrets.cardCrimes || {}
+      const isJudge = cc.judgeId === playerId
+      payload.role = isJudge ? 'judge' : 'player'
+      payload.step = cc.step
+      payload.black = cc.black
+      payload.submitted = !!cc.submissions?.[playerId]
+      if (!isJudge) {
+        payload.hand = sec.hands?.[playerId] || []
+      }
+    }
+
+    if (gameId === 'wordBluff' && room.gameState?.wordBluff) {
+      const wb = room.gameState.wordBluff
+      payload.step = wb.step
+      payload.promptText = wb.promptText
+      payload.word = wb.word
+      payload.submitted = !!wb.bluffs?.[playerId]
+      payload.guessed = !!wb.guesses?.[playerId]
+      if (wb.step === 'guess') {
+        payload.choices = (wb.choices || []).map((c) => ({
+          id: c.id,
+          text: c.text,
+          mine: c.authorId === playerId,
+        }))
+      }
+    }
+
     return NextResponse.json(payload)
   } catch (err) {
     return NextResponse.json(

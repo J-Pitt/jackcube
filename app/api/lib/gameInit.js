@@ -1,4 +1,4 @@
-const { pickRandomItem, pickHostLine } = require('./content')
+const { pickRandomItem, sampleItems, pickHostLine } = require('./content')
 const { buildBluffChoices } = require('./games/partyGameUtils')
 
 const ROUND_MS = {
@@ -10,6 +10,20 @@ const ROUND_MS = {
   bluffBox: { write: 40000, guess: 35000, reveal: 10000 },
   triviaToss: { question: 20000, reveal: 8000 },
   reactionRush: { ready: 0, go: 5000, reveal: 7000 },
+  categories: { write: 60000, reveal: 14000 },
+  doodle: { assign: 5000, draw: 75000, guess: 25000, reveal: 10000 },
+  wordBluff: { write: 50000, guess: 40000, reveal: 11000 },
+  wouldYouRather: { vote: 25000, reveal: 12000 },
+  neverHaveIEver: { vote: 25000, reveal: 12000 },
+  cardCrimes: { submit: 50000, judge: 35000, reveal: 12000 },
+}
+
+const CARD_CRIMES_HAND_SIZE = 6
+
+const CATEGORY_LETTERS = 'ABCDEFGHIKLMNOPRST'
+
+function pickLetter() {
+  return CATEGORY_LETTERS[Math.floor(Math.random() * CATEGORY_LETTERS.length)]
 }
 
 function endsIn(ms) {
@@ -260,6 +274,162 @@ function createReactionRushState(players, room, round = 1) {
   }
 }
 
+function createCategoriesState(players, room, round = 1) {
+  const used = room.gameState?.categories?.usedPromptIds || []
+  const item = pickRandomItem('categories/prompts', { excludeIds: used })
+
+  return {
+    round,
+    categories: {
+      step: 'write',
+      promptId: item?.id || null,
+      categories: item?.categories || ['An animal', 'A food', 'A country'],
+      letter: pickLetter(),
+      answers: {},
+      endsAt: endsIn(ROUND_MS.categories.write),
+      usedPromptIds: item ? [...used, item.id] : used,
+    },
+    secrets: {},
+    roundResults: null,
+    winnerId: null,
+  }
+}
+
+function createDoodleState(players, room, round = 1) {
+  const used = room.gameState?.doodle?.usedPromptIds || []
+  const item = pickRandomItem('doodle/words', { excludeIds: used })
+  const drawerId = pickDrawer(players, round)
+
+  return {
+    round,
+    doodle: {
+      step: 'assign',
+      drawerId,
+      promptId: item?.id || null,
+      strokes: [],
+      guesses: {},
+      correctGuessers: [],
+      endsAt: endsIn(ROUND_MS.doodle.assign),
+      usedPromptIds: item ? [...used, item.id] : used,
+    },
+    secrets: {
+      doodle: {
+        promptText: item?.text || 'star',
+        promptId: item?.id,
+      },
+    },
+    roundResults: null,
+    winnerId: null,
+  }
+}
+
+function createWordBluffState(players, room, round = 1) {
+  const used = room.gameState?.wordBluff?.usedPromptIds || []
+  const item = pickRandomItem('wordBluff/words', { excludeIds: used })
+
+  return {
+    round,
+    wordBluff: {
+      step: 'write',
+      promptId: item?.id || null,
+      word: item?.text || 'WORD',
+      promptText: `What does “${item?.text || 'WORD'}” mean?`,
+      bluffs: {},
+      guesses: {},
+      choices: [],
+      endsAt: endsIn(ROUND_MS.wordBluff.write),
+      usedPromptIds: item ? [...used, item.id] : used,
+    },
+    secrets: {
+      wordBluff: {
+        realAnswer: item?.answer || 'unknown',
+        promptId: item?.id,
+      },
+    },
+    roundResults: null,
+    winnerId: null,
+  }
+}
+
+function createWouldYouRatherState(players, room, round = 1) {
+  const used = room.gameState?.wouldYouRather?.usedPromptIds || []
+  const item = pickRandomItem('wouldYouRather/prompts', { excludeIds: used })
+
+  return {
+    round,
+    wouldYouRather: {
+      step: 'vote',
+      promptId: item?.id || null,
+      optionA: item?.optionA || 'This',
+      optionB: item?.optionB || 'That',
+      votes: {},
+      endsAt: endsIn(ROUND_MS.wouldYouRather.vote),
+      usedPromptIds: item ? [...used, item.id] : used,
+    },
+    secrets: {},
+    roundResults: null,
+    winnerId: null,
+  }
+}
+
+function createNeverHaveIEverState(players, room, round = 1) {
+  const used = room.gameState?.neverHaveIEver?.usedPromptIds || []
+  const item = pickRandomItem('neverHaveIEver/prompts', { excludeIds: used })
+
+  return {
+    round,
+    neverHaveIEver: {
+      step: 'vote',
+      promptId: item?.id || null,
+      statement: item?.text || 'Never have I ever told the truth in this game.',
+      votes: {},
+      endsAt: endsIn(ROUND_MS.neverHaveIEver.vote),
+      usedPromptIds: item ? [...used, item.id] : used,
+    },
+    secrets: {},
+    roundResults: null,
+    winnerId: null,
+  }
+}
+
+function createCardCrimesState(players, room, round = 1) {
+  const usedBlack = room.gameState?.cardCrimes?.usedBlackIds || []
+  const black = pickRandomItem('cardCrimes/black', { excludeIds: usedBlack })
+  const judgeId = pickPresenter(players, round)
+
+  const need = players.length * CARD_CRIMES_HAND_SIZE
+  const whites = sampleItems('cardCrimes/white', need)
+  const hands = {}
+  players.forEach((p, idx) => {
+    hands[p.id] = whites
+      .slice(idx * CARD_CRIMES_HAND_SIZE, (idx + 1) * CARD_CRIMES_HAND_SIZE)
+      .map((w) => ({ id: w.id, text: w.text }))
+  })
+
+  return {
+    round,
+    cardCrimes: {
+      step: 'submit',
+      judgeId,
+      black: { text: black?.text || '___', pick: black?.pick || 1 },
+      submissions: {},
+      board: [],
+      pickedSid: null,
+      winnerId: null,
+      endsAt: endsIn(ROUND_MS.cardCrimes.submit),
+      usedBlackIds: black ? [...usedBlack, black.id] : usedBlack,
+    },
+    secrets: {
+      cardCrimes: {
+        hands,
+        sidToPid: {},
+      },
+    },
+    roundResults: null,
+    winnerId: null,
+  }
+}
+
 function createGameState(gameId, players, room, round = 1) {
   switch (gameId) {
     case 'fakinIt':
@@ -276,6 +446,18 @@ function createGameState(gameId, players, room, round = 1) {
       return createTriviaTossState(players, room, round)
     case 'reactionRush':
       return createReactionRushState(players, room, round)
+    case 'categories':
+      return createCategoriesState(players, room, round)
+    case 'doodle':
+      return createDoodleState(players, room, round)
+    case 'wordBluff':
+      return createWordBluffState(players, room, round)
+    case 'wouldYouRather':
+      return createWouldYouRatherState(players, room, round)
+    case 'neverHaveIEver':
+      return createNeverHaveIEverState(players, room, round)
+    case 'cardCrimes':
+      return createCardCrimesState(players, room, round)
     case 'captionClash':
     default:
       return createCaptionClashState(players, room, round)

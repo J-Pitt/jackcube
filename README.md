@@ -24,8 +24,19 @@ Jackbox & Mario Party-inspired games — pick from [/games](http://localhost:518
 |------|-----|---------|-----|-------|
 | Caption Clash | `captionClash` | 2–5 | Prompt, answers, votes | Write + vote (Quiplash-style) |
 | Bluff Box | `bluffBox` | 2–5 | Fill-in-blank, reveal | Submit bluffs + guess truth (Fibbage-style) |
-| Trivia Toss | `triviaToss` | 2–5 | Question + reveal | Multiple-choice trivia |
+| Trivia Toss | `triviaToss` | 2–5 | Question + reveal | Multiple-choice trivia (50+ Q bank) |
 | Reaction Rush | `reactionRush` | 2–5 | WAIT… GO! | Reflex tap mini-game |
+| Categories | `categories` | 2–5 | Letter + 3 categories, score grid | Type answers fast (Scattergories-style) |
+| Doodle Dash | `doodle` | 3–5 | Live drawing + reveal | One draws, everyone guesses (Pictionary-style) |
+| Word Bluff | `wordBluff` | 2–5 | Obscure word + reveal | Fake a definition, spot the real one (Balderdash-style) |
+
+### Open content / licensing
+
+New games reuse openly-licensed inspiration. Content is bundled as JSON decks under `src/content/decks/`:
+
+- **Trivia Toss** — general-knowledge bank inspired by the [Open Trivia Database](https://opentdb.com) (CC BY-SA 4.0); questions authored for Party Cube.
+- **Doodle Dash** — family word list inspired by open word lists ([wordnik/wordlist](https://github.com/wordnik/wordlist) MIT, [pandaqi/pq-words](https://github.com/pandaqi/pq-words) MIT).
+- **Word Bluff** — obscure-word definitions authored for Party Cube.
 
 ## 18+ mature games
 
@@ -37,6 +48,14 @@ Adult party games ship with curated JSON prompt decks under `src/content/decks/`
 | Fakin' It All Night Long | `fakinIt` | 3–8 |
 | Dirty Drawful | `dirtyDrawful` | 3–8 |
 | Let Me Finish | `letMeFinish` | 3–8 |
+| Would You Rather | `wouldYouRather` | 2–8 |
+| Never Have I Ever | `neverHaveIEver` | 2–8 |
+| Card Crimes | `cardCrimes` | 3–5 |
+
+Adult content sources (all decks authored in-house, under `src/content/decks/`):
+
+- **Would You Rather / Never Have I Ever** — spicy prompts inspired by the MIT-licensed [party-game-sentences](https://github.com/itsbrunodev/party-game-sentences) and [TalkShitGetDared](https://github.com/kyrexiii/TalkShitGetDared).
+- **Card Crimes** — original fill-in cards. To use real Cards Against Humanity content, drop in [crhallberg/json-against-humanity](https://github.com/crhallberg/json-against-humanity) (**CC BY-NC-SA 4.0** — free, non-commercial, share-alike, with credit only).
 
 **Consent:** Mature games show an 18+ gate before lobby/play.
 

@@ -9,6 +9,12 @@ export const ACCENTS = {
   bluffBox: { hex: '#6C5CE7', glow: 'rgba(108,92,231,0.4)' },
   triviaToss: { hex: '#4ECDC4', glow: 'rgba(78,205,196,0.35)' },
   reactionRush: { hex: '#FF6B6B', glow: 'rgba(255,107,107,0.4)' },
+  categories: { hex: '#FFB703', glow: 'rgba(255,183,3,0.4)' },
+  doodle: { hex: '#06D6A0', glow: 'rgba(6,214,160,0.4)' },
+  wordBluff: { hex: '#EF476F', glow: 'rgba(239,71,111,0.4)' },
+  wouldYouRather: { hex: '#F72585', glow: 'rgba(247,37,133,0.4)' },
+  neverHaveIEver: { hex: '#B5179E', glow: 'rgba(181,23,158,0.4)' },
+  cardCrimes: { hex: '#E5383B', glow: 'rgba(229,56,59,0.42)' },
   default: { hex: '#00F5D4', glow: 'rgba(0,245,212,0.35)' },
 }
 

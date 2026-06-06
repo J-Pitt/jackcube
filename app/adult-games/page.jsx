@@ -1,16 +1,19 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { ADULT_GAMES } from '@/lib/games/registry'
 import { isAdultUnlocked } from '@/lib/adultAccess'
 import MatureGate from '@/components/MatureGate'
 
-export default function AdultGamesPage() {
+function AdultGamesContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [ready, setReady] = useState(false)
+  const mode = searchParams.get('mode') === 'local' ? 'local' : searchParams.get('mode') === 'online' ? 'online' : null
+  const modeLabel = mode === 'local' ? 'Local' : mode === 'online' ? 'Online' : null
 
   useEffect(() => {
     if (!isAdultUnlocked()) {
@@ -35,7 +38,9 @@ export default function AdultGamesPage() {
           ← Back home
         </Link>
         <h1 className="mt-6 font-display text-4xl font-bold text-white">Adult games</h1>
-        <p className="mt-2 text-white/50">Pick a game, then host a local or online party.</p>
+        <p className="mt-2 text-white/50">
+          {modeLabel ? `${modeLabel} party — pick a game to host.` : 'Pick a game, then host a local or online party.'}
+        </p>
 
         <div className="mt-10 space-y-4">
           {ADULT_GAMES.map((g, i) => (
@@ -54,24 +59,43 @@ export default function AdultGamesPage() {
               <p className="mt-1 text-xs text-white/30">
                 {g.minPlayers}–{g.maxPlayers} players
               </p>
-              <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                <Link
-                  href={`/host?mode=local&gameId=${g.id}&adult=1`}
-                  className="rounded-xl border border-white/10 py-2.5 text-center text-sm font-semibold text-white hover:border-cube-cyan/50"
-                >
-                  Host local
-                </Link>
-                <Link
-                  href={`/host?mode=online&gameId=${g.id}&adult=1`}
-                  className="rounded-xl border border-white/10 py-2.5 text-center text-sm font-semibold text-white hover:border-cube-violet/50"
-                >
-                  Host online
-                </Link>
-              </div>
+              {mode ? (
+                <div className="mt-4">
+                  <Link
+                    href={`/host?mode=${mode}&gameId=${g.id}&adult=1`}
+                    className="block rounded-xl border border-cube-danger/40 bg-cube-danger/10 py-2.5 text-center text-sm font-semibold text-white hover:bg-cube-danger/20"
+                  >
+                    Host {modeLabel.toLowerCase()} game
+                  </Link>
+                </div>
+              ) : (
+                <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                  <Link
+                    href={`/host?mode=local&gameId=${g.id}&adult=1`}
+                    className="rounded-xl border border-white/10 py-2.5 text-center text-sm font-semibold text-white hover:border-cube-cyan/50"
+                  >
+                    Host local
+                  </Link>
+                  <Link
+                    href={`/host?mode=online&gameId=${g.id}&adult=1`}
+                    className="rounded-xl border border-white/10 py-2.5 text-center text-sm font-semibold text-white hover:border-cube-violet/50"
+                  >
+                    Host online
+                  </Link>
+                </div>
+              )}
             </motion.div>
           ))}
         </div>
       </main>
     </MatureGate>
+  )
+}
+
+export default function AdultGamesPage() {
+  return (
+    <Suspense fallback={<main className="flex min-h-screen items-center justify-center text-white/50">Loading…</main>}>
+      <AdultGamesContent />
+    </Suspense>
   )
 }

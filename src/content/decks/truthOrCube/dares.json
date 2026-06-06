@@ -252,6 +252,25 @@
         "dare"
       ],
       "remotePlaySafe": false
-    }
+    },
+    { "id": "toc-dare-032", "text": "Text your crush a single fire emoji on camera — or chicken out.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-033", "text": "Read your most recent text out loud in your most dramatic voice.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-034", "text": "Show the group your most-used emoji and tell its real story.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-035", "text": "Do your best seductive wink at the camera three times.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-036", "text": "Let the group write your next status — and read it aloud.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-037", "text": "Give a 15-second TED talk on why you're a catch.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-038", "text": "Show the last selfie in your camera roll with zero context.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-039", "text": "Do your most convincing fake laugh until someone else laughs.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-040", "text": "Pick a player and serenade them through the camera for 10 seconds.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-041", "text": "Confess your most recent guilty-pleasure song and play 5 seconds of it.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-042", "text": "Do a runway walk across your room on camera.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-043", "text": "Let the group dare you to call (not text) someone right now.", "tags": ["dare"], "remotePlaySafe": false },
+    { "id": "toc-dare-044", "text": "Reenact your worst flirting attempt for the group.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-045", "text": "Show your screen time and explain your most-used app.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-046", "text": "Speak only in pickup lines until your next turn.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-047", "text": "Let the player to your left choose an emoji you must text someone.", "tags": ["dare"], "remotePlaySafe": false },
+    { "id": "toc-dare-048", "text": "Do your best impression of a player flirting — let them guess who.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-049", "text": "Give the camera bedroom eyes for a full 10 seconds without laughing.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-050", "text": "Read your last DM out loud in a soap-opera voice.", "tags": ["dare"], "remotePlaySafe": true }
   ]
 }

@@ -1,11 +1,17 @@
 'use client'
 
 import Link from 'next/link'
+import { Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { PARTY_GAMES } from '@/lib/games/registry'
 import { getAccent } from '@/components/game/GameUI'
 
-export default function GamesPage() {
+function GamesContent() {
+  const searchParams = useSearchParams()
+  const mode = searchParams.get('mode') === 'local' ? 'local' : searchParams.get('mode') === 'online' ? 'online' : null
+  const modeLabel = mode === 'local' ? 'Local' : mode === 'online' ? 'Online' : null
+
   return (
     <main className="mx-auto min-h-screen max-w-3xl px-6 py-12">
       <Link href="/" className="text-sm text-white/40 transition hover:text-cube-cyan">
@@ -14,7 +20,9 @@ export default function GamesPage() {
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6">
         <h1 className="font-display text-4xl font-extrabold text-white">Party games</h1>
         <p className="mt-2 text-white/50">
-          Jackbox &amp; Mario Party vibes — 2–5 players, phones as controllers, TV as the show.
+          {modeLabel
+            ? `${modeLabel} party — pick a game to host.`
+            : 'Jackbox & Mario Party vibes — 2–5 players, phones as controllers, TV as the show.'}
         </p>
       </motion.div>
 
@@ -47,19 +55,31 @@ export default function GamesPage() {
                 {g.minPlayers}–{g.maxPlayers} players · {g.maxRounds} rounds
               </p>
               <div className="mt-5 flex flex-wrap gap-3">
-                <Link
-                  href={`/host?mode=local&gameId=${g.id}`}
-                  className="rounded-xl px-4 py-2.5 text-sm font-bold text-cube-bg transition active:scale-95"
-                  style={{ background: accent.hex }}
-                >
-                  Host local
-                </Link>
-                <Link
-                  href={`/host?mode=online&gameId=${g.id}`}
-                  className="rounded-xl border border-white/20 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10"
-                >
-                  Host online
-                </Link>
+                {mode ? (
+                  <Link
+                    href={`/host?mode=${mode}&gameId=${g.id}`}
+                    className="rounded-xl px-5 py-2.5 text-sm font-bold text-cube-bg transition active:scale-95"
+                    style={{ background: accent.hex }}
+                  >
+                    Host {modeLabel.toLowerCase()} game
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      href={`/host?mode=local&gameId=${g.id}`}
+                      className="rounded-xl px-4 py-2.5 text-sm font-bold text-cube-bg transition active:scale-95"
+                      style={{ background: accent.hex }}
+                    >
+                      Host local
+                    </Link>
+                    <Link
+                      href={`/host?mode=online&gameId=${g.id}`}
+                      className="rounded-xl border border-white/20 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10"
+                    >
+                      Host online
+                    </Link>
+                  </>
+                )}
               </div>
             </motion.div>
           )
@@ -73,5 +93,13 @@ export default function GamesPage() {
         Joining a game instead? Enter a room code →
       </Link>
     </main>
+  )
+}
+
+export default function GamesPage() {
+  return (
+    <Suspense fallback={<main className="flex min-h-screen items-center justify-center text-white/50">Loading…</main>}>
+      <GamesContent />
+    </Suspense>
   )
 }

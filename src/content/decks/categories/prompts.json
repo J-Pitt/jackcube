@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "gameId": "categories",
+  "category": "prompts",
+  "locale": "en-US",
+  "items": [
+    { "id": "cat-001", "categories": ["An animal", "A food", "A country"] },
+    { "id": "cat-002", "categories": ["A movie", "A celebrity", "A board game"] },
+    { "id": "cat-003", "categories": ["Something in the kitchen", "A sport", "A color"] },
+    { "id": "cat-004", "categories": ["A school subject", "A pizza topping", "A superhero"] },
+    { "id": "cat-005", "categories": ["A car brand", "A fruit", "A city"] },
+    { "id": "cat-006", "categories": ["A video game", "A type of drink", "An animal"] },
+    { "id": "cat-007", "categories": ["A job", "A body part", "A holiday"] },
+    { "id": "cat-008", "categories": ["A famous person", "A musical instrument", "A vegetable"] },
+    { "id": "cat-009", "categories": ["A TV show", "Something you wear", "A flower"] },
+    { "id": "cat-010", "categories": ["A breakfast food", "A dog breed", "A planet or star"] },
+    { "id": "cat-011", "categories": ["A song", "A piece of furniture", "An app"] },
+    { "id": "cat-012", "categories": ["A reason to be late", "A snack", "A mythical creature"] },
+    { "id": "cat-013", "categories": ["A US state", "A dessert", "A type of shoe"] },
+    { "id": "cat-014", "categories": ["A thing in a backpack", "A cartoon character", "A kind of weather"] },
+    { "id": "cat-015", "categories": ["A restaurant chain", "A board game", "A wild animal"] },
+    { "id": "cat-016", "categories": ["A language", "A candy", "A tool"] },
+    { "id": "cat-017", "categories": ["A book", "A type of bird", "Something cold"] },
+    { "id": "cat-018", "categories": ["A hobby", "A pasta dish", "A river or lake"] },
+    { "id": "cat-019", "categories": ["A villain", "A vegetable", "A means of transport"] },
+    { "id": "cat-020", "categories": ["A cereal", "A famous landmark", "A type of dance"] }
+  ]
+}

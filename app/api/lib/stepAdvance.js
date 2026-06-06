@@ -8,6 +8,10 @@ const { scoreCaptionClashRound } = require('./games/captionClashScoring')
 const { scoreBluffBoxRound } = require('./games/bluffBoxScoring')
 const { scoreTriviaTossRound } = require('./games/triviaTossScoring')
 const { scoreReactionRushRound } = require('./games/reactionRushScoring')
+const { scoreCategoriesRound } = require('./games/categoriesScoring')
+const { scoreChoiceVoteRound } = require('./games/choiceVoteScoring')
+const { scoreCardCrimesRound } = require('./games/cardCrimesScoring')
+const { shuffleArray } = require('./games/partyGameUtils')
 const { scoreRound, checkVictory } = require('./scoring')
 
 /** Advance one step in the current party game. Mutates room in place. */
@@ -242,6 +246,149 @@ function applyStepAdvance(room, { forceStep } = {}) {
       return { roundEnded: true }
     }
     gs.reactionRush = rr
+  }
+
+  if (gameId === 'categories' && gs.categories) {
+    const cat = { ...gs.categories }
+
+    if (cat.step === 'write') {
+      cat.step = 'reveal'
+      cat.endsAt = endsIn(ROUND_MS.categories.reveal)
+    } else if (cat.step === 'reveal') {
+      const roundScores = scoreCategoriesRound(cat, room.players || [])
+      const { results, updatedPlayers } = scoreRound(room.players || [], roundScores)
+      room.players = updatedPlayers
+      const winner = checkVictory(updatedPlayers, targetScore)
+      room.phase = winner ? 'victory' : 'leaderboard'
+      room.gameState = { ...gs, categories: cat, roundResults: results, winnerId: winner?.id || null }
+      room.updatedAt = new Date().toISOString()
+      return { roundEnded: true }
+    }
+    gs.categories = cat
+  }
+
+  if (gameId === 'doodle' && gs.doodle) {
+    const dl = { ...gs.doodle }
+    const sec = secrets.doodle || {}
+
+    if (dl.step === 'assign') {
+      dl.step = 'draw'
+      dl.endsAt = endsIn(ROUND_MS.doodle.draw)
+    } else if (dl.step === 'draw') {
+      dl.step = 'guess'
+      dl.endsAt = endsIn(ROUND_MS.doodle.guess)
+    } else if (dl.step === 'guess') {
+      const target = sec.promptText || ''
+      const correctGuessers = []
+      Object.entries(dl.guesses || {}).forEach(([pid, guess]) => {
+        if (pid === dl.drawerId) return
+        const g = String(guess).trim().toLowerCase()
+        const t = String(target).trim().toLowerCase()
+        if (g && (g === t || t.includes(g) || g.includes(t))) correctGuessers.push(pid)
+      })
+      dl.correctGuessers = correctGuessers
+      dl.step = 'reveal'
+      dl.promptText = target
+      dl.endsAt = endsIn(ROUND_MS.doodle.reveal)
+    } else if (dl.step === 'reveal') {
+      const roundScores = scoreDirtyDrawfulRound(
+        { ...dl, promptText: sec.promptText || dl.promptText },
+        room.players || []
+      )
+      const { results, updatedPlayers } = scoreRound(room.players || [], roundScores)
+      room.players = updatedPlayers
+      const winner = checkVictory(updatedPlayers, targetScore)
+      room.phase = winner ? 'victory' : 'leaderboard'
+      room.gameState = { ...gs, doodle: dl, roundResults: results, winnerId: winner?.id || null }
+      room.updatedAt = new Date().toISOString()
+      return { roundEnded: true }
+    }
+    gs.doodle = dl
+  }
+
+  if (gameId === 'wordBluff' && gs.wordBluff) {
+    const wb = { ...gs.wordBluff }
+    const sec = secrets.wordBluff || {}
+
+    if (wb.step === 'write') {
+      wb.choices = buildBluffChoices(wb.bluffs || {}, sec.realAnswer, room.players || [])
+      wb.step = 'guess'
+      wb.endsAt = endsIn(ROUND_MS.wordBluff.guess)
+    } else if (wb.step === 'guess') {
+      wb.step = 'reveal'
+      wb.realAnswer = sec.realAnswer
+      wb.endsAt = endsIn(ROUND_MS.wordBluff.reveal)
+    } else if (wb.step === 'reveal') {
+      const roundScores = scoreBluffBoxRound(wb, room.players || [])
+      const { results, updatedPlayers } = scoreRound(room.players || [], roundScores)
+      room.players = updatedPlayers
+      const winner = checkVictory(updatedPlayers, targetScore)
+      room.phase = winner ? 'victory' : 'leaderboard'
+      room.gameState = { ...gs, wordBluff: wb, roundResults: results, winnerId: winner?.id || null }
+      room.updatedAt = new Date().toISOString()
+      return { roundEnded: true }
+    }
+    gs.wordBluff = wb
+  }
+
+  if ((gameId === 'wouldYouRather' && gs.wouldYouRather) || (gameId === 'neverHaveIEver' && gs.neverHaveIEver)) {
+    const slot = gameId
+    const v = { ...gs[slot] }
+    const options = gameId === 'wouldYouRather' ? ['a', 'b'] : ['have', 'never']
+
+    if (v.step === 'vote') {
+      v.step = 'reveal'
+      v.endsAt = endsIn(ROUND_MS[slot].reveal)
+    } else if (v.step === 'reveal') {
+      const roundScores = scoreChoiceVoteRound(v.votes || {}, room.players || [], options)
+      const { results, updatedPlayers } = scoreRound(room.players || [], roundScores)
+      room.players = updatedPlayers
+      const winner = checkVictory(updatedPlayers, targetScore)
+      room.phase = winner ? 'victory' : 'leaderboard'
+      room.gameState = { ...gs, [slot]: v, roundResults: results, winnerId: winner?.id || null }
+      room.updatedAt = new Date().toISOString()
+      return { roundEnded: true }
+    }
+    gs[slot] = v
+  }
+
+  if (gameId === 'cardCrimes' && gs.cardCrimes) {
+    const cc = { ...gs.cardCrimes }
+    const sec = secrets.cardCrimes || {}
+
+    if (cc.step === 'submit') {
+      const entries = Object.entries(cc.submissions || {})
+        .filter(([pid]) => pid !== cc.judgeId)
+        .map(([pid, texts]) => ({ pid, texts }))
+      const shuffled = shuffleArray(entries)
+      const sidToPid = {}
+      cc.board = shuffled.map((e, i) => {
+        const sid = `sub_${i}_${Math.random().toString(36).slice(2, 8)}`
+        sidToPid[sid] = e.pid
+        return { sid, texts: e.texts }
+      })
+      secrets.cardCrimes = { ...sec, sidToPid }
+      gs.secrets = secrets
+      cc.step = 'judge'
+      cc.endsAt = endsIn(ROUND_MS.cardCrimes.judge)
+    } else if (cc.step === 'judge') {
+      const sidToPid = sec.sidToPid || {}
+      const winnerId = cc.pickedSid ? sidToPid[cc.pickedSid] : null
+      cc.winnerId = winnerId || null
+      cc.board = (cc.board || []).map((b) => ({ ...b, authorId: sidToPid[b.sid] || null }))
+      cc.step = 'reveal'
+      cc.endsAt = endsIn(ROUND_MS.cardCrimes.reveal)
+    } else if (cc.step === 'reveal') {
+      const roundScores = scoreCardCrimesRound(cc, room.players || [])
+      const { results, updatedPlayers } = scoreRound(room.players || [], roundScores)
+      room.players = updatedPlayers
+      const winner = checkVictory(updatedPlayers, targetScore)
+      room.phase = winner ? 'victory' : 'leaderboard'
+      room.gameState = { ...gs, cardCrimes: cc, roundResults: results, winnerId: winner?.id || null }
+      room.updatedAt = new Date().toISOString()
+      return { roundEnded: true }
+    }
+    gs.cardCrimes = cc
   }
 
   room.gameState = gs

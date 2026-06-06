@@ -89,6 +89,65 @@ function sanitizeGameState(gameState, gameId) {
     gs.reactionRush = rr
   }
 
+  if (gameId === 'categories' && gs.categories) {
+    const cat = { ...gs.categories }
+    if (cat.step === 'write') {
+      cat.answeredIds = keysOf(cat.answers)
+      delete cat.answers
+    }
+    gs.categories = cat
+  }
+
+  if (gameId === 'doodle' && gs.doodle) {
+    const dl = { ...gs.doodle }
+    if (dl.step !== 'reveal') {
+      delete dl.promptText
+    }
+    if (dl.step === 'guess') dl.answeredIds = keysOf(dl.guesses)
+    gs.doodle = dl
+  }
+
+  if ((gameId === 'wouldYouRather' && gs.wouldYouRather) || (gameId === 'neverHaveIEver' && gs.neverHaveIEver)) {
+    const v = { ...gs[gameId] }
+    if (v.step === 'vote') {
+      v.answeredIds = keysOf(v.votes)
+      delete v.votes
+    }
+    gs[gameId] = v
+  }
+
+  if (gameId === 'cardCrimes' && gs.cardCrimes) {
+    const cc = { ...gs.cardCrimes }
+    if (cc.step === 'submit') {
+      cc.answeredIds = keysOf(cc.submissions)
+      delete cc.submissions
+      delete cc.board
+    } else if (cc.step === 'judge') {
+      // Show anonymized submissions (texts only) — never the authors before reveal.
+      cc.board = (cc.board || []).map((b) => ({ sid: b.sid, texts: b.texts }))
+      delete cc.submissions
+      delete cc.pickedSid
+    }
+    gs.cardCrimes = cc
+  }
+
+  if (gameId === 'wordBluff' && gs.wordBluff) {
+    const wb = { ...gs.wordBluff }
+    if (wb.step === 'write') {
+      wb.answeredIds = keysOf(wb.bluffs)
+      delete wb.bluffs
+      delete wb.guesses
+      delete wb.choices
+      delete wb.realAnswer
+    } else if (wb.step === 'guess') {
+      wb.answeredIds = keysOf(wb.guesses)
+      delete wb.guesses
+      delete wb.realAnswer
+      wb.choices = (wb.choices || []).map((c) => ({ id: c.id, text: c.text }))
+    }
+    gs.wordBluff = wb
+  }
+
   return gs
 }
 

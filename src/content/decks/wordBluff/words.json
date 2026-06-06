@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "gameId": "wordBluff",
+  "category": "words",
+  "locale": "en-US",
+  "credit": "Obscure-word definitions in the spirit of open word lists. Definitions authored for Party Cube.",
+  "items": [
+    { "id": "wb-001", "text": "GARGALESIS", "answer": "Heavy tickling that produces laughter" },
+    { "id": "wb-002", "text": "PETRICHOR", "answer": "The pleasant smell of rain on dry earth" },
+    { "id": "wb-003", "text": "BORBORYGMUS", "answer": "The rumbling sound made by a hungry stomach" },
+    { "id": "wb-004", "text": "GRIFFONAGE", "answer": "Careless or illegible handwriting" },
+    { "id": "wb-005", "text": "COLLYWOBBLES", "answer": "A feeling of nervousness or butterflies in the stomach" },
+    { "id": "wb-006", "text": "ULLAGE", "answer": "The empty space in a bottle below the cork" },
+    { "id": "wb-007", "text": "AGLET", "answer": "The plastic tip at the end of a shoelace" },
+    { "id": "wb-008", "text": "GLABELLA", "answer": "The smooth space between your eyebrows" },
+    { "id": "wb-009", "text": "TITTYNOPE", "answer": "A small leftover amount of food or drink" },
+    { "id": "wb-010", "text": "SNOLLYGOSTER", "answer": "A shrewd, unprincipled person, often a politician" },
+    { "id": "wb-011", "text": "GRUNTLED", "answer": "Pleased, satisfied, and contented" },
+    { "id": "wb-012", "text": "WAMBLE", "answer": "To feel nauseated or to move unsteadily" },
+    { "id": "wb-013", "text": "ZARF", "answer": "The cardboard sleeve that keeps a hot cup from burning your hand" },
+    { "id": "wb-014", "text": "MONDEGREEN", "answer": "A misheard word or phrase in a song lyric" },
+    { "id": "wb-015", "text": "PANDICULATION", "answer": "The act of stretching and yawning at the same time" },
+    { "id": "wb-016", "text": "GUBBINS", "answer": "Bits and pieces; miscellaneous odds and ends" },
+    { "id": "wb-017", "text": "LOLLYGAG", "answer": "To spend time aimlessly; to dawdle" },
+    { "id": "wb-018", "text": "FLUMMOX", "answer": "To bewilder or confuse someone completely" },
+    { "id": "wb-019", "text": "WIDDERSHINS", "answer": "In a direction opposite to the sun; counterclockwise" },
+    { "id": "wb-020", "text": "QUIRE", "answer": "A set of 24 or 25 sheets of paper" },
+    { "id": "wb-021", "text": "NUDIUSTERTIAN", "answer": "Relating to the day before yesterday" },
+    { "id": "wb-022", "text": "BLOVIATE", "answer": "To talk at length in a pompous, empty way" },
+    { "id": "wb-023", "text": "CRAPULENCE", "answer": "Sickness caused by excessive eating or drinking" },
+    { "id": "wb-024", "text": "DRACONTINE", "answer": "Resembling or relating to a dragon" }
+  ]
+}

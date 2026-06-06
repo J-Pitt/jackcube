@@ -70,6 +70,44 @@ function isStepComplete(room) {
     return false
   }
 
+  if (gameId === 'categories' && gs.categories) {
+    const { step, answers } = gs.categories
+    if (step === 'write') return allPlayersHave(answers, playerIds)
+    return false
+  }
+
+  if (gameId === 'doodle' && gs.doodle) {
+    const { step, drawerId, guesses } = gs.doodle
+    if (step === 'guess') {
+      const guessers = playerIds.filter((id) => id !== drawerId)
+      return guessers.length > 0 && allPlayersHave(guesses, guessers)
+    }
+    return false
+  }
+
+  if (gameId === 'wordBluff' && gs.wordBluff) {
+    const { step, bluffs, guesses } = gs.wordBluff
+    if (step === 'write') return allPlayersHave(bluffs, playerIds)
+    if (step === 'guess') return allPlayersHave(guesses, playerIds)
+    return false
+  }
+
+  if ((gameId === 'wouldYouRather' && gs.wouldYouRather) || (gameId === 'neverHaveIEver' && gs.neverHaveIEver)) {
+    const v = gs[gameId]
+    if (v.step === 'vote') return allPlayersHave(v.votes, playerIds)
+    return false
+  }
+
+  if (gameId === 'cardCrimes' && gs.cardCrimes) {
+    const { step, judgeId, submissions, pickedSid } = gs.cardCrimes
+    if (step === 'submit') {
+      const submitters = playerIds.filter((id) => id !== judgeId)
+      return submitters.length > 0 && allPlayersHave(submissions, submitters)
+    }
+    if (step === 'judge') return !!pickedSid
+    return false
+  }
+
   if (gameId === 'truthOrCube' && gs.truthOrCube) {
     const { step, targetPlayerId, outcome } = gs.truthOrCube
     if (step === 'active') return !!outcome && activeIds(room.players).includes(targetPlayerId)

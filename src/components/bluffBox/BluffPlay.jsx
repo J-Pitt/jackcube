@@ -11,13 +11,23 @@ import {
   LockedBadge,
 } from '@/components/game/GameUI'
 
-const ACCENT_KEY = 'bluffBox'
-
-export default function BluffPlay({ room, roomId, playerId }) {
+export default function BluffPlay({
+  room,
+  roomId,
+  playerId,
+  slotKey = 'bluffBox',
+  accentKey = 'bluffBox',
+  title = 'Bluff Box',
+  emoji = '🎭',
+  countdownSubtitle = 'Time to fool your friends…',
+  writePlaceholder = 'A convincing fake answer…',
+  maxLength = 80,
+}) {
+  const ACCENT_KEY = accentKey
   const [me, setMe] = useState(null)
   const [text, setText] = useState('')
   const [busy, setBusy] = useState(false)
-  const bb = room?.gameState?.bluffBox
+  const bb = room?.gameState?.[slotKey]
   const phase = room?.phase
 
   const refreshMe = useCallback(() => {
@@ -54,15 +64,15 @@ export default function BluffPlay({ room, roomId, playerId }) {
 
   if (phase === 'countdown') {
     return (
-      <PhoneStage title="Bluff Box" emoji="🎭" accentKey={ACCENT_KEY}>
-        <WaitingCard emoji="🎭" title="Bluff Box" subtitle="Time to fool your friends…" accentKey={ACCENT_KEY} />
+      <PhoneStage title={title} emoji={emoji} accentKey={ACCENT_KEY}>
+        <WaitingCard emoji={emoji} title={title} subtitle={countdownSubtitle} accentKey={ACCENT_KEY} />
       </PhoneStage>
     )
   }
 
   if (!bb || phase !== 'playing') {
     return (
-      <PhoneStage title="Bluff Box" emoji="🎭" accentKey={ACCENT_KEY}>
+      <PhoneStage title={title} emoji={emoji} accentKey={ACCENT_KEY}>
         <WaitingCard title="Watch the TV" subtitle="The big screen has the action." accentKey={ACCENT_KEY} />
       </PhoneStage>
     )
@@ -84,8 +94,8 @@ export default function BluffPlay({ room, roomId, playerId }) {
             <input
               value={text}
               onChange={(e) => setText(e.target.value)}
-              maxLength={80}
-              placeholder="A convincing fake answer…"
+              maxLength={maxLength}
+              placeholder={writePlaceholder}
               className="w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-4 text-lg text-white placeholder:text-white/30 focus:border-cube-violet"
             />
             <p className="mt-2 text-sm text-white/40">Tip: make it believable so others pick it.</p>
@@ -126,7 +136,7 @@ export default function BluffPlay({ room, roomId, playerId }) {
   }
 
   return (
-    <PhoneStage title="Bluff Box" emoji="🎭" accentKey={ACCENT_KEY}>
+    <PhoneStage title={title} emoji={emoji} accentKey={ACCENT_KEY}>
       <WaitingCard emoji="🏆" title="Reveal on the TV" subtitle="Did anyone fall for your bluff?" accentKey={ACCENT_KEY} />
     </PhoneStage>
   )

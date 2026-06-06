@@ -116,6 +116,112 @@ export async function POST(request) {
       return NextResponse.json({ success: true })
     }
 
+    if (gameId === 'categories' && gs.categories) {
+      const cat = { ...gs.categories }
+      if (action === 'categoryAnswer' && cat.step === 'write') {
+        const arr = Array.isArray(payload?.answers) ? payload.answers : []
+        const cleaned = (cat.categories || []).map((_, i) =>
+          String(arr[i] || '').trim().slice(0, 40)
+        )
+        cat.answers = { ...cat.answers, [playerId]: cleaned }
+      } else {
+        return NextResponse.json({ success: false, error: 'Invalid categories action' }, { status: 400 })
+      }
+      gs.categories = cat
+      room.gameState = gs
+      await persistInputAndMaybeAdvance(roomId, room)
+      return NextResponse.json({ success: true })
+    }
+
+    if (gameId === 'doodle' && gs.doodle) {
+      const dl = { ...gs.doodle }
+      const isDrawer = dl.drawerId === playerId
+
+      if (action === 'drawStroke' && isDrawer && dl.step === 'draw' && payload?.stroke) {
+        dl.strokes = [...(dl.strokes || []), payload.stroke].slice(-MAX_STROKES)
+      } else if (action === 'drawUndo' && isDrawer && dl.step === 'draw') {
+        const strokes = [...(dl.strokes || [])]
+        strokes.pop()
+        dl.strokes = strokes
+      } else if (action === 'drawClear' && isDrawer && dl.step === 'draw') {
+        dl.strokes = []
+      } else if (action === 'drawGuess' && !isDrawer && dl.step === 'guess') {
+        const text = String(payload?.text || '').slice(0, 80)
+        dl.guesses = { ...dl.guesses, [playerId]: text }
+      } else {
+        return NextResponse.json({ success: false, error: 'Invalid doodle action' }, { status: 400 })
+      }
+      gs.doodle = dl
+      room.gameState = gs
+      await persistInputAndMaybeAdvance(roomId, room)
+      return NextResponse.json({ success: true })
+    }
+
+    if (gameId === 'wordBluff' && gs.wordBluff) {
+      const wb = { ...gs.wordBluff }
+      if (action === 'bluffSubmit' && wb.step === 'write') {
+        const text = String(payload?.text || '').trim().slice(0, 120)
+        if (text) wb.bluffs = { ...wb.bluffs, [playerId]: text }
+      } else if (action === 'bluffGuess' && wb.step === 'guess') {
+        const choiceId = payload?.choiceId
+        const choice = (wb.choices || []).find((c) => c.id === choiceId)
+        if (choice && choice.authorId !== playerId) {
+          wb.guesses = { ...wb.guesses, [playerId]: choiceId }
+        }
+      } else {
+        return NextResponse.json({ success: false, error: 'Invalid wordBluff action' }, { status: 400 })
+      }
+      gs.wordBluff = wb
+      room.gameState = gs
+      await persistInputAndMaybeAdvance(roomId, room)
+      return NextResponse.json({ success: true })
+    }
+
+    if ((gameId === 'wouldYouRather' && gs.wouldYouRather) || (gameId === 'neverHaveIEver' && gs.neverHaveIEver)) {
+      const slot = gameId
+      const v = { ...gs[slot] }
+      const allowed = slot === 'wouldYouRather' ? ['a', 'b'] : ['have', 'never']
+      if (action === 'choiceVote' && v.step === 'vote' && allowed.includes(payload?.choice)) {
+        v.votes = { ...v.votes, [playerId]: payload.choice }
+      } else {
+        return NextResponse.json({ success: false, error: 'Invalid vote action' }, { status: 400 })
+      }
+      gs[slot] = v
+      room.gameState = gs
+      await persistInputAndMaybeAdvance(roomId, room)
+      return NextResponse.json({ success: true })
+    }
+
+    if (gameId === 'cardCrimes' && gs.cardCrimes) {
+      const cc = { ...gs.cardCrimes }
+      const isJudge = cc.judgeId === playerId
+      if (action === 'cardSubmit' && !isJudge && cc.step === 'submit') {
+        const hand = gs.secrets?.cardCrimes?.hands?.[playerId] || []
+        const ids = Array.isArray(payload?.cardIds) ? payload.cardIds.slice(0, cc.black?.pick || 1) : []
+        const texts = ids
+          .map((id) => hand.find((c) => c.id === id)?.text)
+          .filter(Boolean)
+        if (texts.length === (cc.black?.pick || 1)) {
+          cc.submissions = { ...cc.submissions, [playerId]: texts }
+        } else {
+          return NextResponse.json({ success: false, error: 'Pick the right number of cards' }, { status: 400 })
+        }
+      } else if (action === 'cardJudge' && isJudge && cc.step === 'judge') {
+        const sid = payload?.sid
+        if ((cc.board || []).some((b) => b.sid === sid)) {
+          cc.pickedSid = sid
+        } else {
+          return NextResponse.json({ success: false, error: 'Invalid pick' }, { status: 400 })
+        }
+      } else {
+        return NextResponse.json({ success: false, error: 'Invalid cardCrimes action' }, { status: 400 })
+      }
+      gs.cardCrimes = cc
+      room.gameState = gs
+      await persistInputAndMaybeAdvance(roomId, room)
+      return NextResponse.json({ success: true })
+    }
+
     if (gameId === 'fakinIt' && gs.fakinIt) {
       const fi = { ...gs.fakinIt }
       if (action === 'fakinReady') {

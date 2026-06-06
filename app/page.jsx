@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Suspense, useEffect, useState } from 'react'
 import AdultGamesPasswordModal from '@/components/AdultGamesPasswordModal'
+import ModeSelectModal from '@/components/ModeSelectModal'
 import { getMultiplayerStatus, getRoom } from '@/lib/roomApi'
 import { getRejoinPath, loadRejoin } from '@/lib/rejoin'
 import { isAdultUnlocked } from '@/lib/adultAccess'
@@ -16,6 +17,8 @@ function HomeContent() {
   const [saved, setSaved] = useState(null)
   const [rejoinHref, setRejoinHref] = useState(null)
   const [adultModalOpen, setAdultModalOpen] = useState(false)
+  // Which catalog the mode modal will route to: 'party' | 'adult' | null
+  const [modeFor, setModeFor] = useState(null)
 
   useEffect(() => {
     getMultiplayerStatus().then((s) => setRedisOk(s.available))
@@ -31,12 +34,22 @@ function HomeContent() {
     }
   }, [searchParams])
 
-  function openAdultGames() {
+  function chooseParty() {
+    setModeFor('party')
+  }
+
+  function chooseAdult() {
     if (isAdultUnlocked()) {
-      router.push('/adult-games')
+      setModeFor('adult')
       return
     }
     setAdultModalOpen(true)
+  }
+
+  function handleModeSelect(mode) {
+    const target = modeFor === 'adult' ? '/adult-games' : '/games'
+    setModeFor(null)
+    router.push(`${target}?mode=${mode}`)
   }
 
   return (
@@ -72,64 +85,54 @@ function HomeContent() {
         </Link>
       )}
 
-      <p className="mb-4 text-sm uppercase tracking-widest text-white/40">How are you playing?</p>
+      <p className="mb-4 text-sm uppercase tracking-widest text-white/40">Choose your vibe</p>
 
       <div className="grid w-full max-w-md gap-4 sm:grid-cols-2">
-        <Link
-          href="/host?mode=local"
-          className="group rounded-2xl border border-white/10 bg-cube-surface/80 p-6 text-left transition hover:border-cube-cyan/50 hover:bg-cube-surface"
+        <button
+          type="button"
+          onClick={chooseParty}
+          className="group rounded-3xl border border-cube-cyan/30 bg-cube-cyan/5 p-7 text-left transition hover:border-cube-cyan/60 hover:bg-cube-cyan/10 active:scale-[0.98]"
         >
-          <span className="text-3xl">🏠</span>
-          <h2 className="mt-3 font-display text-xl font-bold text-white group-hover:text-cube-cyan">
-            Local party
+          <span className="text-4xl">🎮</span>
+          <h2 className="mt-4 font-display text-2xl font-bold text-white group-hover:text-cube-cyan">
+            Party games
           </h2>
-          <p className="mt-2 text-sm text-white/50">Same room — TV + phones on WiFi</p>
-        </Link>
+          <p className="mt-2 text-sm text-white/50">
+            Caption Clash, Trivia, Doodle Dash &amp; more · 2–5 players
+          </p>
+        </button>
 
-        <Link
-          href="/host?mode=online"
-          className="group rounded-2xl border border-white/10 bg-cube-surface/80 p-6 text-left transition hover:border-cube-violet/50 hover:bg-cube-surface"
+        <button
+          type="button"
+          onClick={chooseAdult}
+          className="group rounded-3xl border border-cube-danger/40 bg-cube-danger/10 p-7 text-left transition hover:border-cube-danger/70 hover:bg-cube-danger/15 active:scale-[0.98]"
         >
-          <span className="text-3xl">🌐</span>
-          <h2 className="mt-3 font-display text-xl font-bold text-white group-hover:text-cube-violet">
-            Online party
+          <span className="text-4xl">🔞</span>
+          <h2 className="mt-4 font-display text-2xl font-bold text-white">
+            Adult games
           </h2>
-          <p className="mt-2 text-sm text-white/50">Friends anywhere — share a link</p>
-        </Link>
+          <p className="mt-2 text-sm text-white/50">Password required · 18+ party games</p>
+        </button>
       </div>
 
       <Link
-        href="/games"
-        className="mt-10 w-full max-w-md rounded-2xl border border-cube-cyan/30 bg-cube-cyan/5 px-6 py-5 text-left transition hover:border-cube-cyan/50 hover:bg-cube-cyan/10"
-      >
-        <span className="text-2xl">🎮</span>
-        <span className="mt-2 block font-display text-lg font-bold text-white">Party games</span>
-        <span className="text-sm text-white/50">
-          Caption Clash, Bluff Box, Trivia Toss &amp; Reaction Rush · 2–5 players
-        </span>
-      </Link>
-
-      <button
-        type="button"
-        onClick={openAdultGames}
-        className="mt-8 w-full max-w-md rounded-2xl border border-cube-danger/40 bg-cube-danger/10 px-6 py-4 text-left transition hover:bg-cube-danger/15"
-      >
-        <span className="text-2xl">🔞</span>
-        <span className="mt-2 block font-display text-lg font-bold text-white">Adult games</span>
-        <span className="text-sm text-white/50">Password required · 18+ party games</span>
-      </button>
-
-      <Link
         href="/join"
-        className="mt-6 text-sm text-white/50 underline-offset-4 hover:text-cube-cyan hover:underline"
+        className="mt-8 text-sm text-white/50 underline-offset-4 hover:text-cube-cyan hover:underline"
       >
         Join with a room code →
       </Link>
 
+      <ModeSelectModal
+        open={modeFor !== null}
+        accent={modeFor === 'adult' ? '#E5383B' : '#00F5D4'}
+        onClose={() => setModeFor(null)}
+        onSelect={handleModeSelect}
+      />
+
       <AdultGamesPasswordModal
         open={adultModalOpen}
         onClose={() => setAdultModalOpen(false)}
-        onUnlocked={() => router.push('/adult-games')}
+        onUnlocked={() => setModeFor('adult')}
       />
     </main>
   )
