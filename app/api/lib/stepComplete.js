@@ -20,8 +20,8 @@ function isStepComplete(room) {
   const playerIds = activeIds(room.players || [])
   if (playerIds.length === 0) return false
 
-  if (gameId === 'captionClash' && gs.captionClash) {
-    const { step, submissions, votes } = gs.captionClash
+  if ((gameId === 'captionClash' && gs.captionClash) || (gameId === 'captionDuel' && gs.captionDuel)) {
+    const { step, submissions, votes } = gs[gameId]
     if (step === 'write') return allPlayersHave(submissions, playerIds)
     if (step === 'vote') return allPlayersHave(votes, playerIds)
     return false
@@ -34,14 +34,14 @@ function isStepComplete(room) {
     return false
   }
 
-  if (gameId === 'triviaToss' && gs.triviaToss) {
-    const { step, answers } = gs.triviaToss
+  if ((gameId === 'triviaToss' && gs.triviaToss) || (gameId === 'triviaDuel' && gs.triviaDuel)) {
+    const { step, answers } = gs[gameId]
     if (step === 'question') return allPlayersHave(answers, playerIds)
     return false
   }
 
-  if (gameId === 'reactionRush' && gs.reactionRush) {
-    const { step, taps, earlyTappers } = gs.reactionRush
+  if ((gameId === 'reactionRush' && gs.reactionRush) || (gameId === 'reactionDuel' && gs.reactionDuel)) {
+    const { step, taps, earlyTappers } = gs[gameId]
     if (step === 'go') {
       return playerIds.every((id) => earlyTappers?.[id] || taps?.[id])
     }
@@ -76,8 +76,8 @@ function isStepComplete(room) {
     return false
   }
 
-  if (gameId === 'doodle' && gs.doodle) {
-    const { step, drawerId, guesses } = gs.doodle
+  if ((gameId === 'doodle' && gs.doodle) || (gameId === 'doodleDuel' && gs.doodleDuel)) {
+    const { step, drawerId, guesses } = gs[gameId]
     if (step === 'guess') {
       const guessers = playerIds.filter((id) => id !== drawerId)
       return guessers.length > 0 && allPlayersHave(guesses, guessers)

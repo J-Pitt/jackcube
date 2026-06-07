@@ -17,7 +17,7 @@ function HomeContent() {
   const [saved, setSaved] = useState(null)
   const [rejoinHref, setRejoinHref] = useState(null)
   const [adultModalOpen, setAdultModalOpen] = useState(false)
-  // Which catalog the mode modal will route to: 'party' | 'adult' | null
+  // Which catalog the mode modal will route to: 'party' | 'duo' | 'adult' | null
   const [modeFor, setModeFor] = useState(null)
 
   useEffect(() => {
@@ -38,6 +38,10 @@ function HomeContent() {
     setModeFor('party')
   }
 
+  function chooseDuo() {
+    setModeFor('duo')
+  }
+
   function chooseAdult() {
     if (isAdultUnlocked()) {
       setModeFor('adult')
@@ -47,7 +51,8 @@ function HomeContent() {
   }
 
   function handleModeSelect(mode) {
-    const target = modeFor === 'adult' ? '/adult-games' : '/games'
+    const target =
+      modeFor === 'adult' ? '/adult-games' : modeFor === 'duo' ? '/duo-games' : '/games'
     setModeFor(null)
     router.push(`${target}?mode=${mode}`)
   }
@@ -87,7 +92,7 @@ function HomeContent() {
 
       <p className="mb-4 text-sm uppercase tracking-widest text-white/40">Choose your vibe</p>
 
-      <div className="grid w-full max-w-md gap-4 sm:grid-cols-2">
+      <div className="grid w-full max-w-2xl gap-4 sm:grid-cols-3">
         <button
           type="button"
           onClick={chooseParty}
@@ -99,6 +104,20 @@ function HomeContent() {
           </h2>
           <p className="mt-2 text-sm text-white/50">
             Caption Clash, Trivia, Doodle Dash &amp; more · 2–5 players
+          </p>
+        </button>
+
+        <button
+          type="button"
+          onClick={chooseDuo}
+          className="group rounded-3xl border border-[#FFD166]/35 bg-[#FFD166]/5 p-7 text-left transition hover:border-[#FFD166]/60 hover:bg-[#FFD166]/10 active:scale-[0.98]"
+        >
+          <span className="text-4xl">⚔️</span>
+          <h2 className="mt-4 font-display text-2xl font-bold text-white group-hover:text-[#FFD166]">
+            Duo games
+          </h2>
+          <p className="mt-2 text-sm text-white/50">
+            Head-to-head · exactly 2 players
           </p>
         </button>
 
@@ -124,7 +143,7 @@ function HomeContent() {
 
       <ModeSelectModal
         open={modeFor !== null}
-        accent={modeFor === 'adult' ? '#E5383B' : '#00F5D4'}
+        accent={modeFor === 'adult' ? '#E5383B' : modeFor === 'duo' ? '#FFD166' : '#00F5D4'}
         onClose={() => setModeFor(null)}
         onSelect={handleModeSelect}
       />

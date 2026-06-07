@@ -39,8 +39,8 @@ export async function POST(request) {
     const gameId = room.config?.gameId || 'captionClash'
     const gs = room.gameState || {}
 
-    if (gameId === 'captionClash' && gs.captionClash) {
-      const cc = { ...gs.captionClash }
+    if ((gameId === 'captionClash' && gs.captionClash) || (gameId === 'captionDuel' && gs.captionDuel)) {
+      const cc = { ...gs[gameId] }
       if (action === 'captionSubmit' && cc.step === 'write') {
         const text = String(payload?.text || '').trim().slice(0, 120)
         if (text) cc.submissions = { ...cc.submissions, [playerId]: text }
@@ -57,7 +57,7 @@ export async function POST(request) {
       } else {
         return NextResponse.json({ success: false, error: 'Invalid captionClash action' }, { status: 400 })
       }
-      gs.captionClash = cc
+      gs[gameId] = cc
       room.gameState = gs
       await persistInputAndMaybeAdvance(roomId, room)
       return NextResponse.json({ success: true })
@@ -83,24 +83,27 @@ export async function POST(request) {
       return NextResponse.json({ success: true })
     }
 
-    if (gameId === 'triviaToss' && gs.triviaToss) {
-      const tt = { ...gs.triviaToss }
+    if ((gameId === 'triviaToss' && gs.triviaToss) || (gameId === 'triviaDuel' && gs.triviaDuel)) {
+      const tt = { ...gs[gameId] }
       if (action === 'triviaAnswer' && tt.step === 'question') {
         const index = payload?.index
         if (Number.isInteger(index) && index >= 0 && index < (tt.options || []).length) {
           tt.answers = { ...tt.answers, [playerId]: index }
+          if (gameId === 'triviaDuel') {
+            tt.answeredAt = { ...(tt.answeredAt || {}), [playerId]: Date.now() }
+          }
         }
       } else {
-        return NextResponse.json({ success: false, error: 'Invalid triviaToss action' }, { status: 400 })
+        return NextResponse.json({ success: false, error: 'Invalid trivia action' }, { status: 400 })
       }
-      gs.triviaToss = tt
+      gs[gameId] = tt
       room.gameState = gs
       await persistInputAndMaybeAdvance(roomId, room)
       return NextResponse.json({ success: true })
     }
 
-    if (gameId === 'reactionRush' && gs.reactionRush) {
-      const rr = { ...gs.reactionRush }
+    if ((gameId === 'reactionRush' && gs.reactionRush) || (gameId === 'reactionDuel' && gs.reactionDuel)) {
+      const rr = { ...gs[gameId] }
       if (action === 'reactionTap') {
         if (rr.step === 'ready') {
           rr.earlyTappers = { ...rr.earlyTappers, [playerId]: true }
@@ -108,9 +111,9 @@ export async function POST(request) {
           rr.taps = { ...rr.taps, [playerId]: Date.now() }
         }
       } else {
-        return NextResponse.json({ success: false, error: 'Invalid reactionRush action' }, { status: 400 })
+        return NextResponse.json({ success: false, error: 'Invalid reaction action' }, { status: 400 })
       }
-      gs.reactionRush = rr
+      gs[gameId] = rr
       room.gameState = gs
       await persistInputAndMaybeAdvance(roomId, room)
       return NextResponse.json({ success: true })
@@ -133,8 +136,8 @@ export async function POST(request) {
       return NextResponse.json({ success: true })
     }
 
-    if (gameId === 'doodle' && gs.doodle) {
-      const dl = { ...gs.doodle }
+    if ((gameId === 'doodle' && gs.doodle) || (gameId === 'doodleDuel' && gs.doodleDuel)) {
+      const dl = { ...gs[gameId] }
       const isDrawer = dl.drawerId === playerId
 
       if (action === 'drawStroke' && isDrawer && dl.step === 'draw' && payload?.stroke) {
@@ -151,7 +154,7 @@ export async function POST(request) {
       } else {
         return NextResponse.json({ success: false, error: 'Invalid doodle action' }, { status: 400 })
       }
-      gs.doodle = dl
+      gs[gameId] = dl
       room.gameState = gs
       await persistInputAndMaybeAdvance(roomId, room)
       return NextResponse.json({ success: true })

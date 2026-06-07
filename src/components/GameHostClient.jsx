@@ -18,6 +18,10 @@ import WordBluffHost from '@/components/wordBluff/WordBluffHost'
 import WouldYouRatherHost from '@/components/wouldYouRather/WouldYouRatherHost'
 import NeverHaveIEverHost from '@/components/neverHaveIEver/NeverHaveIEverHost'
 import CardCrimesHost from '@/components/cardCrimes/CardCrimesHost'
+import TriviaDuelHost from '@/components/triviaDuel/TriviaDuelHost'
+import ReactionDuelHost from '@/components/reactionDuel/ReactionDuelHost'
+import DoodleDuelHost from '@/components/doodleDuel/DoodleDuelHost'
+import CaptionDuelHost from '@/components/captionDuel/CaptionDuelHost'
 import PartyBottomPanel from '@/components/partyVideo/PartyBottomPanel'
 import { useRoomPoll } from '@/hooks/useRoomPoll'
 import { loadRejoin } from '@/lib/rejoin'
@@ -67,6 +71,10 @@ export default function GameHostClient({ roomId: roomIdProp }) {
     wouldYouRather: <WouldYouRatherHost {...hostProps} />,
     neverHaveIEver: <NeverHaveIEverHost {...hostProps} />,
     cardCrimes: <CardCrimesHost {...hostProps} />,
+    triviaDuel: <TriviaDuelHost {...hostProps} />,
+    reactionDuel: <ReactionDuelHost {...hostProps} />,
+    doodleDuel: <DoodleDuelHost {...hostProps} />,
+    captionDuel: <CaptionDuelHost {...hostProps} />,
   }
 
   const game = gameMap[gameId] || gameMap.captionClash

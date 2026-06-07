@@ -11,13 +11,19 @@ import {
   LockedBadge,
 } from '@/components/game/GameUI'
 
-const ACCENT_KEY = 'captionClash'
-
-export default function CaptionPlay({ room, roomId, playerId }) {
+export default function CaptionPlay({
+  room,
+  roomId,
+  playerId,
+  slotKey = 'captionClash',
+  accentKey = 'captionClash',
+  title = 'Caption Clash',
+  emoji = '💬',
+}) {
   const [me, setMe] = useState(null)
   const [text, setText] = useState('')
   const [busy, setBusy] = useState(false)
-  const cc = room?.gameState?.captionClash
+  const cc = room?.gameState?.[slotKey]
   const phase = room?.phase
 
   const refreshMe = useCallback(() => {
@@ -54,30 +60,30 @@ export default function CaptionPlay({ room, roomId, playerId }) {
 
   if (phase === 'countdown') {
     return (
-      <PhoneStage title="Caption Clash" emoji="💬" accentKey={ACCENT_KEY}>
-        <WaitingCard emoji="💬" title="Caption Clash" subtitle="Get ready to be hilarious…" accentKey={ACCENT_KEY} />
+      <PhoneStage title={title} emoji={emoji} accentKey={accentKey}>
+        <WaitingCard emoji={emoji} title={title} subtitle="Get ready to be hilarious…" accentKey={accentKey} />
       </PhoneStage>
     )
   }
 
   if (!cc || phase !== 'playing') {
     return (
-      <PhoneStage title="Caption Clash" emoji="💬" accentKey={ACCENT_KEY}>
-        <WaitingCard title="Watch the TV" subtitle="The big screen has the action." accentKey={ACCENT_KEY} />
+      <PhoneStage title={title} emoji={emoji} accentKey={accentKey}>
+        <WaitingCard title="Watch the TV" subtitle="The big screen has the action." accentKey={accentKey} />
       </PhoneStage>
     )
   }
 
   if (cc.step === 'write') {
     return (
-      <PhoneStage title="Your answer" emoji="✍️" accentKey={ACCENT_KEY}>
-        <PromptCard accentKey={ACCENT_KEY} className="mb-4">
+      <PhoneStage title="Your answer" emoji="✍️" accentKey={accentKey}>
+        <PromptCard accentKey={accentKey} className="mb-4">
           <p className="text-xl font-bold leading-snug text-white">{me?.promptText || cc.promptText}</p>
         </PromptCard>
         {me?.submitted ? (
           <>
-            <WaitingCard emoji="🎉" title="Answer submitted!" subtitle="Waiting for everyone else…" accentKey={ACCENT_KEY} />
-            <LockedBadge accentKey={ACCENT_KEY}>Answer locked in</LockedBadge>
+            <WaitingCard emoji="🎉" title="Answer submitted!" subtitle="Waiting for everyone else…" accentKey={accentKey} />
+            <LockedBadge accentKey={accentKey}>Answer locked in</LockedBadge>
           </>
         ) : (
           <>
@@ -90,7 +96,7 @@ export default function CaptionPlay({ room, roomId, playerId }) {
             />
             <p className="mt-1 text-right text-xs text-white/30">{text.length}/120</p>
             <div className="mt-3">
-              <PrimaryButton accentKey={ACCENT_KEY} onClick={submitCaption} disabled={!text.trim() || busy}>
+              <PrimaryButton accentKey={accentKey} onClick={submitCaption} disabled={!text.trim() || busy}>
                 {busy ? 'Submitting…' : 'Submit answer'}
               </PrimaryButton>
             </div>
@@ -103,17 +109,17 @@ export default function CaptionPlay({ room, roomId, playerId }) {
   if (cc.step === 'vote') {
     const options = me?.voteOptions || []
     return (
-      <PhoneStage title="Vote" emoji="🗳️" accentKey={ACCENT_KEY}>
+      <PhoneStage title="Vote" emoji="🗳️" accentKey={accentKey}>
         <p className="mb-4 text-base text-white/60">{cc.promptText}</p>
         {options.length === 0 ? (
-          <WaitingCard title="No answers to vote on" subtitle="Hang tight…" accentKey={ACCENT_KEY} />
+          <WaitingCard title="No answers to vote on" subtitle="Hang tight…" accentKey={accentKey} />
         ) : (
           <div className="space-y-3">
             {options.map((opt, i) => (
               <ChoiceButton
                 key={opt.playerId}
                 index={i + 1}
-                accentKey={ACCENT_KEY}
+                accentKey={accentKey}
                 disabled={me?.voted || busy}
                 locked={me?.voted}
                 onClick={() => voteFor(opt.playerId)}
@@ -123,14 +129,14 @@ export default function CaptionPlay({ room, roomId, playerId }) {
             ))}
           </div>
         )}
-        {me?.voted && <LockedBadge accentKey={ACCENT_KEY}>Vote locked in</LockedBadge>}
+        {me?.voted && <LockedBadge accentKey={accentKey}>Vote locked in</LockedBadge>}
       </PhoneStage>
     )
   }
 
   return (
-    <PhoneStage title="Caption Clash" emoji="💬" accentKey={ACCENT_KEY}>
-      <WaitingCard emoji="🏆" title="Results on the TV" subtitle="See who won this prompt." accentKey={ACCENT_KEY} />
+    <PhoneStage title={title} emoji={emoji} accentKey={accentKey}>
+      <WaitingCard emoji="🏆" title="Results on the TV" subtitle="See who won this prompt." accentKey={accentKey} />
     </PhoneStage>
   )
 }

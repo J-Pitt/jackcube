@@ -7,7 +7,9 @@ const { scoreTruthOrCubeRound } = require('./games/truthOrCubeScoring')
 const { scoreCaptionClashRound } = require('./games/captionClashScoring')
 const { scoreBluffBoxRound } = require('./games/bluffBoxScoring')
 const { scoreTriviaTossRound } = require('./games/triviaTossScoring')
+const { scoreTriviaDuelRound } = require('./games/triviaDuelScoring')
 const { scoreReactionRushRound } = require('./games/reactionRushScoring')
+const { scoreReactionDuelRound } = require('./games/reactionDuelScoring')
 const { scoreCategoriesRound } = require('./games/categoriesScoring')
 const { scoreChoiceVoteRound } = require('./games/choiceVoteScoring')
 const { scoreCardCrimesRound } = require('./games/cardCrimesScoring')
@@ -157,26 +159,27 @@ function applyStepAdvance(room, { forceStep } = {}) {
     gs.letMeFinish = lmf
   }
 
-  if (gameId === 'captionClash' && gs.captionClash) {
-    const cc = { ...gs.captionClash }
+  if ((gameId === 'captionClash' && gs.captionClash) || (gameId === 'captionDuel' && gs.captionDuel)) {
+    const cc = { ...gs[gameId] }
+    const ms = ROUND_MS[gameId]
 
     if (cc.step === 'write') {
       cc.step = 'vote'
-      cc.endsAt = endsIn(ROUND_MS.captionClash.vote)
+      cc.endsAt = endsIn(ms.vote)
     } else if (cc.step === 'vote') {
       cc.step = 'reveal'
-      cc.endsAt = endsIn(ROUND_MS.captionClash.reveal)
+      cc.endsAt = endsIn(ms.reveal)
     } else if (cc.step === 'reveal') {
       const roundScores = scoreCaptionClashRound(cc, room.players || [])
       const { results, updatedPlayers } = scoreRound(room.players || [], roundScores)
       room.players = updatedPlayers
       const winner = checkVictory(updatedPlayers, targetScore)
       room.phase = winner ? 'victory' : 'leaderboard'
-      room.gameState = { ...gs, captionClash: cc, roundResults: results, winnerId: winner?.id || null }
+      room.gameState = { ...gs, [gameId]: cc, roundResults: results, winnerId: winner?.id || null }
       room.updatedAt = new Date().toISOString()
       return { roundEnded: true }
     }
-    gs.captionClash = cc
+    gs[gameId] = cc
   }
 
   if (gameId === 'bluffBox' && gs.bluffBox) {
@@ -204,48 +207,56 @@ function applyStepAdvance(room, { forceStep } = {}) {
     gs.bluffBox = bb
   }
 
-  if (gameId === 'triviaToss' && gs.triviaToss) {
-    const tt = { ...gs.triviaToss }
-    const sec = secrets.triviaToss || {}
+  if ((gameId === 'triviaToss' && gs.triviaToss) || (gameId === 'triviaDuel' && gs.triviaDuel)) {
+    const tt = { ...gs[gameId] }
+    const sec = secrets[gameId] || {}
+    const ms = ROUND_MS[gameId]
 
     if (tt.step === 'question') {
       tt.step = 'reveal'
       tt.correctIndex = sec.correctIndex
-      tt.endsAt = endsIn(ROUND_MS.triviaToss.reveal)
+      tt.endsAt = endsIn(ms.reveal)
     } else if (tt.step === 'reveal') {
-      const roundScores = scoreTriviaTossRound(tt, room.players || [], sec.correctIndex ?? 0)
+      const roundScores =
+        gameId === 'triviaDuel'
+          ? scoreTriviaDuelRound(tt, room.players || [], sec.correctIndex ?? 0)
+          : scoreTriviaTossRound(tt, room.players || [], sec.correctIndex ?? 0)
       const { results, updatedPlayers } = scoreRound(room.players || [], roundScores)
       room.players = updatedPlayers
       const winner = checkVictory(updatedPlayers, targetScore)
       room.phase = winner ? 'victory' : 'leaderboard'
-      room.gameState = { ...gs, triviaToss: tt, roundResults: results, winnerId: winner?.id || null }
+      room.gameState = { ...gs, [gameId]: tt, roundResults: results, winnerId: winner?.id || null }
       room.updatedAt = new Date().toISOString()
       return { roundEnded: true }
     }
-    gs.triviaToss = tt
+    gs[gameId] = tt
   }
 
-  if (gameId === 'reactionRush' && gs.reactionRush) {
-    const rr = { ...gs.reactionRush }
+  if ((gameId === 'reactionRush' && gs.reactionRush) || (gameId === 'reactionDuel' && gs.reactionDuel)) {
+    const rr = { ...gs[gameId] }
+    const ms = ROUND_MS[gameId]
 
     if (rr.step === 'ready') {
       rr.step = 'go'
       rr.goAt = new Date().toISOString()
-      rr.endsAt = endsIn(ROUND_MS.reactionRush.go)
+      rr.endsAt = endsIn(ms.go)
     } else if (rr.step === 'go') {
       rr.step = 'reveal'
-      rr.endsAt = endsIn(ROUND_MS.reactionRush.reveal)
+      rr.endsAt = endsIn(ms.reveal)
     } else if (rr.step === 'reveal') {
-      const roundScores = scoreReactionRushRound(rr, room.players || [])
+      const roundScores =
+        gameId === 'reactionDuel'
+          ? scoreReactionDuelRound(rr, room.players || [])
+          : scoreReactionRushRound(rr, room.players || [])
       const { results, updatedPlayers } = scoreRound(room.players || [], roundScores)
       room.players = updatedPlayers
       const winner = checkVictory(updatedPlayers, targetScore)
       room.phase = winner ? 'victory' : 'leaderboard'
-      room.gameState = { ...gs, reactionRush: rr, roundResults: results, winnerId: winner?.id || null }
+      room.gameState = { ...gs, [gameId]: rr, roundResults: results, winnerId: winner?.id || null }
       room.updatedAt = new Date().toISOString()
       return { roundEnded: true }
     }
-    gs.reactionRush = rr
+    gs[gameId] = rr
   }
 
   if (gameId === 'categories' && gs.categories) {
@@ -267,16 +278,17 @@ function applyStepAdvance(room, { forceStep } = {}) {
     gs.categories = cat
   }
 
-  if (gameId === 'doodle' && gs.doodle) {
-    const dl = { ...gs.doodle }
-    const sec = secrets.doodle || {}
+  if ((gameId === 'doodle' && gs.doodle) || (gameId === 'doodleDuel' && gs.doodleDuel)) {
+    const dl = { ...gs[gameId] }
+    const sec = secrets[gameId] || {}
+    const ms = ROUND_MS[gameId]
 
     if (dl.step === 'assign') {
       dl.step = 'draw'
-      dl.endsAt = endsIn(ROUND_MS.doodle.draw)
+      dl.endsAt = endsIn(ms.draw)
     } else if (dl.step === 'draw') {
       dl.step = 'guess'
-      dl.endsAt = endsIn(ROUND_MS.doodle.guess)
+      dl.endsAt = endsIn(ms.guess)
     } else if (dl.step === 'guess') {
       const target = sec.promptText || ''
       const correctGuessers = []
@@ -289,7 +301,7 @@ function applyStepAdvance(room, { forceStep } = {}) {
       dl.correctGuessers = correctGuessers
       dl.step = 'reveal'
       dl.promptText = target
-      dl.endsAt = endsIn(ROUND_MS.doodle.reveal)
+      dl.endsAt = endsIn(ms.reveal)
     } else if (dl.step === 'reveal') {
       const roundScores = scoreDirtyDrawfulRound(
         { ...dl, promptText: sec.promptText || dl.promptText },
@@ -299,11 +311,11 @@ function applyStepAdvance(room, { forceStep } = {}) {
       room.players = updatedPlayers
       const winner = checkVictory(updatedPlayers, targetScore)
       room.phase = winner ? 'victory' : 'leaderboard'
-      room.gameState = { ...gs, doodle: dl, roundResults: results, winnerId: winner?.id || null }
+      room.gameState = { ...gs, [gameId]: dl, roundResults: results, winnerId: winner?.id || null }
       room.updatedAt = new Date().toISOString()
       return { roundEnded: true }
     }
-    gs.doodle = dl
+    gs[gameId] = dl
   }
 
   if (gameId === 'wordBluff' && gs.wordBluff) {

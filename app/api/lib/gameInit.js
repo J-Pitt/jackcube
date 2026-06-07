@@ -16,6 +16,10 @@ const ROUND_MS = {
   wouldYouRather: { vote: 25000, reveal: 12000 },
   neverHaveIEver: { vote: 25000, reveal: 12000 },
   cardCrimes: { submit: 50000, judge: 35000, reveal: 12000 },
+  triviaDuel: { question: 15000, reveal: 8000 },
+  reactionDuel: { ready: 0, go: 5000, reveal: 7000 },
+  doodleDuel: { assign: 4000, draw: 60000, guess: 20000, reveal: 10000 },
+  captionDuel: { write: 40000, vote: 25000, reveal: 8000 },
 }
 
 const CARD_CRIMES_HAND_SIZE = 6
@@ -392,6 +396,101 @@ function createNeverHaveIEverState(players, room, round = 1) {
   }
 }
 
+function createTriviaDuelState(players, room, round = 1) {
+  const used = room.gameState?.triviaDuel?.usedPromptIds || []
+  const item = pickRandomItem('triviaToss/questions', { excludeIds: used })
+
+  return {
+    round,
+    triviaDuel: {
+      step: 'question',
+      questionId: item?.id || null,
+      questionText: item?.text || 'Quick trivia!',
+      options: item?.options || ['A', 'B', 'C', 'D'],
+      answers: {},
+      answeredAt: {},
+      endsAt: endsIn(ROUND_MS.triviaDuel.question),
+      usedPromptIds: item ? [...used, item.id] : used,
+    },
+    secrets: {
+      triviaDuel: {
+        correctIndex: item?.correctIndex ?? 0,
+        questionId: item?.id,
+      },
+    },
+    roundResults: null,
+    winnerId: null,
+  }
+}
+
+function createReactionDuelState(players, room, round = 1) {
+  const delay = 2000 + Math.floor(Math.random() * 3000)
+  const signalAt = endsIn(delay)
+
+  return {
+    round,
+    reactionDuel: {
+      step: 'ready',
+      endsAt: signalAt,
+      signalAt,
+      taps: {},
+      earlyTappers: {},
+    },
+    secrets: { reactionDuel: { signalAt } },
+    roundResults: null,
+    winnerId: null,
+  }
+}
+
+function createDoodleDuelState(players, room, round = 1) {
+  const used = room.gameState?.doodleDuel?.usedPromptIds || []
+  const item = pickRandomItem('doodle/words', { excludeIds: used })
+  const drawerId = pickDrawer(players, round)
+
+  return {
+    round,
+    doodleDuel: {
+      step: 'assign',
+      drawerId,
+      promptId: item?.id || null,
+      strokes: [],
+      guesses: {},
+      correctGuessers: [],
+      endsAt: endsIn(ROUND_MS.doodleDuel.assign),
+      usedPromptIds: item ? [...used, item.id] : used,
+    },
+    secrets: {
+      doodleDuel: {
+        promptText: item?.text || 'star',
+        promptId: item?.id,
+      },
+    },
+    roundResults: null,
+    winnerId: null,
+  }
+}
+
+function createCaptionDuelState(players, room, round = 1) {
+  const used = room.gameState?.captionDuel?.usedPromptIds || []
+  const item = pickRandomItem('captionClash/prompts', { excludeIds: used })
+
+  return {
+    round,
+    captionDuel: {
+      step: 'write',
+      promptId: item?.id || null,
+      promptText: item?.text || 'Write something funny…',
+      submissions: {},
+      votes: {},
+      endsAt: endsIn(ROUND_MS.captionDuel.write),
+      usedPromptIds: item ? [...used, item.id] : used,
+    },
+    secrets: {},
+    roundResults: null,
+    winnerId: null,
+  }
+}
+
 function createCardCrimesState(players, room, round = 1) {
   const usedBlack = room.gameState?.cardCrimes?.usedBlackIds || []
   const black = pickRandomItem('cardCrimes/black', { excludeIds: usedBlack })
@@ -458,6 +557,14 @@ function createGameState(gameId, players, room, round = 1) {
       return createNeverHaveIEverState(players, room, round)
     case 'cardCrimes':
       return createCardCrimesState(players, room, round)
+    case 'triviaDuel':
+      return createTriviaDuelState(players, room, round)
+    case 'reactionDuel':
+      return createReactionDuelState(players, room, round)
+    case 'doodleDuel':
+      return createDoodleDuelState(players, room, round)
+    case 'captionDuel':
+      return createCaptionDuelState(players, room, round)
     case 'captionClash':
     default:
       return createCaptionClashState(players, room, round)

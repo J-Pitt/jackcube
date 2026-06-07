@@ -14,8 +14,6 @@ import {
   getAccent,
 } from '@/components/game/GameUI'
 
-const ACCENT_KEY = 'doodle'
-
 function DrawingPreview({ strokes }) {
   const w = 640
   const h = 380
@@ -42,13 +40,22 @@ function DrawingPreview({ strokes }) {
   )
 }
 
-export default function DoodleHost({ room, roomId, hostId, refresh }) {
+export default function DoodleHost({
+  room,
+  roomId,
+  hostId,
+  refresh,
+  slotKey = 'doodle',
+  accentKey = 'doodle',
+  title = 'Doodle Dash',
+  emoji = '✏️',
+}) {
   const [nextLoading, setNextLoading] = useState(false)
   const phase = room?.phase
   const round = room?.gameState?.round ?? 1
-  const dl = room?.gameState?.doodle
+  const dl = room?.gameState?.[slotKey]
   const players = room?.players || []
-  const accent = getAccent(ACCENT_KEY)
+  const accent = getAccent(accentKey)
   const drawer = players.find((p) => p.id === dl?.drawerId)
   const guessers = players.filter((p) => p.id !== dl?.drawerId)
   const standings = players.some((p) => Number(p.score) > 0) ? players : undefined
@@ -81,7 +88,7 @@ export default function DoodleHost({ room, roomId, hostId, refresh }) {
 
   if (phase === 'leaderboard' || phase === 'victory') {
     return (
-      <GameStage title="Doodle Dash" emoji="✏️" accentKey={ACCENT_KEY} room={room} round={round} maxRounds={5}>
+      <GameStage title={title} emoji={emoji} accentKey={accentKey} room={room} round={round} maxRounds={5}>
         <LeaderboardPhase
           room={room}
           onNextRound={handleNextRound}
@@ -93,7 +100,7 @@ export default function DoodleHost({ room, roomId, hostId, refresh }) {
   }
 
   return (
-    <GameStage title="Doodle Dash" emoji="✏️" accentKey={ACCENT_KEY} room={room} round={round} maxRounds={5} standings={standings}>
+    <GameStage title={title} emoji={emoji} accentKey={accentKey} room={room} round={round} maxRounds={5} standings={standings}>
       {phase === 'countdown' && <CountdownOverlay countdown={countdown} />}
 
       {phase === 'playing' && dl && (

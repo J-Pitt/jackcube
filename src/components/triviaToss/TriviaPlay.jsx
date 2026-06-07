@@ -11,13 +11,20 @@ import {
   LockedBadge,
 } from '@/components/game/GameUI'
 
-const ACCENT_KEY = 'triviaToss'
 const LABELS = ['A', 'B', 'C', 'D']
 
-export default function TriviaPlay({ room, roomId, playerId }) {
+export default function TriviaPlay({
+  room,
+  roomId,
+  playerId,
+  slotKey = 'triviaToss',
+  accentKey = 'triviaToss',
+  title = 'Trivia Toss',
+  emoji = '🧠',
+}) {
   const [me, setMe] = useState(null)
   const [busy, setBusy] = useState(false)
-  const tt = room?.gameState?.triviaToss
+  const tt = room?.gameState?.[slotKey]
   const phase = room?.phase
 
   const refreshMe = useCallback(() => {
@@ -43,16 +50,16 @@ export default function TriviaPlay({ room, roomId, playerId }) {
 
   if (phase === 'countdown') {
     return (
-      <PhoneStage title="Trivia Toss" emoji="🧠" accentKey={ACCENT_KEY}>
-        <WaitingCard emoji="🧠" title="Trivia Toss" subtitle="Sharpen up — questions incoming…" accentKey={ACCENT_KEY} />
+      <PhoneStage title={title} emoji={emoji} accentKey={accentKey}>
+        <WaitingCard emoji={emoji} title={title} subtitle="Sharpen up — questions incoming…" accentKey={accentKey} />
       </PhoneStage>
     )
   }
 
   if (!tt || phase !== 'playing') {
     return (
-      <PhoneStage title="Trivia Toss" emoji="🧠" accentKey={ACCENT_KEY}>
-        <WaitingCard title="Watch the TV" subtitle="The big screen has the action." accentKey={ACCENT_KEY} />
+      <PhoneStage title={title} emoji={emoji} accentKey={accentKey}>
+        <WaitingCard title="Watch the TV" subtitle="The big screen has the action." accentKey={accentKey} />
       </PhoneStage>
     )
   }
@@ -60,8 +67,8 @@ export default function TriviaPlay({ room, roomId, playerId }) {
   if (tt.step === 'question') {
     const options = me?.options || tt.options || []
     return (
-      <PhoneStage title="Pick an answer" emoji="🧠" accentKey={ACCENT_KEY}>
-        <PromptCard accentKey={ACCENT_KEY} className="mb-4">
+      <PhoneStage title="Pick an answer" emoji={emoji} accentKey={accentKey}>
+        <PromptCard accentKey={accentKey} className="mb-4">
           <p className="text-xl font-bold leading-snug text-white">{me?.questionText || tt.questionText}</p>
         </PromptCard>
         <div className="space-y-3">
@@ -69,7 +76,7 @@ export default function TriviaPlay({ room, roomId, playerId }) {
             <ChoiceButton
               key={opt}
               index={LABELS[i]}
-              accentKey={ACCENT_KEY}
+              accentKey={accentKey}
               disabled={me?.answered || busy}
               locked={me?.answered}
               onClick={() => pick(i)}
@@ -78,7 +85,7 @@ export default function TriviaPlay({ room, roomId, playerId }) {
             </ChoiceButton>
           ))}
         </div>
-        {me?.answered && <LockedBadge accentKey={ACCENT_KEY}>Answer locked in</LockedBadge>}
+        {me?.answered && <LockedBadge accentKey={accentKey}>Answer locked in</LockedBadge>}
       </PhoneStage>
     )
   }
@@ -88,7 +95,7 @@ export default function TriviaPlay({ room, roomId, playerId }) {
     const myPick = tt.answers?.[playerId]
     const won = myPick === correct
     return (
-      <PhoneStage title="Trivia Toss" emoji="🧠" accentKey={ACCENT_KEY}>
+      <PhoneStage title={title} emoji={emoji} accentKey={accentKey}>
         <div className="flex flex-1 flex-col items-center justify-center text-center">
           <motion.div
             initial={{ scale: 0.5, opacity: 0 }}

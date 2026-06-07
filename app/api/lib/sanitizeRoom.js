@@ -37,8 +37,8 @@ function sanitizeGameState(gameState, gameId) {
     gs.truthOrCube = toc
   }
 
-  if (gameId === 'captionClash' && gs.captionClash) {
-    const cc = { ...gs.captionClash }
+  if ((gameId === 'captionClash' && gs.captionClash) || (gameId === 'captionDuel' && gs.captionDuel)) {
+    const cc = { ...gs[gameId] }
     if (cc.step === 'write') {
       cc.answeredIds = keysOf(cc.submissions)
       delete cc.submissions
@@ -47,7 +47,7 @@ function sanitizeGameState(gameState, gameId) {
       cc.answeredIds = keysOf(cc.votes)
       delete cc.votes
     }
-    gs.captionClash = cc
+    gs[gameId] = cc
   }
 
   if (gameId === 'bluffBox' && gs.bluffBox) {
@@ -68,25 +68,26 @@ function sanitizeGameState(gameState, gameId) {
     gs.bluffBox = bb
   }
 
-  if (gameId === 'triviaToss' && gs.triviaToss) {
-    const tt = { ...gs.triviaToss }
+  if ((gameId === 'triviaToss' && gs.triviaToss) || (gameId === 'triviaDuel' && gs.triviaDuel)) {
+    const tt = { ...gs[gameId] }
     if (tt.step !== 'reveal') {
       tt.answeredIds = keysOf(tt.answers)
       delete tt.correctIndex
       delete tt.answers
+      delete tt.answeredAt
     }
-    gs.triviaToss = tt
+    gs[gameId] = tt
   }
 
-  if (gameId === 'reactionRush' && gs.reactionRush) {
-    const rr = { ...gs.reactionRush }
+  if ((gameId === 'reactionRush' && gs.reactionRush) || (gameId === 'reactionDuel' && gs.reactionDuel)) {
+    const rr = { ...gs[gameId] }
     if (rr.step === 'ready') {
       delete rr.taps
       delete rr.earlyTappers
     } else if (rr.step === 'go') {
       rr.answeredIds = [...keysOf(rr.taps), ...keysOf(rr.earlyTappers)]
     }
-    gs.reactionRush = rr
+    gs[gameId] = rr
   }
 
   if (gameId === 'categories' && gs.categories) {
@@ -98,13 +99,13 @@ function sanitizeGameState(gameState, gameId) {
     gs.categories = cat
   }
 
-  if (gameId === 'doodle' && gs.doodle) {
-    const dl = { ...gs.doodle }
+  if ((gameId === 'doodle' && gs.doodle) || (gameId === 'doodleDuel' && gs.doodleDuel)) {
+    const dl = { ...gs[gameId] }
     if (dl.step !== 'reveal') {
       delete dl.promptText
     }
     if (dl.step === 'guess') dl.answeredIds = keysOf(dl.guesses)
-    gs.doodle = dl
+    gs[gameId] = dl
   }
 
   if ((gameId === 'wouldYouRather' && gs.wouldYouRather) || (gameId === 'neverHaveIEver' && gs.neverHaveIEver)) {

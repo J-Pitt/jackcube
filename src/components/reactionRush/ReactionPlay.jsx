@@ -5,13 +5,19 @@ import { motion } from 'framer-motion'
 import { getRoomMe, sendInput } from '@/lib/roomApi'
 import { PhoneStage, WaitingCard, getAccent } from '@/components/game/GameUI'
 
-const ACCENT_KEY = 'reactionRush'
-
-export default function ReactionPlay({ room, roomId, playerId }) {
+export default function ReactionPlay({
+  room,
+  roomId,
+  playerId,
+  slotKey = 'reactionRush',
+  accentKey = 'reactionRush',
+  title = 'Reaction Rush',
+  emoji = '⚡',
+}) {
   const [me, setMe] = useState(null)
-  const rr = room?.gameState?.reactionRush
+  const rr = room?.gameState?.[slotKey]
   const phase = room?.phase
-  const accent = getAccent(ACCENT_KEY)
+  const accent = getAccent(accentKey)
   // Prefer the faster /me step so the GO button flips with minimal lag.
   const step = me?.step || rr?.step
 
@@ -32,16 +38,16 @@ export default function ReactionPlay({ room, roomId, playerId }) {
 
   if (phase === 'countdown') {
     return (
-      <PhoneStage title="Reaction Rush" emoji="⚡" accentKey={ACCENT_KEY}>
-        <WaitingCard emoji="⚡" title="Reaction Rush" subtitle="Thumbs ready…" accentKey={ACCENT_KEY} />
+      <PhoneStage title={title} emoji={emoji} accentKey={accentKey}>
+        <WaitingCard emoji={emoji} title={title} subtitle="Thumbs ready…" accentKey={accentKey} />
       </PhoneStage>
     )
   }
 
   if (!rr || phase !== 'playing') {
     return (
-      <PhoneStage title="Reaction Rush" emoji="⚡" accentKey={ACCENT_KEY}>
-        <WaitingCard title="Watch the TV" subtitle="The big screen has the action." accentKey={ACCENT_KEY} />
+      <PhoneStage title={title} emoji={emoji} accentKey={accentKey}>
+        <WaitingCard title="Watch the TV" subtitle="The big screen has the action." accentKey={accentKey} />
       </PhoneStage>
     )
   }
@@ -96,8 +102,8 @@ export default function ReactionPlay({ room, roomId, playerId }) {
   }
 
   return (
-    <PhoneStage title="Reaction Rush" emoji="⚡" accentKey={ACCENT_KEY}>
-      <WaitingCard emoji="🏆" title="Results on the TV" subtitle="Who had the fastest thumbs?" accentKey={ACCENT_KEY} />
+    <PhoneStage title={title} emoji={emoji} accentKey={accentKey}>
+      <WaitingCard emoji="🏆" title="Results on the TV" subtitle="Who had the fastest thumbs?" accentKey={accentKey} />
     </PhoneStage>
   )
 }

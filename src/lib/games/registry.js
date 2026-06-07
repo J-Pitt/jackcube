@@ -72,6 +72,50 @@ export const PARTY_GAMES = [
   },
 ]
 
+/** Head-to-head games — exactly 2 players */
+export const DUEL_GAMES = [
+  {
+    id: 'triviaDuel',
+    name: 'Trivia Duel',
+    description: 'Floor It-style speed trivia — both answer, fastest correct wins the bonus',
+    minPlayers: 2,
+    maxPlayers: 2,
+    maxRounds: 5,
+    mature: false,
+    emoji: '⚔️',
+  },
+  {
+    id: 'reactionDuel',
+    name: 'Reaction Duel',
+    description: '1v1 reflex showdown — tap on GO, fastest finger wins',
+    minPlayers: 2,
+    maxPlayers: 2,
+    maxRounds: 5,
+    mature: false,
+    emoji: '🎯',
+  },
+  {
+    id: 'doodleDuel',
+    name: 'Doodle Duel',
+    description: 'Head-to-head Pictionary — take turns drawing while your rival guesses',
+    minPlayers: 2,
+    maxPlayers: 2,
+    maxRounds: 5,
+    mature: false,
+    emoji: '🖊️',
+  },
+  {
+    id: 'captionDuel',
+    name: 'Caption Duel',
+    description: 'Quiplash for two — write a caption, vote for your opponent\'s best line',
+    minPlayers: 2,
+    maxPlayers: 2,
+    maxRounds: 5,
+    mature: false,
+    emoji: '💥',
+  },
+]
+
 /** @deprecated use PARTY_GAMES */
 export const FAMILY_GAMES = PARTY_GAMES
 
@@ -145,7 +189,7 @@ export const ADULT_GAMES = [
   },
 ]
 
-export const GAMES = [...PARTY_GAMES, ...ADULT_GAMES]
+export const GAMES = [...PARTY_GAMES, ...DUEL_GAMES, ...ADULT_GAMES]
 
 export function getGameMeta(gameId) {
   return GAMES.find((g) => g.id === gameId) || PARTY_GAMES[0]
@@ -159,8 +203,15 @@ export function isPartyGame(gameId) {
   return PARTY_GAMES.some((g) => g.id === gameId)
 }
 
+export function isDuelGame(gameId) {
+  return DUEL_GAMES.some((g) => g.id === gameId)
+}
+
 export function validatePlayerCount(gameId, count) {
   const g = getGameMeta(gameId)
+  if (g.minPlayers === g.maxPlayers && count !== g.minPlayers) {
+    return { ok: false, error: `${g.name} needs exactly ${g.minPlayers} players` }
+  }
   if (count < g.minPlayers) {
     return { ok: false, error: `Need at least ${g.minPlayers} players for ${g.name}` }
   }

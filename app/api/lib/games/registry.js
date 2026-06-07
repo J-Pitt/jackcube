@@ -13,6 +13,10 @@ const GAMES = {
   wouldYouRather: { id: 'wouldYouRather', minPlayers: 2, maxPlayers: 8, maxRounds: 5 },
   neverHaveIEver: { id: 'neverHaveIEver', minPlayers: 2, maxPlayers: 8, maxRounds: 5 },
   cardCrimes: { id: 'cardCrimes', minPlayers: 3, maxPlayers: 5, maxRounds: 5 },
+  triviaDuel: { id: 'triviaDuel', minPlayers: 2, maxPlayers: 2, maxRounds: 5 },
+  reactionDuel: { id: 'reactionDuel', minPlayers: 2, maxPlayers: 2, maxRounds: 5 },
+  doodleDuel: { id: 'doodleDuel', minPlayers: 2, maxPlayers: 2, maxRounds: 5 },
+  captionDuel: { id: 'captionDuel', minPlayers: 2, maxPlayers: 2, maxRounds: 5 },
 }
 
 const VALID_GAMES = Object.keys(GAMES)
@@ -23,6 +27,9 @@ function getGameMeta(gameId) {
 
 function validatePlayerCount(gameId, count) {
   const g = getGameMeta(gameId)
+  if (g.minPlayers === g.maxPlayers && count !== g.minPlayers) {
+    return { ok: false, error: `Need exactly ${g.minPlayers} players` }
+  }
   if (count < g.minPlayers) {
     return { ok: false, error: `Need at least ${g.minPlayers} players` }
   }

@@ -15,6 +15,10 @@ export const ACCENTS = {
   wouldYouRather: { hex: '#F72585', glow: 'rgba(247,37,133,0.4)' },
   neverHaveIEver: { hex: '#B5179E', glow: 'rgba(181,23,158,0.4)' },
   cardCrimes: { hex: '#E5383B', glow: 'rgba(229,56,59,0.42)' },
+  triviaDuel: { hex: '#FFD166', glow: 'rgba(255,209,102,0.4)' },
+  reactionDuel: { hex: '#F94144', glow: 'rgba(249,65,68,0.42)' },
+  doodleDuel: { hex: '#43AA8B', glow: 'rgba(67,170,139,0.4)' },
+  captionDuel: { hex: '#9B5DE5', glow: 'rgba(155,93,229,0.4)' },
   default: { hex: '#00F5D4', glow: 'rgba(0,245,212,0.35)' },
 }
 

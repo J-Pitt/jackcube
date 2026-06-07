@@ -15,15 +15,23 @@ import {
   getAccent,
 } from '@/components/game/GameUI'
 
-const ACCENT_KEY = 'captionClash'
-
-export default function CaptionHost({ room, roomId, hostId, refresh }) {
+export default function CaptionHost({
+  room,
+  roomId,
+  hostId,
+  refresh,
+  slotKey = 'captionClash',
+  accentKey = 'captionClash',
+  title = 'Caption Clash',
+  emoji = '💬',
+  writeLabel = 'Write the funniest answer on your phone',
+}) {
   const [nextLoading, setNextLoading] = useState(false)
   const phase = room?.phase
   const round = room?.gameState?.round ?? 1
-  const cc = room?.gameState?.captionClash
+  const cc = room?.gameState?.[slotKey]
   const players = room?.players || []
-  const accent = getAccent(ACCENT_KEY)
+  const accent = getAccent(accentKey)
   const standings = players.some((p) => Number(p.score) > 0) ? players : undefined
 
   const countdown = useGameCountdown({ phase, round, roomId, hostId, onDone: refresh })
@@ -54,7 +62,7 @@ export default function CaptionHost({ room, roomId, hostId, refresh }) {
 
   if (phase === 'leaderboard' || phase === 'victory') {
     return (
-      <GameStage title="Caption Clash" emoji="💬" accentKey={ACCENT_KEY} room={room} round={round} maxRounds={5}>
+      <GameStage title={title} emoji={emoji} accentKey={accentKey} room={room} round={round} maxRounds={5}>
         <LeaderboardPhase
           room={room}
           onNextRound={handleNextRound}
@@ -69,14 +77,14 @@ export default function CaptionHost({ room, roomId, hostId, refresh }) {
   const votes = cc?.votes || {}
 
   return (
-    <GameStage title="Caption Clash" emoji="💬" accentKey={ACCENT_KEY} room={room} round={round} maxRounds={5} standings={standings}>
+    <GameStage title={title} emoji={emoji} accentKey={accentKey} room={room} round={round} maxRounds={5} standings={standings}>
       {phase === 'countdown' && <CountdownOverlay countdown={countdown} />}
 
       {phase === 'playing' && cc && (
         <PhaseReveal key={`${round}-${cc.step}`}>
           {cc.step === 'write' && (
             <div className="space-y-8">
-              <PromptCard label="Write the funniest answer on your phone" accentKey={ACCENT_KEY}>
+              <PromptCard label={writeLabel} accentKey={accentKey}>
                 <p className="font-display text-3xl font-extrabold leading-snug text-white sm:text-4xl">
                   {cc.promptText}
                 </p>

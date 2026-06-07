@@ -16,6 +16,10 @@ import WordBluffPlay from '@/components/wordBluff/WordBluffPlay'
 import WouldYouRatherPlay from '@/components/wouldYouRather/WouldYouRatherPlay'
 import NeverHaveIEverPlay from '@/components/neverHaveIEver/NeverHaveIEverPlay'
 import CardCrimesPlay from '@/components/cardCrimes/CardCrimesPlay'
+import TriviaDuelPlay from '@/components/triviaDuel/TriviaDuelPlay'
+import ReactionDuelPlay from '@/components/reactionDuel/ReactionDuelPlay'
+import DoodleDuelPlay from '@/components/doodleDuel/DoodleDuelPlay'
+import CaptionDuelPlay from '@/components/captionDuel/CaptionDuelPlay'
 import MatureGate from '@/components/MatureGate'
 import PartyVideoControls from '@/components/partyVideo/PartyVideoControls'
 import PartyChat from '@/components/partyVideo/PartyChat'
@@ -126,6 +130,10 @@ export default function GamePlayClient({ roomId: roomIdProp }) {
       wouldYouRather: <WouldYouRatherPlay {...playProps} />,
       neverHaveIEver: <NeverHaveIEverPlay {...playProps} />,
       cardCrimes: <CardCrimesPlay {...playProps} />,
+      triviaDuel: <TriviaDuelPlay {...playProps} />,
+      reactionDuel: <ReactionDuelPlay {...playProps} />,
+      doodleDuel: <DoodleDuelPlay {...playProps} />,
+      captionDuel: <CaptionDuelPlay {...playProps} />,
     }
 
     return playMap[gameId] || playMap.captionClash

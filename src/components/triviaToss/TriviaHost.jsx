@@ -15,16 +15,24 @@ import {
   getAccent,
 } from '@/components/game/GameUI'
 
-const ACCENT_KEY = 'triviaToss'
 const LABELS = ['A', 'B', 'C', 'D']
 
-export default function TriviaHost({ room, roomId, hostId, refresh }) {
+export default function TriviaHost({
+  room,
+  roomId,
+  hostId,
+  refresh,
+  slotKey = 'triviaToss',
+  accentKey = 'triviaToss',
+  title = 'Trivia Toss',
+  emoji = '🧠',
+}) {
   const [nextLoading, setNextLoading] = useState(false)
   const phase = room?.phase
   const round = room?.gameState?.round ?? 1
-  const tt = room?.gameState?.triviaToss
+  const tt = room?.gameState?.[slotKey]
   const players = room?.players || []
-  const accent = getAccent(ACCENT_KEY)
+  const accent = getAccent(accentKey)
   const standings = players.some((p) => Number(p.score) > 0) ? players : undefined
 
   const countdown = useGameCountdown({ phase, round, roomId, hostId, onDone: refresh })
@@ -55,7 +63,7 @@ export default function TriviaHost({ room, roomId, hostId, refresh }) {
 
   if (phase === 'leaderboard' || phase === 'victory') {
     return (
-      <GameStage title="Trivia Toss" emoji="🧠" accentKey={ACCENT_KEY} room={room} round={round} maxRounds={5}>
+      <GameStage title={title} emoji={emoji} accentKey={accentKey} room={room} round={round} maxRounds={5}>
         <LeaderboardPhase
           room={room}
           onNextRound={handleNextRound}
@@ -69,12 +77,12 @@ export default function TriviaHost({ room, roomId, hostId, refresh }) {
   const correct = tt?.correctIndex
 
   return (
-    <GameStage title="Trivia Toss" emoji="🧠" accentKey={ACCENT_KEY} room={room} round={round} maxRounds={5} standings={standings}>
+    <GameStage title={title} emoji={emoji} accentKey={accentKey} room={room} round={round} maxRounds={5} standings={standings}>
       {phase === 'countdown' && <CountdownOverlay countdown={countdown} />}
 
       {phase === 'playing' && tt && (
         <PhaseReveal key={`${round}-${tt.step}`}>
-          <PromptCard label="Answer on your phone" accentKey={ACCENT_KEY} className="mb-6">
+          <PromptCard label="Answer on your phone" accentKey={accentKey} className="mb-6">
             <p className="font-display text-3xl font-extrabold leading-snug text-white sm:text-4xl">
               {tt.questionText}
             </p>

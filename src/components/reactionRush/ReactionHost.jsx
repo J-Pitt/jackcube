@@ -12,15 +12,22 @@ import {
   getAccent,
 } from '@/components/game/GameUI'
 
-const ACCENT_KEY = 'reactionRush'
-
-export default function ReactionHost({ room, roomId, hostId, refresh }) {
+export default function ReactionHost({
+  room,
+  roomId,
+  hostId,
+  refresh,
+  slotKey = 'reactionRush',
+  accentKey = 'reactionRush',
+  title = 'Reaction Rush',
+  emoji = '⚡',
+}) {
   const [nextLoading, setNextLoading] = useState(false)
   const phase = room?.phase
   const round = room?.gameState?.round ?? 1
-  const rr = room?.gameState?.reactionRush
+  const rr = room?.gameState?.[slotKey]
   const players = room?.players || []
-  const accent = getAccent(ACCENT_KEY)
+  const accent = getAccent(accentKey)
   const standings = players.some((p) => Number(p.score) > 0) ? players : undefined
 
   const countdown = useGameCountdown({ phase, round, roomId, hostId, onDone: refresh })
@@ -51,7 +58,7 @@ export default function ReactionHost({ room, roomId, hostId, refresh }) {
 
   if (phase === 'leaderboard' || phase === 'victory') {
     return (
-      <GameStage title="Reaction Rush" emoji="⚡" accentKey={ACCENT_KEY} room={room} round={round} maxRounds={5}>
+      <GameStage title={title} emoji={emoji} accentKey={accentKey} room={room} round={round} maxRounds={5}>
         <LeaderboardPhase
           room={room}
           onNextRound={handleNextRound}
@@ -71,7 +78,7 @@ export default function ReactionHost({ room, roomId, hostId, refresh }) {
   const noTap = players.filter((p) => !rr?.taps?.[p.id] && !rr?.earlyTappers?.[p.id])
 
   return (
-    <GameStage title="Reaction Rush" emoji="⚡" accentKey={ACCENT_KEY} room={room} round={round} maxRounds={5} standings={standings}>
+    <GameStage title={title} emoji={emoji} accentKey={accentKey} room={room} round={round} maxRounds={5} standings={standings}>
       {phase === 'countdown' && <CountdownOverlay countdown={countdown} />}
 
       {phase === 'playing' && rr && (

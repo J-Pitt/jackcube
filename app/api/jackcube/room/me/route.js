@@ -91,8 +91,8 @@ export async function GET(request) {
       }
     }
 
-    if (gameId === 'captionClash' && room.gameState?.captionClash) {
-      const cc = room.gameState.captionClash
+    if ((gameId === 'captionClash' && room.gameState?.captionClash) || (gameId === 'captionDuel' && room.gameState?.captionDuel)) {
+      const cc = room.gameState[gameId]
       payload.step = cc.step
       payload.promptText = cc.promptText
       payload.submitted = !!cc.submissions?.[playerId]
@@ -120,8 +120,8 @@ export async function GET(request) {
       }
     }
 
-    if (gameId === 'triviaToss' && room.gameState?.triviaToss) {
-      const tt = room.gameState.triviaToss
+    if ((gameId === 'triviaToss' && room.gameState?.triviaToss) || (gameId === 'triviaDuel' && room.gameState?.triviaDuel)) {
+      const tt = room.gameState[gameId]
       payload.step = tt.step
       payload.questionText = tt.questionText
       payload.options = tt.options
@@ -129,8 +129,8 @@ export async function GET(request) {
       if (tt.step === 'reveal') payload.correctIndex = tt.correctIndex
     }
 
-    if (gameId === 'reactionRush' && room.gameState?.reactionRush) {
-      const rr = room.gameState.reactionRush
+    if ((gameId === 'reactionRush' && room.gameState?.reactionRush) || (gameId === 'reactionDuel' && room.gameState?.reactionDuel)) {
+      const rr = room.gameState[gameId]
       payload.step = rr.step
       payload.tapped = !!rr.taps?.[playerId]
       payload.early = !!rr.earlyTappers?.[playerId]
@@ -145,9 +145,9 @@ export async function GET(request) {
       payload.myAnswers = cat.answers?.[playerId] || null
     }
 
-    if (gameId === 'doodle' && room.gameState?.doodle) {
-      const dl = room.gameState.doodle
-      const sec = secrets.doodle || {}
+    if ((gameId === 'doodle' && room.gameState?.doodle) || (gameId === 'doodleDuel' && room.gameState?.doodleDuel)) {
+      const dl = room.gameState[gameId]
+      const sec = secrets[gameId] || {}
       const isDrawer = dl.drawerId === playerId
       payload.role = isDrawer ? 'drawer' : 'guesser'
       payload.step = dl.step
