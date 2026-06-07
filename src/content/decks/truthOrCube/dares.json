@@ -5,272 +5,70 @@
   "intensity": "mature",
   "locale": "en-US",
   "items": [
-    {
-      "id": "toc-dare-001",
-      "text": "Send a thirsty emoji to the last person you texted — show the group.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-002",
-      "text": "Let the group pick a word you must whisper seductively.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-003",
-      "text": "Do your best \"I am the drama\" walk across the room.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-004",
-      "text": "Swap phones with someone for 30 seconds — no scrolling DMs.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-005",
-      "text": "Post a vague thirsty story — delete after the round.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-006",
-      "text": "Let someone rewrite your dating bio out loud.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-007",
-      "text": "Give your most convincing fake moan for two seconds.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-008",
-      "text": "Text \"thinking about you\" to someone the group chooses (or chicken out).",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-009",
-      "text": "Do 10 squats while maintaining eye contact with the host.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-010",
-      "text": "Read your last three emojis used like they are a poem.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-011",
-      "text": "Let the group pose you for a thirst trap photo — keep it PG-13.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-012",
-      "text": "Serenade the player on your left for fifteen seconds.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-013",
-      "text": "Swap an item of clothing with someone for one round.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-014",
-      "text": "Do your best impression of someone in the room flirting.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-015",
-      "text": "Hold a plank while saying three things you find hot.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-016",
-      "text": "Let the group pick a pickup line — deliver it to the camera.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-017",
-      "text": "Show the last photo you took without explaining it.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-018",
-      "text": "Give someone a compliment that sounds like a threat.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-019",
-      "text": "Narrate your morning routine like a romance novel.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-020",
-      "text": "Do a slow-motion hair flip or hat tip.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-021",
-      "text": "Let the group rename you for the rest of the night.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-022",
-      "text": "Demonstrate your signature dance move from the club.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-023",
-      "text": "Say something nice about each player — no repeats.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-024",
-      "text": "Act out your last crush meeting you in a movie.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-025",
-      "text": "Share your most-used emoji and defend it.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-026",
-      "text": "Let someone tickle your ego — brag for twenty seconds.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-027",
-      "text": "Pretend you are on a dating show intro — sell yourself.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-028",
-      "text": "Do push-ups or wall sits until the timer ends.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-029",
-      "text": "Whisper a secret to the player across from you.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-030",
-      "text": "Let the group choose your next drink or snack.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    {
-      "id": "toc-dare-031",
-      "text": "Strike three poses the group calls out — fast.",
-      "tags": [
-        "dare"
-      ],
-      "remotePlaySafe": false
-    },
-    { "id": "toc-dare-032", "text": "Text your crush a single fire emoji on camera — or chicken out.", "tags": ["dare"], "remotePlaySafe": true },
-    { "id": "toc-dare-033", "text": "Read your most recent text out loud in your most dramatic voice.", "tags": ["dare"], "remotePlaySafe": true },
-    { "id": "toc-dare-034", "text": "Show the group your most-used emoji and tell its real story.", "tags": ["dare"], "remotePlaySafe": true },
-    { "id": "toc-dare-035", "text": "Do your best seductive wink at the camera three times.", "tags": ["dare"], "remotePlaySafe": true },
-    { "id": "toc-dare-036", "text": "Let the group write your next status — and read it aloud.", "tags": ["dare"], "remotePlaySafe": true },
-    { "id": "toc-dare-037", "text": "Give a 15-second TED talk on why you're a catch.", "tags": ["dare"], "remotePlaySafe": true },
-    { "id": "toc-dare-038", "text": "Show the last selfie in your camera roll with zero context.", "tags": ["dare"], "remotePlaySafe": true },
-    { "id": "toc-dare-039", "text": "Do your most convincing fake laugh until someone else laughs.", "tags": ["dare"], "remotePlaySafe": true },
-    { "id": "toc-dare-040", "text": "Pick a player and serenade them through the camera for 10 seconds.", "tags": ["dare"], "remotePlaySafe": true },
-    { "id": "toc-dare-041", "text": "Confess your most recent guilty-pleasure song and play 5 seconds of it.", "tags": ["dare"], "remotePlaySafe": true },
-    { "id": "toc-dare-042", "text": "Do a runway walk across your room on camera.", "tags": ["dare"], "remotePlaySafe": true },
-    { "id": "toc-dare-043", "text": "Let the group dare you to call (not text) someone right now.", "tags": ["dare"], "remotePlaySafe": false },
-    { "id": "toc-dare-044", "text": "Reenact your worst flirting attempt for the group.", "tags": ["dare"], "remotePlaySafe": true },
-    { "id": "toc-dare-045", "text": "Show your screen time and explain your most-used app.", "tags": ["dare"], "remotePlaySafe": true },
-    { "id": "toc-dare-046", "text": "Speak only in pickup lines until your next turn.", "tags": ["dare"], "remotePlaySafe": true },
-    { "id": "toc-dare-047", "text": "Let the player to your left choose an emoji you must text someone.", "tags": ["dare"], "remotePlaySafe": false },
-    { "id": "toc-dare-048", "text": "Do your best impression of a player flirting — let them guess who.", "tags": ["dare"], "remotePlaySafe": true },
-    { "id": "toc-dare-049", "text": "Give the camera bedroom eyes for a full 10 seconds without laughing.", "tags": ["dare"], "remotePlaySafe": true },
-    { "id": "toc-dare-050", "text": "Read your last DM out loud in a soap-opera voice.", "tags": ["dare"], "remotePlaySafe": true }
+    { "id": "toc-dare-001", "text": "📸 Take a selfie right now — no fixing anything. Send it to the chat as-is.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-002", "text": "📸 Take a photo from the neck down in whatever you're wearing. Send it.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-003", "text": "📸 Send your sexiest mirror selfie to the chat. Work your angles.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-004", "text": "📸 Take a close-up photo of your lips. Make it as seductive as possible.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-005", "text": "📸 Send a photo of your neck and collarbone. Make it look hot.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-006", "text": "📸 Take a photo showing off your legs. Send it.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-007", "text": "📸 Snap a pic of yourself biting your lip. Send it.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-008", "text": "📸 Take a 'just woke up in bed' photo and send it to the chat.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-009", "text": "📸 Take a suggestive photo using only shadows and lighting. Send it.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-010", "text": "📸 Send a photo of yourself with one less piece of clothing than you have on now.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-011", "text": "📸 Take a photo of yourself from behind, looking over your shoulder. Send it.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-012", "text": "📸 Show the group the last spicy photo in your camera roll (blur faces if needed).", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-013", "text": "📸 Take a photo in just your underwear and send it to the chat.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-014", "text": "📸 Take a photo of your stomach — shirt pulled up or off. Send it.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-015", "text": "📸 Send a chest/cleavage photo to the chat. You decide how much to show.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-016", "text": "Run your fingers slowly from your neck down to your waist on camera.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-017", "text": "Trace circles on your inner thigh with your fingertips for 15 seconds on camera.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-018", "text": "Run your hands slowly through your hair, tilt your head back, and hold it for 10 seconds.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-019", "text": "Touch yourself wherever feels good — 20 seconds, on camera, you pick the spot.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-020", "text": "Rub the back of your neck slowly with your eyes closed for 15 seconds. Let everyone watch.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-021", "text": "Run an ice cube or cold water across your chest on camera and react naturally.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-022", "text": "Slowly trace your fingers across your stomach for 15 seconds on camera.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-023", "text": "Place your hand on your inner thigh and slide it up as far as you dare. Show the group.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-024", "text": "Caress your own arms, shoulders, and neck like someone else is doing it — 20 seconds.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-025", "text": "Put your hand under your shirt and run it across your body for 15 seconds on camera.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-026", "text": "Run your fingertips along the waistband of your pants or underwear slowly on camera.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-027", "text": "Press your hands against your chest and slide them down your body to your hips. Do it slow.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-028", "text": "Massage your own thigh slowly for 15 seconds while looking at the camera.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-029", "text": "Take off one piece of clothing right now. Show the group.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-030", "text": "Choose: lose your shirt or your pants for the next 3 rounds. Send proof.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-031", "text": "Do a slow striptease — remove at least one item. Take your time with it.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-032", "text": "Show the group your underwear without fully undressing. Get creative.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-033", "text": "Undress to your underwear and do a slow spin on camera.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-034", "text": "Unbutton or unzip something and leave it open for the rest of the round.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-035", "text": "Put on the least amount of clothing you're comfortable with and show the group.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-036", "text": "Pull your shirt off over your head as slowly as you can on camera.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-037", "text": "Lower your waistband just enough to show your hip bones. Hold it for 10 seconds.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-038", "text": "Record a 15-second voice note of your sexiest moan. Send it to the chat.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-039", "text": "Whisper into a voice note exactly what you want done to you tonight. Send it.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-040", "text": "Say 'I want you' in the most seductive voice you can. Record it and send it.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-041", "text": "Do your best fake orgasm for the group. Full commitment — sell it.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-042", "text": "Record yourself moaning someone's name the way you'd say it in bed. Send it.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-043", "text": "Whisper a dirty fantasy into a voice note — 30 seconds minimum. Send it.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-044", "text": "Do a sexy dance for 30 seconds. No laughing — commit to it.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-045", "text": "Suck on your finger slowly while looking at the camera for 10 seconds.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-046", "text": "Bite your lip and give the camera your best 'come here' eyes for 15 seconds.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-047", "text": "Lick your lips slowly and tell the group one thing that makes you weak.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-048", "text": "Do a slow, sexy walk across the room on camera.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-049", "text": "Demonstrate how you kiss — use the back of your hand. Make it look real.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-050", "text": "Lay back and arch your back like something amazing just happened. Hold it 10 seconds.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-051", "text": "Blindfold yourself with a shirt or scarf and describe your hottest fantasy for 60 seconds.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-052", "text": "Strike your most seductive pose and hold it for 15 seconds. The group rates you 1–10.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-053", "text": "Crawl across the bed or floor toward the camera as seductively as you can.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-054", "text": "Pretend the camera is someone you're into — seduce it for 20 seconds without speaking.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-055", "text": "Lay on your back, close your eyes, and act out exactly how you react when you're being pleased — 15 seconds.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-056", "text": "Describe in detail how you like to be touched — where, how slow, how hard. Be specific.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-057", "text": "Tell the group your dirtiest fantasy. Leave nothing out.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-058", "text": "Describe step by step what you'd do to someone if you had them alone for one hour.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-059", "text": "Describe the hottest sexual experience you've ever had. Set the scene.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-060", "text": "Tell the group exactly what turns you on the fastest. Be specific.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-061", "text": "Describe your body the way you'd want a lover to describe it.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-062", "text": "Describe what you'd do on a one-night stand — from the first look to the morning after.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-063", "text": "Tell the group the one move you do that always gets a reaction. Demonstrate if you dare.", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-064", "text": "Describe the last time you touched yourself — what were you thinking about?", "tags": ["dare"], "remotePlaySafe": true },
+    { "id": "toc-dare-065", "text": "Tell the group your biggest bedroom secret — something nobody here knows.", "tags": ["dare"], "remotePlaySafe": true }
   ]
 }
