@@ -9,10 +9,17 @@ import {
   useRef,
   useState,
 } from 'react'
-import { getMediaSupportError, hasVideoTrack, requestLobbyMedia } from '@/lib/media'
+import {
+  getMediaSupportError,
+  hasVideoTrack,
+  requestLobbyMedia,
+  requestRoomCameraMedia,
+} from '@/lib/media'
 import { loadRejoin } from '@/lib/rejoin'
 import {
   VIDEO_JOIN_KEY,
+  VIDEO_SOURCE_KEY,
+  ROOM_CAMERA_KEY,
   attachAudioStream,
   displayNameFromPeerId,
   displayPeerId,
@@ -39,6 +46,10 @@ export function PartyVideoProvider({ children }) {
   const [remotePeers, setRemotePeers] = useState([])
   const [audioOnly, setAudioOnly] = useState(false)
   const [mediaBlocked, setMediaBlocked] = useState(null)
+  const [roomCameraStream, setRoomCameraStream] = useState(null)
+  const [roomCameraOn, setRoomCameraOn] = useState(false)
+  const [cameraSource, setCameraSourceState] = useState('phone')
+  const [panelExpanded, setPanelExpanded] = useState(false)
 
   const peerRef = useRef(null)
   const callsRef = useRef({})
@@ -54,6 +65,8 @@ export function PartyVideoProvider({ children }) {
   remotePeersRef.current = remotePeers
 
   const isDisplayMode = session?.screenRole === 'tv'
+  const isHostPlayer =
+    session?.isHost === true || session?.playerId === room?.hostId
 
   const myId = useMemo(() => {
     if (!roomId) return null
@@ -84,12 +97,21 @@ export function PartyVideoProvider({ children }) {
   useEffect(() => {
     if (isDisplayMode) {
       setJoined(!!roomId)
+      try {
+        setRoomCameraOn(localStorage.getItem(ROOM_CAMERA_KEY) === '1')
+      } catch {
+        setRoomCameraOn(false)
+      }
       return undefined
     }
     try {
-      setJoined(localStorage.getItem(VIDEO_JOIN_KEY) === '1')
+      const source = localStorage.getItem(VIDEO_SOURCE_KEY)
+      setCameraSourceState(source === 'room' ? 'room' : 'phone')
+      const wantsVideo = localStorage.getItem(VIDEO_JOIN_KEY) === '1'
+      setJoined(wantsVideo && source !== 'room')
     } catch {
       setJoined(false)
+      setCameraSourceState('phone')
     }
     return undefined
   }, [isDisplayMode, roomId])
@@ -108,15 +130,77 @@ export function PartyVideoProvider({ children }) {
     [isDisplayMode]
   )
 
+  const setCameraSource = useCallback(
+    (source) => {
+      if (isDisplayMode) return
+      const next = source === 'room' ? 'room' : 'phone'
+      setCameraSourceState(next)
+      try {
+        if (next === 'room') {
+          localStorage.setItem(VIDEO_SOURCE_KEY, 'room')
+          localStorage.removeItem(VIDEO_JOIN_KEY)
+        } else {
+          localStorage.setItem(VIDEO_SOURCE_KEY, 'phone')
+        }
+      } catch {
+        /* ignore */
+      }
+      if (next === 'room') persistJoined(false)
+    },
+    [isDisplayMode, persistJoined]
+  )
+
   const join = useCallback(() => {
     if (isDisplayMode) return
-    if (!mediaBlocked && !getMediaSupportError()) persistJoined(true)
-  }, [isDisplayMode, mediaBlocked, persistJoined])
+    if (cameraSource === 'room') return
+    if (!mediaBlocked && !getMediaSupportError()) {
+      try {
+        localStorage.setItem(VIDEO_SOURCE_KEY, 'phone')
+      } catch {
+        /* ignore */
+      }
+      setCameraSourceState('phone')
+      persistJoined(true)
+    }
+  }, [isDisplayMode, cameraSource, mediaBlocked, persistJoined])
 
   const leave = useCallback(() => {
     if (isDisplayMode) return
     persistJoined(false)
   }, [isDisplayMode, persistJoined])
+
+  const toggleRoomCamera = useCallback(async () => {
+    if (!isDisplayMode) return
+    if (roomCameraOn) {
+      roomCameraStream?.getTracks().forEach((t) => t.stop())
+      setRoomCameraStream(null)
+      setRoomCameraOn(false)
+      try {
+        localStorage.removeItem(ROOM_CAMERA_KEY)
+      } catch {
+        /* ignore */
+      }
+      return
+    }
+    const blocked = getMediaSupportError()
+    if (blocked) {
+      setError(blocked)
+      return
+    }
+    try {
+      const stream = await requestRoomCameraMedia()
+      setRoomCameraStream(stream)
+      setRoomCameraOn(true)
+      setError(null)
+      try {
+        localStorage.setItem(ROOM_CAMERA_KEY, '1')
+      } catch {
+        /* ignore */
+      }
+    } catch (e) {
+      setError(e?.message || 'Could not access room camera')
+    }
+  }, [isDisplayMode, roomCameraOn, roomCameraStream])
 
   const hasRemoteStream = useCallback((peerId) => {
     return remotePeersRef.current.some((p) => p.peerId === peerId && p.stream)
@@ -383,6 +467,39 @@ export function PartyVideoProvider({ children }) {
     })
   }, [cameraOff, localStream, isDisplayMode])
 
+  useEffect(() => {
+    if (!isDisplayMode || !roomCameraOn || roomCameraStream) return undefined
+    let cancelled = false
+    ;(async () => {
+      try {
+        const stream = await requestRoomCameraMedia()
+        if (!cancelled) setRoomCameraStream(stream)
+      } catch (e) {
+        if (!cancelled) {
+          setRoomCameraOn(false)
+          setError(e?.message || 'Could not access room camera')
+        }
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [isDisplayMode, roomCameraOn, roomCameraStream])
+
+  useEffect(() => {
+    return () => {
+      roomCameraStream?.getTracks().forEach((t) => t.stop())
+    }
+  }, [roomCameraStream])
+
+  const hasActiveVideo =
+    visibleRemotePeers.some((p) => p.stream) || !!roomCameraStream || (joined && ready && !isDisplayMode)
+
+  useEffect(() => {
+    if (hasActiveVideo) setPanelExpanded(true)
+    else setPanelExpanded(false)
+  }, [hasActiveVideo])
+
   const value = {
     roomId,
     myPlayerId,
@@ -396,7 +513,16 @@ export function PartyVideoProvider({ children }) {
     mediaBlocked,
     remotePeers: visibleRemotePeers,
     isDisplayMode,
+    isHostPlayer,
     inCall: joined && ready,
+    hasActiveVideo,
+    panelExpanded,
+    setPanelExpanded,
+    roomCameraStream,
+    roomCameraOn,
+    cameraSource,
+    setCameraSource,
+    toggleRoomCamera,
     join,
     leave,
     setMuted,

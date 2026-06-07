@@ -63,3 +63,19 @@ export async function requestLobbyMedia() {
 export function hasVideoTrack(stream) {
   return stream?.getVideoTracks?.().length > 0
 }
+
+/** Webcam on the main screen / TV device. */
+export async function requestRoomCameraMedia() {
+  try {
+    return await requestUserMedia({
+      audio: true,
+      video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
+    })
+  } catch (err) {
+    const name = err?.name || ''
+    if (name === 'NotFoundError' || name === 'NotAllowedError' || name === 'OverconstrainedError') {
+      return requestUserMedia({ audio: true, video: false })
+    }
+    throw err
+  }
+}

@@ -7,16 +7,39 @@ import { safePeerId } from '@/lib/partyVideo'
 
 /** All player cameras on the main TV screen — receive-only, no self preview. */
 export default function HostVideoRail({ className = '' }) {
-  const { remotePeers, players, inCall, joined, isDisplayMode, roomId } = usePartyVideo()
+  const {
+    remotePeers,
+    players,
+    inCall,
+    isDisplayMode,
+    roomId,
+    roomCameraStream,
+    hasActiveVideo,
+    panelExpanded,
+    setPanelExpanded,
+  } = usePartyVideo()
 
-  const tiles = remotePeers.filter((p) => p.stream)
+  const phoneTiles = remotePeers.filter((p) => p.stream)
+  const tiles = [
+    ...(roomCameraStream
+      ? [{ peerId: '__room__', name: 'Room camera', stream: roomCameraStream, local: true }]
+      : []),
+    ...phoneTiles,
+  ]
   const tileSize = tiles.length === 1 ? 'hero' : tiles.length <= 4 ? 'large' : 'large'
 
-  if (!isDisplayMode && !joined && tiles.length === 0) {
+  if (!panelExpanded && !hasActiveVideo) {
     return (
-      <div className={`rounded-2xl border border-white/10 bg-cube-surface/90 p-4 backdrop-blur ${className}`}>
-        <PartyVideoControls />
-      </div>
+      <button
+        type="button"
+        onClick={() => setPanelExpanded(true)}
+        className={`flex w-full items-center justify-between gap-3 rounded-2xl border border-white/10 bg-cube-surface/90 px-4 py-3 text-left backdrop-blur transition hover:border-white/20 ${className}`}
+      >
+        <span className="text-sm text-white/50">
+          Party cam — no one on yet
+        </span>
+        <span className="text-xs font-semibold text-cube-cyan">Open</span>
+      </button>
     )
   }
 
@@ -26,9 +49,20 @@ export default function HostVideoRail({ className = '' }) {
     >
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm font-semibold uppercase tracking-widest text-white/50">
-          Party cam {inCall ? '· live' : ''}
+          Party cam {inCall && hasActiveVideo ? '· live' : ''}
         </p>
-        <PartyVideoControls compact />
+        <div className="flex items-center gap-2">
+          {!hasActiveVideo && (
+            <button
+              type="button"
+              onClick={() => setPanelExpanded(false)}
+              className="text-xs text-white/40 hover:text-white/70"
+            >
+              Minimize
+            </button>
+          )}
+          <PartyVideoControls compact />
+        </div>
       </div>
       {tiles.length > 0 ? (
         <div
@@ -58,9 +92,9 @@ export default function HostVideoRail({ className = '' }) {
           })}
         </div>
       ) : (
-        <p className="py-6 text-center text-sm text-white/40">
+        <p className="py-4 text-center text-sm text-white/40">
           {isDisplayMode
-            ? 'Join video on your phone to show your camera here…'
+            ? 'Enable room camera or join video on phones to show faces here.'
             : 'Waiting for players to join video…'}
         </p>
       )}

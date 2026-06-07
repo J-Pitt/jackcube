@@ -54,3 +54,6 @@ export function attachAudioStream(audioEl, stream) {
 }
 
 export const VIDEO_JOIN_KEY = 'jackcube:videoJoined'
+/** 'phone' | 'room' — where the host publishes party cam from */
+export const VIDEO_SOURCE_KEY = 'jackcube:videoSource'
+export const ROOM_CAMERA_KEY = 'jackcube:roomCameraOn'

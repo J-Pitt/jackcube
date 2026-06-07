@@ -1,10 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import dynamic from 'next/dynamic'
-import { clearRejoin } from '@/lib/rejoin'
+import { useLeaveGame } from '@/hooks/useLeaveGame'
+import ConfettiBurst from '@/components/results/ConfettiBurst'
+import { getAccent } from '@/components/game/GameUI'
 
 const Leaderboard3D = dynamic(() => import('@/components/leaderboard/Leaderboard3D'), {
   ssr: false,
@@ -70,38 +71,53 @@ export function PhaseTimer({ endsAt, label }) {
 }
 
 export function GoHomeButton({ className = '' }) {
-  const router = useRouter()
+  const leaveGame = useLeaveGame()
 
   return (
     <button
       type="button"
-      onClick={() => {
-        clearRejoin()
-        router.push('/')
-      }}
+      onClick={leaveGame}
       className={`w-full rounded-xl border border-white/20 py-3 font-bold text-white transition hover:bg-white/10 ${className}`}
     >
-      Back to home
+      Leave game
     </button>
   )
 }
 
 export function LeaderboardPhase({ room, onNextRound, showNext = true, nextLoading = false }) {
   const isVictory = !showNext
-  const winner = room?.players?.find((p) => p.id === room?.gameState?.winnerId)
+  const winnerId = room?.gameState?.winnerId
+  const winner = room?.players?.find((p) => p.id === winnerId)
+  const accent = getAccent(room?.config?.gameId)
 
   return (
     <motion.div key="lb" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+      {isVictory && (
+        <ConfettiBurst
+          active
+          duration={4200}
+          intensity={1.4}
+          colors={[accent.hex, '#6C5CE7', '#FF6B6B', '#FFD166', '#ffffff']}
+        />
+      )}
       <Leaderboard3D
         results={room?.gameState?.roundResults}
         players={room?.players}
         targetScore={room?.config?.targetScore}
         accentKey={room?.config?.gameId}
+        isVictory={isVictory}
+        winnerId={winnerId}
       />
       {isVictory && winner && (
-        <p className="mt-6 text-center font-display text-3xl font-bold text-cube-cyan">
+        <motion.p
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3, type: 'spring', stiffness: 260, damping: 18 }}
+          className="mt-6 text-center font-display text-3xl font-bold"
+          style={{ color: accent.hex }}
+        >
           {winner.name} wins!
-        </p>
+        </motion.p>
       )}
       {showNext ? (
         <button

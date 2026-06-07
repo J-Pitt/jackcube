@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import LobbyVideo from '@/components/LobbyVideo'
@@ -10,8 +10,9 @@ import PlayerList from '@/components/PlayerList'
 import RoomCodeDisplay from '@/components/RoomCodeDisplay'
 import MatureGate, { hasMatureConsent } from '@/components/MatureGate'
 import { useRoomPoll } from '@/hooks/useRoomPoll'
-import { leaveRoom, startGame, updateRoomConfig } from '@/lib/roomApi'
-import { clearRejoin, getRejoinPath, loadRejoin, saveRejoin } from '@/lib/rejoin'
+import { startGame, updateRoomConfig } from '@/lib/roomApi'
+import { getRejoinPath, loadRejoin, saveRejoin } from '@/lib/rejoin'
+import { useLeaveGame } from '@/hooks/useLeaveGame'
 import Link from 'next/link'
 import {
   PARTY_GAMES,
@@ -89,13 +90,7 @@ export default function LobbyPage() {
     }
   }, [room?.phase, room?.hostId, roomId, router])
 
-  const handleLeave = useCallback(async () => {
-    if (session?.roomId && session?.playerId) {
-      await leaveRoom(session.roomId, session.playerId).catch(() => {})
-    }
-    clearRejoin()
-    router.push('/')
-  }, [session, router])
+  const leaveGame = useLeaveGame()
 
   const isTvScreen = session?.screenRole === 'tv'
   const canControlLobby = isTvScreen || session?.playerId === room?.hostId
@@ -185,7 +180,7 @@ export default function LobbyPage() {
           </div>
           <button
             type="button"
-            onClick={handleLeave}
+            onClick={leaveGame}
             className="rounded-xl border border-white/15 px-4 py-2 text-sm text-white/80 hover:bg-white/5"
           >
             Leave room
