@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { sendChat } from '@/lib/roomApi'
 import { loadRejoin } from '@/lib/rejoin'
+import CameraCapture from './CameraCapture'
 
 export default function PartyChat({
   room,
@@ -14,6 +15,7 @@ export default function PartyChat({
   const [text, setText] = useState('')
   const [sending, setSending] = useState(false)
   const [error, setError] = useState(null)
+  const [cameraOpen, setCameraOpen] = useState(false)
   const bottomRef = useRef(null)
   const session = loadRejoin()
   const playerId = playerIdProp || session?.playerId
@@ -44,6 +46,18 @@ export default function PartyChat({
     }
   }
 
+  async function handleSendPhoto(dataUrl) {
+    if (!roomId || !playerId) return
+    setError(null)
+    try {
+      await sendChat(roomId, playerId, '', { image: dataUrl })
+      setCameraOpen(false)
+    } catch (err) {
+      setError(err.message || 'Could not send photo')
+      setCameraOpen(false)
+    }
+  }
+
   const height = compact ? 'max-h-36' : 'max-h-48'
 
   return (
@@ -60,18 +74,36 @@ export default function PartyChat({
           </p>
         ) : (
           messages.map((m) => (
-            <p key={m.id} className="text-sm leading-snug text-white/85">
+            <div key={m.id} className="text-sm leading-snug text-white/85">
               <span className="font-semibold" style={{ color: m.color || '#6C5CE7' }}>
                 {m.playerName}:
               </span>{' '}
-              {m.text}
-            </p>
+              {m.type === 'image' && m.image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={m.image}
+                  alt={`${m.playerName}'s photo`}
+                  className="mt-1 max-h-48 w-auto rounded-lg border border-white/10"
+                />
+              ) : (
+                m.text
+              )}
+            </div>
           ))
         )}
         <div ref={bottomRef} />
       </div>
       {playerId ? (
         <form onSubmit={handleSubmit} className="mt-2 flex gap-2">
+          <button
+            type="button"
+            onClick={() => setCameraOpen(true)}
+            aria-label="Take a photo"
+            title="Take a photo"
+            className="shrink-0 rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-base text-white/80 hover:bg-white/10"
+          >
+            📷
+          </button>
           <input
             type="text"
             value={text}
@@ -92,6 +124,10 @@ export default function PartyChat({
         </form>
       ) : (
         <p className="mt-2 text-xs text-white/40">Join on your phone to chat</p>
+      )}
+
+      {cameraOpen && (
+        <CameraCapture onCapture={handleSendPhoto} onClose={() => setCameraOpen(false)} />
       )}
       {error && (
         <p className="mt-1 text-xs text-cube-danger" role="alert">

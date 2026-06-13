@@ -3,14 +3,25 @@ import { getRoom, setRoom } from '../../../lib/redis'
 
 const MAX_MESSAGES = 100
 const MAX_TEXT = 200
+// Inline photos travel through the existing chat state (no separate store), so
+// keep them small. Client compresses before sending; this is a hard ceiling.
+const MAX_IMAGE_CHARS = 400_000
 
 export async function POST(request) {
   try {
-    const { roomId, playerId, text, asGuess } = await request.json()
-    if (!roomId || !playerId || !text?.trim()) {
+    const { roomId, playerId, text, asGuess, image } = await request.json()
+    const hasText = !!text?.trim()
+    const isImage = typeof image === 'string' && image.startsWith('data:image/')
+    if (!roomId || !playerId || (!hasText && !isImage)) {
       return NextResponse.json(
-        { success: false, error: 'roomId, playerId, and text required' },
+        { success: false, error: 'roomId, playerId, and text or image required' },
         { status: 400 }
+      )
+    }
+    if (isImage && image.length > MAX_IMAGE_CHARS) {
+      return NextResponse.json(
+        { success: false, error: 'Photo too large' },
+        { status: 413 }
       )
     }
 
@@ -35,8 +46,9 @@ export async function POST(request) {
       playerId,
       playerName: player.name,
       color: player.color,
-      text: String(text).trim().slice(0, MAX_TEXT),
+      text: hasText ? String(text).trim().slice(0, MAX_TEXT) : '',
       ts: new Date().toISOString(),
+      ...(isImage ? { type: 'image', image } : {}),
     }
 
     const chat = [...(room.chat || []), message].slice(-MAX_MESSAGES)
