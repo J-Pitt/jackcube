@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { sendChat } from '@/lib/roomApi'
 import { loadRejoin } from '@/lib/rejoin'
+import { usePartyVideo } from '@/contexts/PartyVideoContext'
 import CameraCapture from './CameraCapture'
 
 export default function PartyChat({
@@ -17,6 +18,9 @@ export default function PartyChat({
   const [error, setError] = useState(null)
   const [cameraOpen, setCameraOpen] = useState(false)
   const bottomRef = useRef(null)
+  const { localStream, roomCameraStream, isDisplayMode } = usePartyVideo()
+  // Reuse whichever camera is already live so we don't open a second one.
+  const liveCameraStream = isDisplayMode ? roomCameraStream : localStream
   const session = loadRejoin()
   const playerId = playerIdProp || session?.playerId
   const messages = room?.chat || []
@@ -134,7 +138,11 @@ export default function PartyChat({
       )}
 
       {cameraOpen && (
-        <CameraCapture onCapture={handleSendMedia} onClose={() => setCameraOpen(false)} />
+        <CameraCapture
+          onCapture={handleSendMedia}
+          onClose={() => setCameraOpen(false)}
+          existingStream={liveCameraStream}
+        />
       )}
       {error && (
         <p className="mt-1 text-xs text-cube-danger" role="alert">

@@ -22,6 +22,26 @@ export function getMediaSupportError() {
   return null
 }
 
+/**
+ * Turn a raw getUserMedia error into a short, actionable message. The browser's
+ * own wording ("...not allowed by the platform in the current context...") is
+ * cryptic; the usual real cause on phones is an in-app browser webview blocking
+ * the camera, or a remembered permission denial.
+ */
+export function describeMediaError(err) {
+  const name = err?.name || ''
+  if (name === 'NotAllowedError' || name === 'SecurityError') {
+    return 'Camera/mic is blocked. If you opened this from inside another app (Instagram, Messenger, TikTok…), tap the menu and choose "Open in Safari/Chrome." Otherwise allow camera + mic for this site, then retry.'
+  }
+  if (name === 'NotReadableError' || name === 'AbortError') {
+    return 'Your camera/mic is busy in another app or tab. Close it and retry.'
+  }
+  if (name === 'NotFoundError' || name === 'OverconstrainedError') {
+    return 'No usable camera/mic was found on this device.'
+  }
+  return err?.message || 'Could not access camera/microphone.'
+}
+
 export async function requestUserMedia(constraints) {
   const supportError = getMediaSupportError()
   if (supportError) throw new Error(supportError)

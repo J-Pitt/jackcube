@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { requestUserMedia } from '@/lib/media'
+import { describeMediaError, requestUserMedia } from '@/lib/media'
 
 const MAX_VIDEO_SECONDS = 6
 const VIDEO_MIME_CANDIDATES = [
@@ -19,17 +19,28 @@ function pickVideoMime() {
   return ''
 }
 
+function streamHasVideo(stream) {
+  return !!stream && stream.getVideoTracks?.().length > 0
+}
+
 /**
  * In-app camera for capturing a NEW photo or short video (no gallery/upload).
  * Uses getUserMedia; photos snapshot a canvas, videos use MediaRecorder capped
  * short. Calls onCapture(dataUrl, kind) where kind is 'image' | 'video'.
+ *
+ * If `existingStream` (a live party-video stream with a camera track) is passed,
+ * it is reused instead of opening a second camera — mobile browsers (esp. iOS
+ * Safari) reject a concurrent getUserMedia with NotAllowedError.
  */
-export default function CameraCapture({ onCapture, onClose }) {
+export default function CameraCapture({ onCapture, onClose, existingStream }) {
   const videoRef = useRef(null)
   const streamRef = useRef(null)
+  const ownsStreamRef = useRef(false)
   const recorderRef = useRef(null)
   const chunksRef = useRef([])
   const timerRef = useRef(null)
+
+  const canReuse = streamHasVideo(existingStream)
 
   const [mode, setMode] = useState('photo')
   const [facing, setFacing] = useState('user')
@@ -44,20 +55,30 @@ export default function CameraCapture({ onCapture, onClose }) {
   const hasPreview = !!photo || !!videoData
 
   const stop = useCallback(() => {
-    if (streamRef.current) {
+    // Only stop tracks we acquired — a reused party stream stays alive.
+    if (streamRef.current && ownsStreamRef.current) {
       streamRef.current.getTracks().forEach((t) => t.stop())
-      streamRef.current = null
     }
+    streamRef.current = null
+    ownsStreamRef.current = false
   }, [])
 
   const start = useCallback(async () => {
     setError(null)
     stop()
     try {
-      const stream = await requestUserMedia({
-        audio: mode === 'video',
-        video: { facingMode: facing, width: { ideal: 640 }, height: { ideal: 640 } },
-      })
+      let stream
+      if (streamHasVideo(existingStream)) {
+        // Reuse the live party-video camera instead of opening a second one.
+        stream = existingStream
+        ownsStreamRef.current = false
+      } else {
+        stream = await requestUserMedia({
+          audio: mode === 'video',
+          video: { facingMode: facing, width: { ideal: 640 }, height: { ideal: 640 } },
+        })
+        ownsStreamRef.current = true
+      }
       streamRef.current = stream
       if (videoRef.current) {
         videoRef.current.srcObject = stream
@@ -65,9 +86,9 @@ export default function CameraCapture({ onCapture, onClose }) {
         await videoRef.current.play().catch(() => {})
       }
     } catch (err) {
-      setError(err?.message || 'Could not open the camera.')
+      setError(describeMediaError(err))
     }
-  }, [facing, mode, stop])
+  }, [facing, mode, stop, existingStream])
 
   // Run the live camera unless we're previewing a captured shot/clip.
   useEffect(() => {
@@ -206,7 +227,7 @@ export default function CameraCapture({ onCapture, onClose }) {
             {recording ? `Recording ${Math.ceil(MAX_VIDEO_SECONDS - elapsed)}s` : 'Preview'}
           </span>
         )}
-        {!hasPreview && !recording ? (
+        {!hasPreview && !recording && !canReuse ? (
           <button
             type="button"
             onClick={() => setFacing((f) => (f === 'user' ? 'environment' : 'user'))}

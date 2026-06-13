@@ -10,6 +10,7 @@ import {
   useState,
 } from 'react'
 import {
+  describeMediaError,
   getMediaSupportError,
   hasVideoTrack,
   requestLobbyMedia,
@@ -198,7 +199,7 @@ export function PartyVideoProvider({ children }) {
         /* ignore */
       }
     } catch (e) {
-      setError(e?.message || 'Could not access room camera')
+      setError(describeMediaError(e))
     }
   }, [isDisplayMode, roomCameraOn, roomCameraStream])
 
@@ -358,7 +359,7 @@ export function PartyVideoProvider({ children }) {
         })
       } catch (e) {
         if (!cancelled) {
-          setError(e?.message || 'Could not access camera/microphone')
+          setError(describeMediaError(e))
           persistJoined(false)
         }
         setReady(false)
@@ -477,7 +478,7 @@ export function PartyVideoProvider({ children }) {
       } catch (e) {
         if (!cancelled) {
           setRoomCameraOn(false)
-          setError(e?.message || 'Could not access room camera')
+          setError(describeMediaError(e))
         }
       }
     })()
@@ -518,6 +519,7 @@ export function PartyVideoProvider({ children }) {
     hasActiveVideo,
     panelExpanded,
     setPanelExpanded,
+    localStream,
     roomCameraStream,
     roomCameraOn,
     cameraSource,
