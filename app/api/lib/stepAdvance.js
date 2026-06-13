@@ -108,7 +108,9 @@ function applyStepAdvance(room, { forceStep } = {}) {
 
     if (toc.step === 'cube') {
       toc.step = 'active'
-      toc.endsAt = endsIn(ROUND_MS.truthOrCube.active)
+      // No timer on a player's turn — they take as long as they need. The turn
+      // advances when they submit (or when the host skips).
+      toc.endsAt = null
     } else if (toc.step === 'active') {
       toc.step = 'reveal'
       toc.promptText = sec.promptText

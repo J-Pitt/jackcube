@@ -135,11 +135,8 @@ export default function TruthHost({ room, roomId, hostId, refresh }) {
                 </p>
               )}
 
-              {toc.step !== 'reveal' && (
-                <PhaseTimer
-                  endsAt={toc.endsAt}
-                  label={toc.step === 'cube' ? 'Cube stops in' : 'Time left'}
-                />
+              {toc.step === 'cube' && (
+                <PhaseTimer endsAt={toc.endsAt} label="Cube stops in" />
               )}
 
               <div className="mt-6 flex items-center justify-center gap-6">

@@ -186,14 +186,16 @@ export default function TruthPlay({ room, roomId, playerId }) {
     )
   }
 
-  // Reveal — everyone sees the typed truth answer.
-  if (toc.step === 'reveal' && isTruth) {
+  // Reveal — everyone sees the typed truth answer on their phone too.
+  if (toc.step === 'reveal' && (isTruth || toc.answerText)) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center bg-cube-bg p-6 text-center">
         <p className="text-xs uppercase tracking-widest text-cube-cyan">
           {target?.name}’s truth
         </p>
-        <p className="mt-2 text-lg font-semibold text-white/80">{toc.promptText}</p>
+        {toc.promptText && (
+          <p className="mt-2 text-lg font-semibold text-white/80">{toc.promptText}</p>
+        )}
         {toc.answerText ? (
           <p className="mt-6 text-2xl font-bold leading-relaxed text-white">
             “{toc.answerText}”
