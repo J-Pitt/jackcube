@@ -279,6 +279,18 @@ export async function POST(request) {
         toc.outcome = 'done'
       } else if (action === 'truthOrChicken' && isTarget && toc.step === 'active') {
         toc.outcome = 'chicken'
+      } else if (
+        action === 'truthOrAnswer' &&
+        isTarget &&
+        toc.step === 'active' &&
+        toc.cardType === 'truth'
+      ) {
+        const text = String(payload?.text || '').trim().slice(0, 600)
+        if (!text) {
+          return NextResponse.json({ success: false, error: 'Answer required' }, { status: 400 })
+        }
+        toc.answerText = text
+        toc.outcome = 'done'
       } else {
         return NextResponse.json({ success: false, error: 'Invalid truthOrCube action' }, { status: 400 })
       }

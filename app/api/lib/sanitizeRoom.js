@@ -33,6 +33,7 @@ function sanitizeGameState(gameState, gameId) {
     const toc = { ...gs.truthOrCube }
     if (toc.step !== 'reveal') {
       delete toc.promptText
+      delete toc.answerText
     }
     gs.truthOrCube = toc
   }

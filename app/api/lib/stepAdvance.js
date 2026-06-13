@@ -1,4 +1,5 @@
-const { endsIn, ROUND_MS, buildBluffChoices } = require('./gameInit')
+const { endsIn, ROUND_MS, buildBluffChoices, createGameState } = require('./gameInit')
+const { activePlayers } = require('./playerPresence')
 const { pickHostLine } = require('./content')
 const { scoreFakinItRound } = require('./games/fakinItScoring')
 const { scoreDirtyDrawfulRound } = require('./games/dirtyDrawfulScoring')
@@ -113,19 +114,18 @@ function applyStepAdvance(room, { forceStep } = {}) {
       toc.promptText = sec.promptText
       toc.endsAt = endsIn(ROUND_MS.truthOrCube.reveal)
     } else if (toc.step === 'reveal') {
-      const roundScores = scoreTruthOrCubeRound(toc, room.players || [])
-      const { results, updatedPlayers } = scoreRound(room.players || [], roundScores)
-      room.players = updatedPlayers
-      const winner = checkVictory(updatedPlayers, targetScore)
-      room.phase = winner ? 'victory' : 'leaderboard'
-      room.gameState = {
-        ...gs,
-        truthOrCube: toc,
-        roundResults: results,
-        winnerId: winner?.id || null,
-      }
+      // Truth or Dare has no scoring or leaderboard — roll straight to the
+      // next player's turn and keep looping person to person.
+      const nextRoundNum = (gs.round || 1) + 1
+      room.gameState = createGameState(
+        'truthOrCube',
+        activePlayers(room.players || []),
+        room,
+        nextRoundNum
+      )
+      room.phase = 'playing'
       room.updatedAt = new Date().toISOString()
-      return { roundEnded: true }
+      return { roundEnded: false }
     }
     gs.truthOrCube = toc
   }

@@ -122,8 +122,8 @@ export const FAMILY_GAMES = PARTY_GAMES
 export const ADULT_GAMES = [
   {
     id: 'truthOrCube',
-    name: 'Truth or Cube',
-    description: 'Spin the cube — 10 rounds of spicy truths & dares',
+    name: 'Truth or Dare',
+    description: 'Go around the circle — spicy truths & dares, person to person',
     minPlayers: 2,
     maxPlayers: 8,
     maxRounds: 10,

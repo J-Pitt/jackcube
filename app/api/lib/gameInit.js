@@ -5,7 +5,7 @@ const ROUND_MS = {
   fakinIt: { prompt: 8000, action: 25000, vote: 30000, reveal: 8000 },
   dirtyDrawful: { assign: 5000, draw: 90000, guess: 30000, reveal: 10000 },
   letMeFinish: { question: 6000, pitch: 55000, rebuttal: 20000, vote: 25000, reveal: 8000 },
-  truthOrCube: { cube: 4500, active: 50000, reveal: 7000 },
+  truthOrCube: { cube: 4500, active: 50000, reveal: 13000 },
   captionClash: { write: 45000, vote: 30000, reveal: 8000 },
   bluffBox: { write: 40000, guess: 35000, reveal: 10000 },
   triviaToss: { question: 20000, reveal: 8000 },

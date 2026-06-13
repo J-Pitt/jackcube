@@ -44,7 +44,7 @@ Adult party games ship with curated JSON prompt decks under `src/content/decks/`
 
 | Game | ID | Players |
 |------|-----|---------|
-| Truth or Cube | `truthOrCube` | 2–8 |
+| Truth or Dare | `truthOrCube` | 2–8 |
 | Fakin' It All Night Long | `fakinIt` | 3–8 |
 | Dirty Drawful | `dirtyDrawful` | 3–8 |
 | Let Me Finish | `letMeFinish` | 3–8 |
