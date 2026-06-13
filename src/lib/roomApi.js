@@ -98,11 +98,11 @@ export async function leaveRoom(roomId, playerId) {
   return parseResponse(res, 'Failed to leave room')
 }
 
-export async function sendChat(roomId, playerId, text, { asGuess = false, image } = {}) {
+export async function sendChat(roomId, playerId, text, { asGuess = false, image, video } = {}) {
   const res = await fetchRoom(`${ROOM_PATH}/chat`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ roomId, playerId, text, asGuess, image }),
+    body: JSON.stringify({ roomId, playerId, text, asGuess, image, video }),
   })
   return parseResponse(res, 'Failed to send message')
 }

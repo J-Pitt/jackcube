@@ -46,14 +46,14 @@ export default function PartyChat({
     }
   }
 
-  async function handleSendPhoto(dataUrl) {
+  async function handleSendMedia(dataUrl, kind) {
     if (!roomId || !playerId) return
     setError(null)
     try {
-      await sendChat(roomId, playerId, '', { image: dataUrl })
+      await sendChat(roomId, playerId, '', kind === 'video' ? { video: dataUrl } : { image: dataUrl })
       setCameraOpen(false)
     } catch (err) {
-      setError(err.message || 'Could not send photo')
+      setError(err.message || 'Could not send')
       setCameraOpen(false)
     }
   }
@@ -83,6 +83,13 @@ export default function PartyChat({
                 <img
                   src={m.image}
                   alt={`${m.playerName}'s photo`}
+                  className="mt-1 max-h-48 w-auto rounded-lg border border-white/10"
+                />
+              ) : m.type === 'video' && m.video ? (
+                <video
+                  src={m.video}
+                  controls
+                  playsInline
                   className="mt-1 max-h-48 w-auto rounded-lg border border-white/10"
                 />
               ) : (
@@ -127,7 +134,7 @@ export default function PartyChat({
       )}
 
       {cameraOpen && (
-        <CameraCapture onCapture={handleSendPhoto} onClose={() => setCameraOpen(false)} />
+        <CameraCapture onCapture={handleSendMedia} onClose={() => setCameraOpen(false)} />
       )}
       {error && (
         <p className="mt-1 text-xs text-cube-danger" role="alert">

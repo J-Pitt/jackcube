@@ -3,18 +3,45 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { requestUserMedia } from '@/lib/media'
 
+const MAX_VIDEO_SECONDS = 6
+const VIDEO_MIME_CANDIDATES = [
+  'video/mp4',
+  'video/webm;codecs=vp9,opus',
+  'video/webm;codecs=vp8,opus',
+  'video/webm',
+]
+
+function pickVideoMime() {
+  if (typeof MediaRecorder === 'undefined') return null
+  for (const m of VIDEO_MIME_CANDIDATES) {
+    if (MediaRecorder.isTypeSupported?.(m)) return m
+  }
+  return ''
+}
+
 /**
- * In-app camera for taking a NEW photo (no gallery / upload). Uses getUserMedia
- * and a canvas snapshot, downscaled hard so it can ride inline through chat.
- * Calls onCapture(dataUrl) when the user sends; onClose to dismiss.
+ * In-app camera for capturing a NEW photo or short video (no gallery/upload).
+ * Uses getUserMedia; photos snapshot a canvas, videos use MediaRecorder capped
+ * short. Calls onCapture(dataUrl, kind) where kind is 'image' | 'video'.
  */
 export default function CameraCapture({ onCapture, onClose }) {
   const videoRef = useRef(null)
   const streamRef = useRef(null)
+  const recorderRef = useRef(null)
+  const chunksRef = useRef([])
+  const timerRef = useRef(null)
+
+  const [mode, setMode] = useState('photo')
   const [facing, setFacing] = useState('user')
   const [error, setError] = useState(null)
   const [photo, setPhoto] = useState(null)
+  const [videoData, setVideoData] = useState(null)
+  const [recording, setRecording] = useState(false)
+  const [elapsed, setElapsed] = useState(0)
   const [busy, setBusy] = useState(false)
+
+  const videoSupported = pickVideoMime() !== null
+  const hasPreview = !!photo || !!videoData
 
   const stop = useCallback(() => {
     if (streamRef.current) {
@@ -28,29 +55,35 @@ export default function CameraCapture({ onCapture, onClose }) {
     stop()
     try {
       const stream = await requestUserMedia({
-        audio: false,
-        video: { facingMode: facing, width: { ideal: 1280 }, height: { ideal: 1280 } },
+        audio: mode === 'video',
+        video: { facingMode: facing, width: { ideal: 640 }, height: { ideal: 640 } },
       })
       streamRef.current = stream
       if (videoRef.current) {
         videoRef.current.srcObject = stream
+        videoRef.current.muted = true
         await videoRef.current.play().catch(() => {})
       }
     } catch (err) {
       setError(err?.message || 'Could not open the camera.')
     }
-  }, [facing, stop])
+  }, [facing, mode, stop])
 
-  // (Re)start the live camera unless we're previewing a captured shot.
+  // Run the live camera unless we're previewing a captured shot/clip.
   useEffect(() => {
-    if (photo) return undefined
+    if (hasPreview) return undefined
     start()
     return stop
-  }, [start, stop, photo])
+  }, [start, stop, hasPreview])
 
-  useEffect(() => stop, [stop])
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current)
+      stop()
+    }
+  }, [stop])
 
-  function capture() {
+  function capturePhoto() {
     const video = videoRef.current
     if (!video?.videoWidth) return
     const maxDim = 900
@@ -62,7 +95,6 @@ export default function CameraCapture({ onCapture, onClose }) {
     canvas.height = h
     const ctx = canvas.getContext('2d')
     if (facing === 'user') {
-      // Mirror selfies so the saved shot matches the preview.
       ctx.translate(w, 0)
       ctx.scale(-1, 1)
     }
@@ -71,11 +103,72 @@ export default function CameraCapture({ onCapture, onClose }) {
     stop()
   }
 
+  function startRecording() {
+    const stream = streamRef.current
+    if (!stream) return
+    const mimeType = pickVideoMime()
+    let recorder
+    try {
+      recorder = new MediaRecorder(stream, {
+        mimeType: mimeType || undefined,
+        videoBitsPerSecond: 700_000,
+        audioBitsPerSecond: 64_000,
+      })
+    } catch {
+      try {
+        recorder = new MediaRecorder(stream)
+      } catch {
+        setError('Video recording is not supported on this browser.')
+        return
+      }
+    }
+    chunksRef.current = []
+    recorder.ondataavailable = (e) => {
+      if (e.data && e.data.size) chunksRef.current.push(e.data)
+    }
+    recorder.onstop = () => {
+      const blob = new Blob(chunksRef.current, { type: recorder.mimeType || 'video/webm' })
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setVideoData(reader.result)
+        stop()
+      }
+      reader.readAsDataURL(blob)
+    }
+    recorderRef.current = recorder
+    recorder.start()
+    setRecording(true)
+    setElapsed(0)
+    const startedAt = Date.now()
+    timerRef.current = setInterval(() => {
+      const s = (Date.now() - startedAt) / 1000
+      setElapsed(s)
+      if (s >= MAX_VIDEO_SECONDS) stopRecording()
+    }, 100)
+  }
+
+  function stopRecording() {
+    if (timerRef.current) {
+      clearInterval(timerRef.current)
+      timerRef.current = null
+    }
+    setRecording(false)
+    const recorder = recorderRef.current
+    if (recorder && recorder.state !== 'inactive') recorder.stop()
+  }
+
+  function retake() {
+    setPhoto(null)
+    setVideoData(null)
+  }
+
   async function send() {
-    if (!photo || busy) return
+    if (busy) return
+    const data = photo || videoData
+    if (!data) return
     setBusy(true)
     try {
-      await onCapture(photo)
+      await onCapture(data, photo ? 'image' : 'video')
     } finally {
       setBusy(false)
     }
@@ -91,10 +184,29 @@ export default function CameraCapture({ onCapture, onClose }) {
         >
           Cancel
         </button>
-        <span className="text-xs font-semibold uppercase tracking-widest text-white/50">
-          Take a photo
-        </span>
-        {!photo ? (
+        {!hasPreview && !recording && videoSupported ? (
+          <div className="flex overflow-hidden rounded-full border border-white/20 text-xs font-semibold">
+            <button
+              type="button"
+              onClick={() => setMode('photo')}
+              className={`px-3 py-1 ${mode === 'photo' ? 'bg-white text-black' : 'text-white/70'}`}
+            >
+              Photo
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode('video')}
+              className={`px-3 py-1 ${mode === 'video' ? 'bg-white text-black' : 'text-white/70'}`}
+            >
+              Video
+            </button>
+          </div>
+        ) : (
+          <span className="text-xs font-semibold uppercase tracking-widest text-white/50">
+            {recording ? `Recording ${Math.ceil(MAX_VIDEO_SECONDS - elapsed)}s` : 'Preview'}
+          </span>
+        )}
+        {!hasPreview && !recording ? (
           <button
             type="button"
             onClick={() => setFacing((f) => (f === 'user' ? 'environment' : 'user'))}
@@ -113,6 +225,13 @@ export default function CameraCapture({ onCapture, onClose }) {
         ) : photo ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={photo} alt="preview" className="max-h-full max-w-full object-contain" />
+        ) : videoData ? (
+          <video
+            src={videoData}
+            controls
+            playsInline
+            className="max-h-full max-w-full object-contain"
+          />
         ) : (
           <video
             ref={videoRef}
@@ -121,6 +240,12 @@ export default function CameraCapture({ onCapture, onClose }) {
             className="max-h-full max-w-full object-contain"
             style={{ transform: facing === 'user' ? 'scaleX(-1)' : 'none' }}
           />
+        )}
+        {recording && (
+          <span className="absolute left-1/2 top-4 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/60 px-3 py-1 text-sm font-semibold text-white">
+            <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-cube-danger" />
+            {elapsed.toFixed(1)}s
+          </span>
         )}
       </div>
 
@@ -133,11 +258,11 @@ export default function CameraCapture({ onCapture, onClose }) {
           >
             Try again
           </button>
-        ) : photo ? (
+        ) : hasPreview ? (
           <>
             <button
               type="button"
-              onClick={() => setPhoto(null)}
+              onClick={retake}
               className="rounded-xl border border-white/25 px-6 py-3 font-bold text-white"
             >
               Retake
@@ -151,12 +276,28 @@ export default function CameraCapture({ onCapture, onClose }) {
               {busy ? 'Sending…' : 'Send to chat'}
             </button>
           </>
+        ) : mode === 'photo' ? (
+          <button
+            type="button"
+            onClick={capturePhoto}
+            aria-label="Capture photo"
+            className="h-16 w-16 rounded-full border-4 border-white bg-white/20 transition active:scale-90"
+          />
+        ) : recording ? (
+          <button
+            type="button"
+            onClick={stopRecording}
+            aria-label="Stop recording"
+            className="flex h-16 w-16 items-center justify-center rounded-full border-4 border-cube-danger bg-cube-danger/30"
+          >
+            <span className="h-6 w-6 rounded bg-cube-danger" />
+          </button>
         ) : (
           <button
             type="button"
-            onClick={capture}
-            aria-label="Capture"
-            className="h-16 w-16 rounded-full border-4 border-white bg-white/20 transition active:scale-90"
+            onClick={startRecording}
+            aria-label="Start recording"
+            className="h-16 w-16 rounded-full border-4 border-white bg-cube-danger transition active:scale-90"
           />
         )}
       </div>

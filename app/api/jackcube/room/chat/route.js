@@ -3,24 +3,32 @@ import { getRoom, setRoom } from '../../../lib/redis'
 
 const MAX_MESSAGES = 100
 const MAX_TEXT = 200
-// Inline photos travel through the existing chat state (no separate store), so
-// keep them small. Client compresses before sending; this is a hard ceiling.
+// Inline photos/videos travel through the existing chat state (no separate
+// store), so keep them small. Client compresses before sending; hard ceilings.
 const MAX_IMAGE_CHARS = 400_000
+const MAX_VIDEO_CHARS = 2_000_000
 
 export async function POST(request) {
   try {
-    const { roomId, playerId, text, asGuess, image } = await request.json()
+    const { roomId, playerId, text, asGuess, image, video } = await request.json()
     const hasText = !!text?.trim()
     const isImage = typeof image === 'string' && image.startsWith('data:image/')
-    if (!roomId || !playerId || (!hasText && !isImage)) {
+    const isVideo = typeof video === 'string' && video.startsWith('data:video/')
+    if (!roomId || !playerId || (!hasText && !isImage && !isVideo)) {
       return NextResponse.json(
-        { success: false, error: 'roomId, playerId, and text or image required' },
+        { success: false, error: 'roomId, playerId, and text, image, or video required' },
         { status: 400 }
       )
     }
     if (isImage && image.length > MAX_IMAGE_CHARS) {
       return NextResponse.json(
         { success: false, error: 'Photo too large' },
+        { status: 413 }
+      )
+    }
+    if (isVideo && video.length > MAX_VIDEO_CHARS) {
+      return NextResponse.json(
+        { success: false, error: 'Video too large — keep it short' },
         { status: 413 }
       )
     }
@@ -48,7 +56,7 @@ export async function POST(request) {
       color: player.color,
       text: hasText ? String(text).trim().slice(0, MAX_TEXT) : '',
       ts: new Date().toISOString(),
-      ...(isImage ? { type: 'image', image } : {}),
+      ...(isVideo ? { type: 'video', video } : isImage ? { type: 'image', image } : {}),
     }
 
     const chat = [...(room.chat || []), message].slice(-MAX_MESSAGES)
