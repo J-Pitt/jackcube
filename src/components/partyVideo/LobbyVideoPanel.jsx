@@ -15,7 +15,7 @@ export default function LobbyVideoPanel({ className = '' }) {
       <button
         type="button"
         onClick={() => setPanelExpanded(true)}
-        className={`flex w-full items-center justify-between rounded-2xl border border-white/10 bg-cube-surface/80 px-4 py-3 text-left ${className}`}
+        className={`flex w-full items-center justify-between rounded-2xl border-2 border-cube-cyan/30 bg-cube-surface/80 px-4 py-3 text-left transition hover:border-cube-cyan/50 ${className}`}
       >
         <span className="text-sm text-white/50">Party cam — tap to join</span>
         <span className="text-xs font-semibold text-cube-cyan">Open</span>
@@ -24,7 +24,7 @@ export default function LobbyVideoPanel({ className = '' }) {
   }
 
   return (
-    <section className={`rounded-2xl border border-white/10 bg-cube-surface/80 p-4 ${className}`}>
+    <section className={`rounded-2xl border-2 border-cube-cyan/40 bg-cube-surface/80 p-4 shadow-[0_0_24px_-8px_rgba(0,245,212,0.5)] ${className}`}>
       <div className="mb-3 flex items-start justify-between gap-2">
         <div>
           <h2 className="text-lg font-semibold text-white">Your camera</h2>

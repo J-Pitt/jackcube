@@ -50,7 +50,7 @@ Adult party games ship with curated JSON prompt decks under `src/content/decks/`
 | Let Me Finish | `letMeFinish` | 3–8 |
 | Would You Rather | `wouldYouRather` | 2–8 |
 | Never Have I Ever | `neverHaveIEver` | 2–8 |
-| Card Crimes | `cardCrimes` | 3–5 |
+| yard Crimes | `cardCrimes` | 3–5 |
 
 Adult content sources (all decks authored in-house, under `src/content/decks/`):
 

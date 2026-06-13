@@ -33,7 +33,7 @@ export default function HostVideoRail({ className = '' }) {
       <button
         type="button"
         onClick={() => setPanelExpanded(true)}
-        className={`flex w-full items-center justify-between gap-3 rounded-2xl border border-white/10 bg-cube-surface/90 px-4 py-3 text-left backdrop-blur transition hover:border-white/20 ${className}`}
+        className={`flex w-full items-center justify-between gap-3 rounded-2xl border-2 border-cube-cyan/30 bg-cube-surface/90 px-4 py-3 text-left backdrop-blur transition hover:border-cube-cyan/50 ${className}`}
       >
         <span className="text-sm text-white/50">
           Party cam — no one on yet
@@ -45,10 +45,10 @@ export default function HostVideoRail({ className = '' }) {
 
   return (
     <div
-      className={`rounded-2xl border border-white/10 bg-cube-surface/95 p-4 shadow-xl backdrop-blur ${className}`}
+      className={`rounded-2xl border-2 border-cube-cyan/40 bg-cube-surface/95 p-4 shadow-[0_0_24px_-8px_rgba(0,245,212,0.5)] backdrop-blur ${className}`}
     >
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <p className="text-sm font-semibold uppercase tracking-widest text-white/50">
+        <p className="text-sm font-semibold uppercase tracking-widest text-cube-cyan/80">
           Party cam {inCall && hasActiveVideo ? '· live' : ''}
         </p>
         <div className="flex items-center gap-2">

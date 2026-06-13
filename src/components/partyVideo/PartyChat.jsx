@@ -66,9 +66,9 @@ export default function PartyChat({
 
   return (
     <div
-      className={`flex flex-col rounded-2xl border border-white/10 bg-cube-surface/95 p-3 shadow-xl backdrop-blur ${className}`}
+      className={`flex flex-col rounded-2xl border-2 border-cube-violet/40 bg-cube-surface/95 p-3 shadow-[0_0_24px_-8px_rgba(108,92,231,0.5)] backdrop-blur ${className}`}
     >
-      <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-white/50">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-cube-violet">
         Party chat
       </p>
       <div className={`${height} space-y-1.5 overflow-y-auto pr-1`}>
